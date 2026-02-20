@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import SidebarLink from './sidebar-link';
 import Link from 'next/link';
-import { House, Megaphone, Terminal, UserRound } from 'lucide-react';
+import { BugPlay, Github, GithubIcon, GitPullRequestArrow, House, Laptop, LaptopMinimal, LucideGithub, Megaphone, ScrollText, Terminal, UserRound } from 'lucide-react';
 import SocialLink from './social-link';
 
 export default function Sidebar() {
@@ -22,10 +22,6 @@ export default function Sidebar() {
                         <House className="w-[clamp(1em,2vw,1.75em)]"/>
                         Home
                     </SidebarLink>
-                    <SidebarLink href="/about" pathname={pathname}>
-                        <UserRound className="w-[clamp(1em,2vw,1.75em)]"/>
-                        About
-                    </SidebarLink>
                     <SidebarLink href="/projects" pathname={pathname}>
                         <Terminal className="w-[clamp(1em,2vw,1.75em)]"/>
                         Projects
@@ -34,11 +30,16 @@ export default function Sidebar() {
                         <Megaphone className="w-[clamp(1em,2vw,1.75em)]"/>
                         Blog
                     </SidebarLink>
+                    <SidebarLink href="/cheats" pathname={pathname}>
+                        <BugPlay className="w-[clamp(1em,2vw,1.75em)]"/>
+                        Cheats
+                    </SidebarLink>
                 </div>
             </div>
             <div className="w-full flex flex-col justify-center gap-2">
                 <div className="w-full flex flex-row justify-around items-center h-fit">
-                    <SocialLink href="https://discord.com/users/694274948071555154" icon={<img src="/icons/discord.png" className="w-[clamp(8px,2vw,20px)] h-fit invert" />} />
+                    <SocialLink href="https://discord.com/users/694274948071555154" icon={<img src="/icons/discord.png" className="invert w-[clamp(8px,2vw,20px)] h-fit " />} />
+                    <SocialLink href="https://github.com/tullysaurus" icon={<Github className="w-[clamp(1em,2vw,1.75em)] fill-white"/>} />
 
 
                 </div>
