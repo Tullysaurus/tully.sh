@@ -1,3 +1,1 @@
-# tully.sh
-
-The source code for [my website](https://tully.sh)
+# The source code for [tully.sh](https://tully.sh)
