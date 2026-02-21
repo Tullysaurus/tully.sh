@@ -1,41 +1,29 @@
-import { NextRequest } from "next/server";
+import { WorkerEntrypoint } from "cloudflare:workers";
 
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const key = searchParams.get("key");
+export default class extends WorkerEntrypoint<Env> {
+  async GET(request: Request) {
+    const url = new URL(request.url);
+    const key = url.pathname.slice(1);
 
-    if (!key) {
-      return new Response("Missing file key", { status: 400 });
+    if (request.method == "GET"){
+      const object = await this.env.bucket.get(key, {
+        onlyIf: request.headers,
+        range: request.headers,
+      });
+
+      if (object === null) {
+        return new Response("Object Not Found", { status: 404 });
+      }
+
+      const headers = new Headers();
+      object.writeHttpMetadata(headers);
+      headers.set("etag", object.httpEtag);
+
+      // When no body is present, preconditions have failed
+      return new Response("body" in object ? object.body : undefined, {
+        status: "body" in object ? 200 : 412,
+        headers,
+      });
     }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const bucket = (globalThis as any).env?.MY_BUCKET;
-
-    if (!bucket) {
-      console.error("MY_BUCKET binding missing");
-      return new Response("Server misconfigured", { status: 500 });
-    }
-
-
-    // ✅ SAFE access without breaking Next types
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const object = await bucket.get(key) // ?? await (globalThis as any).env?.bucket?.get(key);
-
-    if (!object) {
-      return new Response("File not found", { status: 404 });
-    }
-
-    const headers = new Headers();
-    object.writeHttpMetadata(headers);
-    headers.set("etag", object.httpEtag);
-
-    return new Response(object.body, {
-      status: 200,
-      headers,
-    });
-  } catch (err) {
-    console.error(err);
-    return new Response("Internal Server Error", { status: 500 });
   }
-}
+};

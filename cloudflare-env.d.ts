@@ -3,6 +3,7 @@
 // Runtime types generated with workerd@1.20260219.0 2025-12-01 global_fetch_strictly_public,nodejs_compat
 declare namespace Cloudflare {
 	interface Env {
+		bucket: R2Bucket;
 		IMAGES: ImagesBinding;
 		ASSETS: Fetcher;
 		NEXTJS_ENV: string;
