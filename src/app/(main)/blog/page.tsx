@@ -1,14 +1,9 @@
-export default function Home() {
+export default function Projects() {
   return (
     <div
-      style={{
-        display: "flex",
-        height: "100vh",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+      className="flex flex-col h-100vh w-100vh items-center pt-[10vh] gap-8"
     >
-      <h1 className="text-[32px] italic">tully.sh/blog</h1>
+      <h1 className="text-5xl italic font-light">tully.sh/blog</h1>
     </div>
   );
 }
