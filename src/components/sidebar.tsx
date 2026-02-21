@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import SidebarLink from './sidebar-link';
 import Link from 'next/link';
-import { BugPlay, Github, GithubIcon, GitPullRequestArrow, House, Laptop, LaptopMinimal, LucideGithub, Megaphone, ScrollText, Terminal, UserRound } from 'lucide-react';
+import { BugPlay, Github, GithubIcon, GitPullRequestArrow, House, Laptop, LaptopMinimal, LucideGithub, Megaphone, ScrollText, Server, Terminal, UserRound } from 'lucide-react';
 import SocialLink from './social-link';
 
 export default function Sidebar() {
@@ -35,6 +35,10 @@ export default function Sidebar() {
                     <SidebarLink href="/scripts" pathname={pathname}>
                         <BugPlay className={`w-[${textClamp}]`}/>
                         Scripts
+                    </SidebarLink>
+                    <SidebarLink href="/proxy" pathname={pathname}>
+                        <Server className={`w-[${textClamp}]`}/>
+                        Web Proxy
                     </SidebarLink>
                 </div>
             </div>
