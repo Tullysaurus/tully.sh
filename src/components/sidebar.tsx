@@ -8,8 +8,10 @@ import SocialLink from './social-link';
 
 export default function Sidebar() {
     const pathname = usePathname();
+
+    const textClamp = "clamp(1em,1.5vw,1.75em)"
     return (
-        <div className="w-fit min-h-screen p-[clamp(0em,1.5vw,8vh)] bg-[#0f0f0f] flex flex-col justify-between items-center">
+        <div className="w-fit min-h-screen p-[clamp(0em,3vw,8vh)] bg-[#0f0f0f] flex flex-col justify-between items-center">
             <h1 className="h-fit w-full flex justify-center">
                 <Link href="/" className="text-[clamp(1.5em,2.25vw,2.75em)] italic font-bold flex h-fit w-fit justify-center">
                     <p>tully</p>
@@ -17,21 +19,21 @@ export default function Sidebar() {
                 </Link>
             </h1>
             <div className="w-full min-h-[60%] h-[60vh] ">
-                <div className="w-fit h-fit flex flex-col p-[clamp(0em,1vh,1em)] gap-[clamp(0em,0.5vw,1em)] text-[clamp(1em,2vw,1.75em)]">
+                <div className={`w-fit h-fit flex flex-col p-[clamp(0em,1vh,1em)] gap-[clamp(0em,0.5vw,1em)] text-[${textClamp}]`}>
                     <SidebarLink href="/" pathname={pathname}>
-                        <House className="w-[clamp(1em,2vw,1.75em)]"/>
+                        <House className={`w-[${textClamp}]`}/>
                         Home
                     </SidebarLink>
                     <SidebarLink href="/projects" pathname={pathname}>
-                        <Terminal className="w-[clamp(1em,2vw,1.75em)]"/>
+                        <Terminal className={`w-[${textClamp}]`}/>
                         Projects
                     </SidebarLink>
                     <SidebarLink href="/blog" pathname={pathname}>
-                        <Megaphone className="w-[clamp(1em,2vw,1.75em)]"/>
+                        <Megaphone className={`w-[${textClamp}]`}/>
                         Blog
                     </SidebarLink>
                     <SidebarLink href="/cheats" pathname={pathname}>
-                        <BugPlay className="w-[clamp(1em,2vw,1.75em)]"/>
+                        <BugPlay className={`w-[${textClamp}]`}/>
                         Cheats
                     </SidebarLink>
                 </div>
