@@ -9,9 +9,18 @@ export async function GET(request: NextRequest) {
       return new Response("Missing file key", { status: 400 });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const bucket = (globalThis as any).env?.MY_BUCKET;
+
+    if (!bucket) {
+      console.error("MY_BUCKET binding missing");
+      return new Response("Server misconfigured", { status: 500 });
+    }
+
+
     // ✅ SAFE access without breaking Next types
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const object = await (request as any).cf?.env?.bucket?.get(key) ?? await (globalThis as any).env?.bucket?.get(key);
+    const object = await bucket.get(key) // ?? await (globalThis as any).env?.bucket?.get(key);
 
     if (!object) {
       return new Response("File not found", { status: 404 });
