@@ -9,9 +9,9 @@ export async function GET(request: NextRequest) {
       return new Response("Missing file key", { status: 400 });
     }
 
-    // env.bucket must be available in your runtime
+    // ✅ SAFE access without breaking Next types
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const object = await (globalThis as any).env.bucket.get(key);
+    const object = await (request as any).cf?.env?.bucket?.get(key) ?? await (globalThis as any).env?.bucket?.get(key);
 
     if (!object) {
       return new Response("File not found", { status: 404 });
