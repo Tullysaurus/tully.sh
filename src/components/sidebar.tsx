@@ -40,7 +40,7 @@ export default function Sidebar() {
             </div>
             <div className="w-full flex flex-col justify-center gap-2">
                 <div className="w-full flex flex-row justify-around items-center h-fit">
-                    <SocialLink href="https://discord.com/users/694274948071555154" icon={<img src="/icons/discord.png" className="invert w-[clamp(8px,2vw,20px)] h-fit " />} />
+                    <SocialLink href="https://discord.com/users/694274948071555154" icon={<img src="https://r2.tully.sh/icons/discord.png" className="invert w-[clamp(8px,2vw,20px)] h-fit " />} />
                     <SocialLink href="https://github.com/tullysaurus" icon={<Github className="w-[clamp(1em,2vw,1.75em)] fill-white"/>} />
 
 
