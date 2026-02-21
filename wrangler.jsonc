@@ -10,6 +10,7 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "tully-sh",
 	"main": ".open-next/worker.js",
+	"preview_urls": false,
 	"compatibility_date": "2025-12-01",
 	"compatibility_flags": [
 		"nodejs_compat",
