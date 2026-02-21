@@ -13,11 +13,11 @@ export default function Home() {
   */
   return (
     <div
-      className="flex flex-col h-100vh w-100vh items-center pt-[10vh] gap-4"
+      className="flex flex-col h-100vh w-100vh items-center pt-[10vh] gap-8"
     >
       <h1 className="text-5xl font-bold">About Me</h1>
       <p className="text-l text-center w-3/8 font-semibold">
-        Self-taught developer programming as a hobby to circumvent rules and restrictions put in place by schools.
+        Self-taught developer programming as a hobby since the age of eight.
       </p>
       <div className="w-[60vw] h-fit mt-4 flex flex-row">
         <div className="w-[60%] h-fit flex flex-col gap-6">
@@ -48,6 +48,7 @@ export default function Home() {
             <TimelineElement side="r" text="2025" hover="AWS" icon={<Database className="w-4 h-4 text-white"/>}/>
         </div>
       </div>
+
        
     </div>
   );

@@ -32,9 +32,9 @@ export default function Sidebar() {
                         <Megaphone className={`w-[${textClamp}]`}/>
                         Blog
                     </SidebarLink>
-                    <SidebarLink href="/cheats" pathname={pathname}>
+                    <SidebarLink href="/scripts" pathname={pathname}>
                         <BugPlay className={`w-[${textClamp}]`}/>
-                        Cheats
+                        Scripts
                     </SidebarLink>
                 </div>
             </div>

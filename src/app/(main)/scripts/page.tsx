@@ -8,7 +8,7 @@ export default function Home() {
         alignItems: "center",
       }}
     >
-      <h1 className="text-[32px] italic">tully.sh/cheats</h1>
+      <h1 className="text-[32px] italic">tully.sh/scripts</h1>
     </div>
   );
 }
