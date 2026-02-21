@@ -11,6 +11,9 @@
 	"name": "tully-sh",
 	"main": ".open-next/worker.js",
 	"preview_urls": false,
+	"routes": [
+		{"pattern": "tully.sh/*", "zone_name": "tully.sh"}
+	],
 	"compatibility_date": "2025-12-01",
 	"compatibility_flags": [
 		"nodejs_compat",
