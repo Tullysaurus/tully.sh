@@ -60,6 +60,21 @@ export default function Scripts() {
   />),
       "date": Date.now()
     },
+    "chromebooks": {
+      "title": "Chromebook exploits",
+      "description": "A discord with resources for exploiting/unenrolling for chromebooks",
+      "id": "chromebooks",
+      "onclick": (id: string) => {
+        window.open("https://discord.gg/crosbreaker-1375357349425971231", "_blank");
+      },
+      "preview": (
+        <img 
+          src="https://r2.tully.sh/scripts/preview/chromebooks.png"
+          alt="preview"
+          className="w-full h-full object-cover"
+        />)
+
+    } 
   }
   return (
     <div
@@ -68,6 +83,7 @@ export default function Scripts() {
       <h1 className="text-5xl italic font-light">tully.sh/scripts</h1>
 
       <div className="w-[70vw] h-[70vh] grid grid-cols-3">
+        <GridItem {...scripts["chromebooks"]}/>
         <GridItem {...scripts["wayground"]}/>
         <GridItem {...scripts["edpuzzle"]}/>
         <GridItem {...scripts["blooket"]}/>
