@@ -72,7 +72,8 @@ export default function Scripts() {
           src="https://r2.tully.sh/scripts/preview/chromebooks.png"
           alt="preview"
           className="w-full h-full object-cover"
-        />)
+        />),
+        "date": Date.now()
 
     } 
   }
