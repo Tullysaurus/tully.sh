@@ -15,11 +15,12 @@ export default function Home() {
           <h2 className="text-3xl font-bold mt-4 text-[#FFC17B]">Tully C.</h2>
           <p className="font-semibold text-lg">Full-Stack Developer</p>
           <p className="h-fit wrap-normal">
-            Hi! I&apos;m Tully, a self-taught developer with over seven years of experience in programming.
-            I first started developing when I was around eight years old, and I&apos;ve kept it as a hobby
-            every since. I&apos;ve spent the last seven years familiarizing myself with many languages,
-            frameworks, cloud providers, and more. I have a certain kind of love for free and open
-            source software, and I&apos;ve made it a point to make all of my projects free to use and open source.<br/>
+            Hi! I&apos;m Tully (also known as Tullydev/Tullsaurus), a self-taught developer with over seven 
+            years of experience in programming. I first started developing when I was around eight years old,
+            and I&apos;ve kept it as a hobby every since. I&apos;ve spent the last seven years familiarizing
+            myself with many languages, frameworks, cloud providers, and more. I have a certain kind of love
+            for free and open source software, and I&apos;ve made it a point to make all of my projects free
+            and open source.<br/>
             <br/>
             My goal for my projects is to give students the tools to achieve the freedom they deserve
             in the learning environment.
