@@ -5,15 +5,13 @@ export default function GridItem({
   title,
   description,
   id,
-  onclick,
-  preview,
+  url,
   date,
 }: {
   title: string;
   description: string;
   id: string;
-  onclick: (id: string) => void;
-  preview: React.ReactElement;
+  url: string;
   date: number;
 }) {
   const unixTime = new Date(date);
@@ -24,12 +22,18 @@ export default function GridItem({
 
   return (
     <div
-      onClick={() => onclick(id)}
+      onClick={() => {
+        window.open(url, "_blank")
+      }}
       className="group cursor-pointer w-[22vw] h-[32vh] bg-[#1f1f1f] rounded-lg overflow-hidden flex flex-col transition hover:scale-[1.02]"
     >
       {/* Image / Preview */}
       <div className="relative w-full h-[55%] bg-neutral-800 overflow-hidden">
-        {preview}
+        <img 
+          src={`https://r2.tully.sh/scripts/preview/${id}.png`}
+          alt="Preview"
+          className="w-full h-full object-cover"
+        />
 
         {/* Date badge */}
         <div className="absolute top-3 right-3 bg-[#f5b041] text-black text-xs font-semibold px-2 py-1 rounded">
