@@ -16,13 +16,13 @@ export default function TimelineElement({
   const isRight = side === "r";
 
   const containerClasses = [
-    "w-[50%] h-8 flex flex-row",
-    isRight ? "flex-row-reverse ml-[calc(50%-3vw)]" : "ml-4",
-    isRight ? "justify-start" : "justify-end",
+    "w-full h-8 flex flex-row justify-end",
+    isRight ? "flex-row-reverse" : "",
+    isRight ? "pl-[calc(50%-16px)]" : "pr-[calc(50%-16px)]"
   ].join(" ");
 
   const contentClasses = [
-    "group relative w-[calc(100%-4vw)] h-full flex items-center cursor-pointer",
+    "group relative w-fit h-full flex items-center cursor-pointer",
     isRight ? "justify-start" : "justify-end",
     "after:w-4 after:h-px after:bg-white after:absolute after:top-1/2",
     isRight ? "after:left-0" : "after:right-0",

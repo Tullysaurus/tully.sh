@@ -34,7 +34,7 @@ export default function Home() {
             <TimelineElement side="l" text="2023" hover="Next.JS" icon={<Gem className="w-4 h-4 text-white"/>}/>
             <TimelineElement side="r" text="2024" hover="First repository" icon={<GitPullRequestArrow className="w-4 h-4 text-white"/>}/>
             <TimelineElement side="l" text="2024" hover="Scratch Clone" icon={<MessageSquareText className="w-4 h-4 text-white"/>}/>
-            <TimelineElement side="r" text="2025" hover="AWS" icon={<Database className="w-4 h-4 text-white"/>}/>
+            <TimelineElement side="r" text="2025" hover="Learned AWS" icon={<Database className="w-4 h-4 text-white"/>}/>
         </div>
       </div>
 
