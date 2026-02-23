@@ -9,8 +9,9 @@ export default function Scripts() {
     >
       <h1 className="text-5xl italic font-light">tully.sh/blog</h1>
 
-      <div className="w-[70vw] h-[70vh] grid grid-cols-3">
-      </div>
+      <p className="text-l text-center w-3/8 font-semibold">
+        Nothing to see here...
+      </p>
     </div>
   );
 }
