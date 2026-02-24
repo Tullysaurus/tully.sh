@@ -1,23 +1,27 @@
-import GridItem from "@/components/grid-item";
+'use client';
 
+import GridItem from "@/components/grid-item";
 declare global {
   var authPassed: boolean | undefined;
 }
 
-globalThis.authPassed = false;
 
 async function checkAuth(auth: string){
+  console.log("checking auth: " + auth);
+
   if (!auth){
     // open modal to authenticate
     console.log("no auth")
     return false
   }
 
-  return await fetch(`http://tully.sh/api/check?key=${auth}`).then((res) => {
+  return await fetch(`http://localhost:3000/api/check?key=${auth}`).then((res) => {
 
     if (res.ok){
+      console.log("auth passed")
       return true
     }
+    console.log("auth failed")
     // open modal to authenticate
     return false
     
@@ -27,18 +31,33 @@ async function checkAuth(auth: string){
 
 
 export default async function Scripts() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const scripts = await fetch("https://r2.tully.sh/scripts/scripts.json").then(res => res.json() as any).then((json) => {return json})
+  var authenticated = true;
 
-  const clicked = async (c: string) => {
-    "use server";
+  const scripts = await fetch("https://r2.tully.sh/scripts/scripts.json")
+      .then(res => res.json())
+      
+      
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+  const clicked =  () => {
+    if (authenticated) {
+      return new Promise((res, rej) => {
+        res("1")
+      })
+    }
 
     const cookies = Object.fromEntries(
-      c.split("; ").map(c => c.split("="))
+      document.cookie.split("; ").map(c => c.split("="))
     );  
-    const auth = cookies['auth']
-    
-    return (await checkAuth(auth)) ? "1" : "0"
+
+    const authRes = checkAuth(cookies['auth']).then((res) => {
+      authenticated = res
+      return res
+    })
+
+    return authRes
+
+    return 
   }
 
 

@@ -1,29 +1,31 @@
-import { PrismaClient } from "@prisma/client";
-import { Pool } from "pg";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { Pool } from 'pg';
+import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-declare global {
-  var prisma: PrismaClient | undefined;
-}
+// 1. Next.js Hot Reload Cache to prevent zombie connections
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
+export async function getPrisma(){
+    const { env } = await getCloudflareContext({ async: true });
 
+  // 3. Initialize Prisma globally so it survives Next.js refreshes
+    if (!globalForPrisma.prisma) {
+        const connectionString = env.HYPERDRIVE.connectionString;
+        const clientConfig: any = { connectionString };
 
-export default function getPrisma(){
-  if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL is required in environment bindings");
-  }
-  
-  // Create PostgreSQL pool
-  const pool = new Pool();
-  const adapter = new PrismaPg(pool);
-  
-  // Use global cache to prevent multiple instances during development
-  if (!global.prisma) {
-    global.prisma = new PrismaClient({
-      adapter,
-      log: ["query"],
-    });
-  }
+        // Force SSL for local tunnel to AWS RDS
+        if (connectionString.includes("localhost")) {
+            clientConfig.ssl = { rejectUnauthorized: false };
+        }
 
-  return global.prisma;
+        // 💡 THE FIX: Use pg.Pool instead of pg.Client so Prisma can multiplex queries
+        const pool = new Pool(clientConfig);
+        const adapter = new PrismaPg(pool);
+        globalForPrisma.prisma = new PrismaClient({ adapter });
+    }
+
+  const prisma = globalForPrisma.prisma;
+  return prisma;
+
 }
