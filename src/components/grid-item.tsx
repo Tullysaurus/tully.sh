@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-export default async function GridItem({
+export default function GridItem({
   title,
   description,
   id,
@@ -31,7 +31,7 @@ export default async function GridItem({
 
   return (
     <div
-      onClick={async () => {
+      onClick={() => {
         if (useAuth){
           const auth = cookies["auth"];
           const hasAuth = Object.keys(cookies).includes("auth")
@@ -42,14 +42,17 @@ export default async function GridItem({
             return
           }
   
-          const res = await fetch(`/api/check?key=${auth}`)
-          if (res.ok){
-            window.open(url, "_blank")
-          } else {
-            // open modal to authenticate
-            console.log("auth failed")
-            return
-          }
+          fetch(`/api/check?key=${auth}`).then((res) => {
+
+            if (res.ok){
+              window.open(url, "_blank")
+            } else {
+              // open modal to authenticate
+              console.log("auth failed")
+              return
+            }
+            
+          })
         } else {
           window.open(url, "_blank")
         }
