@@ -1,91 +1,78 @@
 'use client';
 
 import GridItem from "@/components/grid-item";
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-function checkAuth(auth: string, setAuthPassed: React.Dispatch<React.SetStateAction<boolean>>){
-  if (!auth){
-    // open modal to authenticate
-    setAuthPassed(false)
-    console.log("no auth")
-    return
+const defaultScripts = {
+  "chromebooks": {
+    title: "",
+    description: "",
+    id: "",
+    url: "",
+    date: 0
+  },
+  "wayground": {
+    title: "",
+    description: "",
+    id: "",
+    url: "",
+    date: 0
+  },
+  "edpuzzle": {
+    title: "",
+    description: "",
+    id: "",
+    url: "",
+    date: 0
+  },
+  "blooket": {
+    title: "",
+    description: "",
+    id: "",
+    url: "",
+    date: 0
+  },
+  "gimkit": {
+    title: "",
+    description: "",
+    id: "",
+    url: "",
+    date: 0
   }
-
-  fetch(`/api/check?key=${auth}`).then((res) => {
-
-    if (res.ok){
-      setAuthPassed(true)
-    } else {
-      // open modal to authenticate
-      setAuthPassed(false)
-    }
-  })
-}
-
-
+};
 
 export default function Scripts() {
 
-  const [scripts, setScripts] = useState({
-    "chromebooks": {
-      title: "",
-      description: "",
-      id: "",
-      url: "",
-      date: 0
+  const { data: scripts } = useQuery({
+    queryKey: ["scripts"],
+    queryFn: async () => {
+      const res = await fetch("https://r2.tully.sh/scripts/scripts.json");
+      return res.json();
     },
-    "wayground": {
-      title: "",
-      description: "",
-      id: "",
-      url: "",
-      date: 0
-    },
-    "edpuzzle": {
-      title: "",
-      description: "",
-      id: "",
-      url: "",
-      date: 0
-    },
-    "blooket": {
-      title: "",
-      description: "",
-      id: "",
-      url: "",
-      date: 0
-    },
-    "gimkit": {
-      title: "",
-      description: "",
-      id: "",
-      url: "",
-      date: 0
-    }
-  })
+    initialData: defaultScripts,
+  });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetch("https://r2.tully.sh/scripts/scripts.json").then(res => res.json() as any).then((json) => {return json}).then(json => setScripts(json));
-
-  const [authPassed, setAuthPassed] = useState(false)
-  
-  setTimeout(
-    () => {
-      if (authPassed){
-        return
-      }
-
-      console.log("checking auth")
+  const { data: authPassed } = useQuery({
+    queryKey: ["auth"],
+    queryFn: async () => {
+      if (typeof document === 'undefined') return false;
+      
       const cookies = Object.fromEntries(
         document.cookie.split("; ").map(c => c.split("="))
       );
-      const auth = cookies['auth']
+      const auth = cookies['auth'];
 
-      checkAuth(auth, setAuthPassed)
+      if (!auth) {
+        console.log("no auth");
+        return false;
+      }
+
+      const res = await fetch(`/api/check?key=${auth}`);
+      return res.ok;
     },
-    1000
-  )
-
+    initialData: false,
+    refetchInterval: (query) => (query.state.data ? false : 1000),
+  });
 
   return (
     <div
@@ -94,11 +81,11 @@ export default function Scripts() {
       <h1 className="text-5xl italic font-light">tully.sh/scripts</h1>
 
       <div className="w-[70vw] h-[70vh] grid grid-cols-3">
-        <GridItem {...scripts["chromebooks"]} enabled={authPassed}/>
-        <GridItem {...scripts["wayground"]} enabled={authPassed}/>
-        <GridItem {...scripts["edpuzzle"]} enabled={authPassed}/>
-        <GridItem {...scripts["blooket"]} enabled={authPassed}/>
-        <GridItem {...scripts["gimkit"]} enabled={authPassed}/>
+        <GridItem {...(scripts["chromebooks"] || defaultScripts["chromebooks"])} enabled={authPassed}/>
+        <GridItem {...(scripts["wayground"] || defaultScripts["wayground"])} enabled={authPassed}/>
+        <GridItem {...(scripts["edpuzzle"] || defaultScripts["edpuzzle"])} enabled={authPassed}/>
+        <GridItem {...(scripts["blooket"] || defaultScripts["blooket"])} enabled={authPassed}/>
+        <GridItem {...(scripts["gimkit"] || defaultScripts["gimkit"])} enabled={authPassed}/>
       </div>
     </div>
   );
