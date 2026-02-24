@@ -8,12 +8,14 @@ export default async function GridItem({
   id,
   url,
   date,
+  useAuth = false
 }: {
   title: string;
   description: string;
   id: string;
   url: string;
   date: number;
+  useAuth: boolean;
 }) {
   const unixTime = new Date(date);
   const dayOfMonth = unixTime.getDate();
@@ -30,22 +32,26 @@ export default async function GridItem({
   return (
     <div
       onClick={async () => {
-        const auth = cookies["auth"];
-        const hasAuth = Object.keys(cookies).includes("auth")
-
-        if (!hasAuth){
-          // open modal to authenticate
-          console.log("no auth")
-          return
-        }
-
-        const res = await fetch(`/api/check?key=${auth}`)
-        if (res.ok){
-          window.open(url, "_blank")
+        if (useAuth){
+          const auth = cookies["auth"];
+          const hasAuth = Object.keys(cookies).includes("auth")
+  
+          if (!hasAuth){
+            // open modal to authenticate
+            console.log("no auth")
+            return
+          }
+  
+          const res = await fetch(`/api/check?key=${auth}`)
+          if (res.ok){
+            window.open(url, "_blank")
+          } else {
+            // open modal to authenticate
+            console.log("auth failed")
+            return
+          }
         } else {
-          // open modal to authenticate
-          console.log("auth failed")
-          return
+          window.open(url, "_blank")
         }
 
       }}

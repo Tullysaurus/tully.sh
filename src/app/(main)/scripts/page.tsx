@@ -14,11 +14,11 @@ export default async function Scripts() {
       <h1 className="text-5xl italic font-light">tully.sh/scripts</h1>
 
       <div className="w-[70vw] h-[70vh] grid grid-cols-3">
-        <GridItem {...scripts["chromebooks"]}/>
-        <GridItem {...scripts["wayground"]}/>
-        <GridItem {...scripts["edpuzzle"]}/>
-        <GridItem {...scripts["blooket"]}/>
-        <GridItem {...scripts["gimkit"]}/>
+        <GridItem {...scripts["chromebooks"]} useAuth={true}/>
+        <GridItem {...scripts["wayground"]} useAuth={true}/>
+        <GridItem {...scripts["edpuzzle"]} useAuth={true}/>
+        <GridItem {...scripts["blooket"]} useAuth={true}/>
+        <GridItem {...scripts["gimkit"]} useAuth={true}/>
       </div>
     </div>
   );
