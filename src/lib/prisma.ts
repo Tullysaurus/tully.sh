@@ -1,5 +1,5 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import { Pool } from 'pg';
+import { Client } from 'pg';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
@@ -19,9 +19,12 @@ export async function getPrisma(){
             clientConfig.ssl = { rejectUnauthorized: false };
         }
 
-        // 💡 THE FIX: Use pg.Pool instead of pg.Client so Prisma can multiplex queries
-        const pool = new Pool(clientConfig);
-        const adapter = new PrismaPg(pool);
+        const client = new Client(clientConfig);
+
+        await client.connect();
+        
+        const adapter = new PrismaPg(client);
+        
         globalForPrisma.prisma = new PrismaClient({ adapter });
     }
 
