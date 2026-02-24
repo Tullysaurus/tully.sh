@@ -8,54 +8,24 @@ export default function GridItem({
   id,
   url,
   date,
-  useAuth = false
+  enabled = true
 }: {
-  title: string;
-  description: string;
-  id: string;
-  url: string;
-  date: number;
-  useAuth: boolean;
+  title: string | null;
+  description: string | null;
+  id: string | null;
+  url: string | null;
+  date: number | null;
+  enabled: boolean;
 }) {
-  const unixTime = new Date(date);
+  const unixTime = new Date(date || 0);
   const dayOfMonth = unixTime.getDate();
   const month = unixTime.toLocaleString('default', { month: 'short' });
-
-  const [authPassed, setAuthPassed] = useState(false)
-
 
   return (
     <div
       onClick={() => {
-        if (useAuth && !authPassed){
-          const cookies = Object.fromEntries(
-            document.cookie.split("; ").map(c => c.split("="))
-          );
-          const auth = cookies['auth']
-          console.log(auth)
-
-          if (!auth){
-            // open modal to authenticate
-            setAuthPassed(false)
-            console.log("no auth")
-            return
-          }
-  
-          fetch(`/api/check?key=${auth}`).then((res) => {
-
-            if (res.ok){
-              setAuthPassed(true)
-              window.open(url, "_blank")
-            } else {
-              // open modal to authenticate
-              setAuthPassed(false)
-              console.log("auth failed")
-              return
-            }
-
-          })
-        } else {
-          window.open(url, "_blank")
+        if (enabled){
+          window.open(url || "", "_blank")
         }
 
       }}

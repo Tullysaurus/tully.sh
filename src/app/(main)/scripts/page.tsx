@@ -1,10 +1,59 @@
-import GridItem from "@/components/grid-item";
+'use client';
 
-export default async function Scripts() {
-  const scripts : Record<string, any> = await fetch("https://r2.tully.sh/scripts/scripts.json").then(res => res.json() as Promise<Record<string, any>>).then((json) => {
-    return json
+import GridItem from "@/components/grid-item";
+import { useState } from "react";
+
+function checkAuth(auth: string, setAuthPassed: React.Dispatch<React.SetStateAction<boolean>>){
+  if (!auth){
+    // open modal to authenticate
+    setAuthPassed(false)
+    console.log("no auth")
+    return
+  }
+
+  fetch(`/api/check?key=${auth}`).then((res) => {
+
+    if (res.ok){
+      setAuthPassed(true)
+    } else {
+      // open modal to authenticate
+      setAuthPassed(false)
+    }
+  })
+}
+
+
+
+export default function Scripts() {
+
+  const [scripts, setScripts] = useState({
+    "chromebooks": {},
+    "wayground": {},
+    "edpuzzle": {},
+    "blooket": {},
+    "gimkit": {}
   })
 
+  fetch("https://r2.tully.sh/scripts/scripts.json").then(res => res.json() as Promise<Record<string, any>>).then((json) => {return json}).then(json => setScripts(json));
+
+  const [authPassed, setAuthPassed] = useState(false)
+  
+  setTimeout(
+    () => {
+      if (authPassed){
+        return
+      }
+
+      console.log("checking auth")
+      const cookies = Object.fromEntries(
+        document.cookie.split("; ").map(c => c.split("="))
+      );
+      const auth = cookies['auth']
+
+      checkAuth(auth, setAuthPassed)
+    },
+    1000
+  )
 
 
   return (
@@ -14,11 +63,11 @@ export default async function Scripts() {
       <h1 className="text-5xl italic font-light">tully.sh/scripts</h1>
 
       <div className="w-[70vw] h-[70vh] grid grid-cols-3">
-        <GridItem {...scripts["chromebooks"]} useAuth={true}/>
-        <GridItem {...scripts["wayground"]} useAuth={true}/>
-        <GridItem {...scripts["edpuzzle"]} useAuth={true}/>
-        <GridItem {...scripts["blooket"]} useAuth={true}/>
-        <GridItem {...scripts["gimkit"]} useAuth={true}/>
+        <GridItem {...scripts["chromebooks"]} enabled={authPassed}/>
+        <GridItem {...scripts["wayground"]} enabled={authPassed}/>
+        <GridItem {...scripts["edpuzzle"]} enabled={authPassed}/>
+        <GridItem {...scripts["blooket"]} enabled={authPassed}/>
+        <GridItem {...scripts["gimkit"]} enabled={authPassed}/>
       </div>
     </div>
   );
