@@ -13,7 +13,7 @@ async function checkAuth(auth: string){
     return false
   }
 
-  return await fetch(`https://tully.sh/api/check?key=${auth}`).then((res) => {
+  return await fetch(`https://api.tully.sh/check?key=${auth}`).then((res) => {
 
     if (res.ok){
       console.log("auth passed")
@@ -62,7 +62,7 @@ export default async function Scripts() {
 
       <div className="w-[70vw] h-[70vh] grid grid-cols-3">
         {
-          Object.keys(scripts as {}).map((key) => {
+          Object.keys(scripts as object).map((key) => {
             return (
               <GridItem key={key} {...scripts[key]} onclick={clicked}/>
             )

@@ -45,16 +45,6 @@
 			"bucket_name": "tully-sh"
 		}
 	],
-	"hyperdrive": [
-		{
-			"binding": "HYPERDRIVE",
-			"id": "1529916132c44e8aa3c69c44a681a425",
-			"localConnectionString": "postgresql://postgres:qUmn*eimE.B4fwIt4tm:x:)EMeMF@localhost:5432/postgres"
-		}
-	],
-	"vars": {
-		"nodejs_compat": "v2"
-	}
 
 	/**
 	 * Smart Placement
