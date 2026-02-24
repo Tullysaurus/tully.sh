@@ -1,90 +1,45 @@
-'use client';
-
 import GridItem from "@/components/grid-item";
-import { useState } from "react";
 
-function checkAuth(auth: string, setAuthPassed: React.Dispatch<React.SetStateAction<boolean>>){
+declare global {
+  var authPassed: boolean | undefined;
+}
+
+globalThis.authPassed = false;
+
+async function checkAuth(auth: string){
   if (!auth){
     // open modal to authenticate
-    setAuthPassed(false)
     console.log("no auth")
-    return
+    return false
   }
 
-  fetch(`/api/check?key=${auth}`).then((res) => {
+  return await fetch(`http://tully.sh/api/check?key=${auth}`).then((res) => {
 
     if (res.ok){
-      setAuthPassed(true)
-    } else {
-      // open modal to authenticate
-      setAuthPassed(false)
+      return true
     }
+    // open modal to authenticate
+    return false
+    
   })
 }
 
 
 
-export default function Scripts() {
-
-  const [scripts, setScripts] = useState({
-    "chromebooks": {
-      title: "",
-      description: "",
-      id: "",
-      url: "",
-      date: 0
-    },
-    "wayground": {
-      title: "",
-      description: "",
-      id: "",
-      url: "",
-      date: 0
-    },
-    "edpuzzle": {
-      title: "",
-      description: "",
-      id: "",
-      url: "",
-      date: 0
-    },
-    "blooket": {
-      title: "",
-      description: "",
-      id: "",
-      url: "",
-      date: 0
-    },
-    "gimkit": {
-      title: "",
-      description: "",
-      id: "",
-      url: "",
-      date: 0
-    }
-  })
-
+export default async function Scripts() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetch("https://r2.tully.sh/scripts/scripts.json").then(res => res.json() as any).then((json) => {return json}).then(json => setScripts(json));
+  const scripts = await fetch("https://r2.tully.sh/scripts/scripts.json").then(res => res.json() as any).then((json) => {return json})
 
-  const [authPassed, setAuthPassed] = useState(false)
-  
-  setTimeout(
-    () => {
-      if (authPassed){
-        return
-      }
+  const clicked = async (c: string) => {
+    "use server";
 
-      console.log("checking auth")
-      const cookies = Object.fromEntries(
-        document.cookie.split("; ").map(c => c.split("="))
-      );
-      const auth = cookies['auth']
-
-      checkAuth(auth, setAuthPassed)
-    },
-    1000
-  )
+    const cookies = Object.fromEntries(
+      c.split("; ").map(c => c.split("="))
+    );  
+    const auth = cookies['auth']
+    
+    return (await checkAuth(auth)) ? "1" : "0"
+  }
 
 
   return (
@@ -97,7 +52,7 @@ export default function Scripts() {
         {
           Object.keys(scripts).map((key) => {
             return (
-              <GridItem key={key} {...scripts[key]} enabled={authPassed}/>
+              <GridItem key={key} {...scripts[key]} onclick={clicked}/>
             )
           })
         }

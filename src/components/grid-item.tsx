@@ -7,14 +7,14 @@ export default function GridItem({
   id,
   url,
   date,
-  enabled = true
+  onclick,
 }: {
   title: string | null;
   description: string | null;
   id: string | null;
   url: string | null;
   date: number | null;
-  enabled: boolean;
+  onclick: (c: string) => Promise<string>;
 }) {
   const unixTime = new Date(date || 0);
   const dayOfMonth = unixTime.getDate();
@@ -23,9 +23,11 @@ export default function GridItem({
   return (
     <div
       onClick={() => {
-        if (enabled){
-          window.open(url || "", "_blank")
-        }
+        onclick(document.cookie).then((res) => {
+          if (res === "1"){
+            window.open(url || "", "_blank")
+          }
+        })
 
       }}
       className="group cursor-pointer w-[22vw] h-[32vh] bg-[#1f1f1f] rounded-lg overflow-hidden flex flex-col transition hover:scale-[1.02]"
