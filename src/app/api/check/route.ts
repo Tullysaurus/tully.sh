@@ -3,11 +3,16 @@ import getPrisma from "@/lib/prisma";
 import { env } from "cloudflare:workers";
 
 
-export default async function GET(request: Request): Promise<Response> {
+export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const key = searchParams.get("key") || "";
 
-  const prisma = getPrisma(env); // getPrisma internally reads env or global prisma
+
+  const ENV = {
+    DATABASE_URL: env.DATABASE_URL || process.env.DATABASE_URL,
+  }
+
+  const prisma = getPrisma(ENV); // getPrisma internally reads env or global prisma
 
   if (!key) {
     return new Response(JSON.stringify({ error: "Missing key parameter" }), {
