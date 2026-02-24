@@ -1,5 +1,5 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import { Client } from 'pg';
+import { Pool } from 'pg';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
@@ -19,11 +19,9 @@ export async function getPrisma(){
             clientConfig.ssl = { rejectUnauthorized: false };
         }
 
-        const client = new Client(clientConfig);
-
-        await client.connect();
-        
-        const adapter = new PrismaPg(client);
+        const pool = new Pool(clientConfig);
+      
+        const adapter = new PrismaPg(pool);
         
         globalForPrisma.prisma = new PrismaClient({ adapter });
     }

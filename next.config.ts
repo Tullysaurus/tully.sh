@@ -10,7 +10,8 @@ initOpenNextCloudflareForDev();
 
 const nextConfig: NextConfig = {
 	/* config options here */
-	devIndicators: false
+	devIndicators: false,
+	serverExternalPackages: ["@prisma/client", ".prisma/client"]
 };
 
 export default nextConfig;
