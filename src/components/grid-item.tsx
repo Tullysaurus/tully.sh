@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from "react";
 
 export default function GridItem({
   title,
@@ -21,23 +21,22 @@ export default function GridItem({
   const dayOfMonth = unixTime.getDate();
   const month = unixTime.toLocaleString('default', { month: 'short' });
 
-  const [cookies, setCookies] : any[] = useState({});
-
-  useEffect(() => {
-    setCookies(document.cookie); 
-    console.log(document.cookie);
-  }, []);
+  const [authPassed, setAuthPassed] = useState(false)
 
 
   return (
     <div
       onClick={() => {
-        if (useAuth){
-          const auth = cookies["auth"];
-          const hasAuth = Object.keys(cookies).includes("auth")
-  
-          if (!hasAuth){
+        if (useAuth && !authPassed){
+          const cookies = Object.fromEntries(
+            document.cookie.split("; ").map(c => c.split("="))
+          );
+          const auth = cookies['auth']
+          console.log(auth)
+
+          if (!auth){
             // open modal to authenticate
+            setAuthPassed(false)
             console.log("no auth")
             return
           }
@@ -45,13 +44,15 @@ export default function GridItem({
           fetch(`/api/check?key=${auth}`).then((res) => {
 
             if (res.ok){
+              setAuthPassed(true)
               window.open(url, "_blank")
             } else {
               // open modal to authenticate
+              setAuthPassed(false)
               console.log("auth failed")
               return
             }
-            
+
           })
         } else {
           window.open(url, "_blank")
