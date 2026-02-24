@@ -1,11 +1,11 @@
 // src/app/api/check/route.ts
 import getPrisma from "@/lib/prisma";
 
-export async function GET(request: Request) {
+export async function fetch(request: Request, env: { DATABASE_URL: string }) {
   const { searchParams } = new URL(request.url);
   const key = searchParams.get("key") || "";
 
-  const prisma = getPrisma(); // getPrisma internally reads env or global prisma
+  const prisma = getPrisma(env); // getPrisma internally reads env or global prisma
 
   if (!key) {
     return new Response(JSON.stringify({ error: "Missing key parameter" }), {
