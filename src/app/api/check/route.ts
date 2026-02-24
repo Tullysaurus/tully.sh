@@ -1,6 +1,9 @@
-import { getPrisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
 import * as crypto from 'crypto'
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '@prisma/client';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -16,8 +19,18 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Missing key parameter" }, { status: 400 });
   }
 
-  const prisma = await getPrisma();
+  const { env } = await getCloudflareContext({ async: true})
+  const connectionString = env.HYPERDRIVE.connectionString;
+  const clientConfig: any = { connectionString };
 
+  // Force SSL for local tunnel to AWS RDS
+  if (connectionString.includes("localhost")) {
+      clientConfig.ssl = { rejectUnauthorized: false };
+  }
+
+  const pool = new Pool(clientConfig);
+  const adapter = new PrismaPg(pool);
+  const prisma = new PrismaClient({ adapter });
 
   try {
     const keyFound = await prisma.key.findUnique({
