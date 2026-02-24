@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from "react";
+
 
 export default function GridItem({
   title,
@@ -20,11 +22,19 @@ export default function GridItem({
   const dayOfMonth = unixTime.getDate();
   const month = unixTime.toLocaleString('default', { month: 'short' });
 
+  const [auth, setAuth] = useState(false);
+
   return (
     <div
       onClick={() => {
+        
+        if (auth) {
+          window.open(url || "", "_blank")
+          return
+        }
         onclick(document.cookie).then((res) => {
           if (res === "1"){
+            setAuth(true)
             window.open(url || "", "_blank")
           }
         })

@@ -1,5 +1,3 @@
-'use client';
-
 import GridItem from "@/components/grid-item";
 declare global {
   var authPassed: boolean | undefined;
@@ -15,49 +13,44 @@ async function checkAuth(auth: string){
     return false
   }
 
-  return await fetch(`http://localhost:3000/api/check?key=${auth}`).then((res) => {
+  return await fetch(`https://tully.sh/api/check?key=${auth}`).then((res) => {
 
     if (res.ok){
       console.log("auth passed")
       return true
     }
     console.log("auth failed")
-    // open modal to authenticate
     return false
     
   })
 }
 
+interface Scripts {
+  [key: string]: {
+    title : string | null,
+    description : string | null,
+    id : string | null,
+    url: string | null,
+    date: number | null,
+  }
+}
 
 
 export default async function Scripts() {
-  var authenticated = true;
-
-  const scripts = await fetch("https://r2.tully.sh/scripts/scripts.json")
+  const scripts : Scripts = await fetch("https://r2.tully.sh/scripts/scripts.json")
       .then(res => res.json())
       
       
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-  const clicked =  () => {
-    if (authenticated) {
-      return new Promise((res, rej) => {
-        res("1")
-      })
-    }
+  const clicked = async (c: string) => {
+    "use server";
 
     const cookies = Object.fromEntries(
-      document.cookie.split("; ").map(c => c.split("="))
+      c.split("; ").map(c => c.split("="))
     );  
 
-    const authRes = checkAuth(cookies['auth']).then((res) => {
-      authenticated = res
-      return res
-    })
-
-    return authRes
-
-    return 
+    return (await checkAuth(cookies['auth'])) ? "1" : "0"
   }
 
 
@@ -69,7 +62,7 @@ export default async function Scripts() {
 
       <div className="w-[70vw] h-[70vh] grid grid-cols-3">
         {
-          Object.keys(scripts).map((key) => {
+          Object.keys(scripts as {}).map((key) => {
             return (
               <GridItem key={key} {...scripts[key]} onclick={clicked}/>
             )
