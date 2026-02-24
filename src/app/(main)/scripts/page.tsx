@@ -27,11 +27,41 @@ function checkAuth(auth: string, setAuthPassed: React.Dispatch<React.SetStateAct
 export default function Scripts() {
 
   const [scripts, setScripts] = useState({
-    "chromebooks": {},
-    "wayground": {},
-    "edpuzzle": {},
-    "blooket": {},
-    "gimkit": {}
+    "chromebooks": {
+      title: "",
+      description: "",
+      id: "",
+      url: "",
+      date: 0
+    },
+    "wayground": {
+      title: "",
+      description: "",
+      id: "",
+      url: "",
+      date: 0
+    },
+    "edpuzzle": {
+      title: "",
+      description: "",
+      id: "",
+      url: "",
+      date: 0
+    },
+    "blooket": {
+      title: "",
+      description: "",
+      id: "",
+      url: "",
+      date: 0
+    },
+    "gimkit": {
+      title: "",
+      description: "",
+      id: "",
+      url: "",
+      date: 0
+    }
   })
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,11 +94,11 @@ export default function Scripts() {
       <h1 className="text-5xl italic font-light">tully.sh/scripts</h1>
 
       <div className="w-[70vw] h-[70vh] grid grid-cols-3">
-        <GridItem title={null} description={null} id={null} url={null} date={null} {...scripts["chromebooks"]} enabled={authPassed}/>
-        <GridItem title={null} description={null} id={null} url={null} date={null} {...scripts["wayground"]} enabled={authPassed}/>
-        <GridItem title={null} description={null} id={null} url={null} date={null} {...scripts["edpuzzle"]} enabled={authPassed}/>
-        <GridItem title={null} description={null} id={null} url={null} date={null} {...scripts["blooket"]} enabled={authPassed}/>
-        <GridItem title={null} description={null} id={null} url={null} date={null} {...scripts["gimkit"]} enabled={authPassed}/>
+        <GridItem {...scripts["chromebooks"]} enabled={authPassed}/>
+        <GridItem {...scripts["wayground"]} enabled={authPassed}/>
+        <GridItem {...scripts["edpuzzle"]} enabled={authPassed}/>
+        <GridItem {...scripts["blooket"]} enabled={authPassed}/>
+        <GridItem {...scripts["gimkit"]} enabled={authPassed}/>
       </div>
     </div>
   );
