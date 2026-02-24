@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
-		"build": "DATABASE_URL=postgresql://postgres:p>CUUqqwzxye4RMZ4[9FMD~n*o~o@tully-sh.c9y8um4i2cuu.us-east-2.rds.amazonaws.com:5432/postgres npx prisma generate && next build",
+		"build": "npx prisma generate && next build",
 		"start": "next start",
 		"lint": "next lint",
 		"deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
