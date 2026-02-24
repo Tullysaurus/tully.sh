@@ -1,6 +1,15 @@
+import { prisma } from "@/lib/prisma";
+
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
-    const key = searchParams.get('key');
+    const key = searchParams.get('key') || "";
+
+    const keyFound = await prisma.key.findUnique({
+        where: {
+            key: key,
+        },
+    });
+
 
     if (!key) {
         return new Response(JSON.stringify({ error: 'Missing key parameter' }), {
@@ -10,8 +19,14 @@ export async function GET(request: Request) {
     }
 
     try {
-        return new Response(JSON.stringify({ success: true, key }), {
-            status: 200,
+        if (keyFound) {
+            return new Response(JSON.stringify({ success: true, key }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+        return new Response(JSON.stringify({ success: false, key }), {
+            status: 401,
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error) {
