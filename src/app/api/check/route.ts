@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as crypto from 'crypto'
-import { sql } from '@/lib/db';
-
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import postgres from 'postgres';
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const key = crypto
@@ -15,6 +15,11 @@ export async function GET(request: NextRequest) {
   if (!key) {
     return NextResponse.json({ error: "Missing key parameter" }, { status: 400 });
   }
+
+  const { env } = await getCloudflareContext({ async: true})
+  const connectionString = env.HYPERDRIVE.connectionString;
+  
+  const sql = postgres(connectionString);
 
   try {
     const result = await sql`SELECT EXISTS (SELECT 1 FROM keys WHERE key = ${key})`;
