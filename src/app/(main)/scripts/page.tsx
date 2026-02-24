@@ -34,7 +34,8 @@ export default function Scripts() {
     "gimkit": {}
   })
 
-  fetch("https://r2.tully.sh/scripts/scripts.json").then(res => res.json() as Promise<Record<string, any>>).then((json) => {return json}).then(json => setScripts(json));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fetch("https://r2.tully.sh/scripts/scripts.json").then(res => res.json() as any).then((json) => {return json}).then(json => setScripts(json));
 
   const [authPassed, setAuthPassed] = useState(false)
   
@@ -63,11 +64,11 @@ export default function Scripts() {
       <h1 className="text-5xl italic font-light">tully.sh/scripts</h1>
 
       <div className="w-[70vw] h-[70vh] grid grid-cols-3">
-        <GridItem {...scripts["chromebooks"]} enabled={authPassed}/>
-        <GridItem {...scripts["wayground"]} enabled={authPassed}/>
-        <GridItem {...scripts["edpuzzle"]} enabled={authPassed}/>
-        <GridItem {...scripts["blooket"]} enabled={authPassed}/>
-        <GridItem {...scripts["gimkit"]} enabled={authPassed}/>
+        <GridItem title={null} description={null} id={null} url={null} date={null} {...scripts["chromebooks"]} enabled={authPassed}/>
+        <GridItem title={null} description={null} id={null} url={null} date={null} {...scripts["wayground"]} enabled={authPassed}/>
+        <GridItem title={null} description={null} id={null} url={null} date={null} {...scripts["edpuzzle"]} enabled={authPassed}/>
+        <GridItem title={null} description={null} id={null} url={null} date={null} {...scripts["blooket"]} enabled={authPassed}/>
+        <GridItem title={null} description={null} id={null} url={null} date={null} {...scripts["gimkit"]} enabled={authPassed}/>
       </div>
     </div>
   );
