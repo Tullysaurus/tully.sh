@@ -1,6 +1,6 @@
 import { getPrisma } from "@/lib/prisma";
 
-export async function GET(request: Request, env: any) {
+export async function fetch(request: Request, env: any) {
     const { searchParams } = new URL(request.url);
     const key = searchParams.get('key') || "";
 
