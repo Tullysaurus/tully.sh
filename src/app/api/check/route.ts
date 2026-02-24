@@ -1,8 +1,10 @@
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 
-export async function GET(request: Request) {
+export async function GET(request: Request, env: any) {
     const { searchParams } = new URL(request.url);
     const key = searchParams.get('key') || "";
+
+    const prisma = getPrisma(env)
 
     const keyFound = await prisma.key.findUnique({
         where: {

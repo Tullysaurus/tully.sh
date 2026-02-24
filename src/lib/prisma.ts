@@ -1,20 +1,31 @@
 import { PrismaClient } from "@prisma/client";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
-import 'dotenv/config'
 
 declare global {
   var prisma: PrismaClient | undefined;
 }
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
+/**
+ * Initialize Prisma with a database URL from the environment.
+ * In Cloudflare Workers, the URL comes from the `env` argument, not process.env.
+ */
+export function getPrisma(env: { DATABASE_URL: string }) {
+  if (!env.DATABASE_URL) {
+    throw new Error("DATABASE_URL is required in environment bindings");
+  }
 
-export const prisma =
-  global.prisma ||
-  new PrismaClient({
-    adapter,
-    log: ["query"]
-  });
+  // Create PostgreSQL pool
+  const pool = new Pool({ connectionString: env.DATABASE_URL });
+  const adapter = new PrismaPg(pool);
 
-if (process.env.NODE_ENV !== "production") global.prisma = prisma;
+  // Use global cache to prevent multiple instances during development
+  if (!global.prisma) {
+    global.prisma = new PrismaClient({
+      adapter,
+      log: ["query"],
+    });
+  }
+
+  return global.prisma;
+}
