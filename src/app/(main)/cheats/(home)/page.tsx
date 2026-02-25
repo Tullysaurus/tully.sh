@@ -71,7 +71,7 @@ export default function CheatsHome() {
         </div>
       </div>
       <p className="reveal-up delay-4 text-center text-xs text-neutral-500">
-        Some tools require a valid access key.
+        All tools require a valid access key.
       </p>
     </div>
   );
