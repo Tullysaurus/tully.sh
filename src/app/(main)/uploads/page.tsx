@@ -3,6 +3,7 @@
 import UploadModal from "@/components/upload-modal";
 import { useState, useEffect, useCallback } from "react";
 import { Search, Plus, FileText, Download } from "lucide-react";
+import AuthModal from "@/components/auth-modal";
 
 type AssignmentType = "ASSIGNMENT" | "TEST" | "QUIZ" | "NOTES";
 
@@ -27,6 +28,7 @@ interface Upload {
 
 export default function Uploads() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const [filters, setFilters] = useState<UploadFilter>({
     name: "",
     type: "",
@@ -71,6 +73,28 @@ export default function Uploads() {
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const checkAuth = async (cookieString: string) => {
+    const cookies = Object.fromEntries(cookieString.split("; ").map((c) => c.split("=")));
+    const key = cookies['auth'];
+    if (!key) return "0";
+    
+    try {
+      const res = await fetch(`https://api.tully.sh/check?key=${key}`);
+      return res.ok ? "1" : "0";
+    } catch (e) {
+      return "0";
+    }
+  };
+
+  const handleDownload = async (id: string) => {
+    const isAuth = await checkAuth(document.cookie);
+    if (isAuth === "1") {
+      window.open(`https://r2.tully.sh/uploads/${id}.zip`, "_blank");
+    } else {
+      setAuthModalOpen(true);
+    }
   };
 
   return (
@@ -170,15 +194,13 @@ export default function Uploads() {
                     <p>Hour: {upload.hour}</p>
                     <p className="text-[10px] text-neutral-600 mt-1">{new Date(upload.createdAt).toLocaleDateString()}</p>
                   </div>
-                  <a 
-                    href={`https://r2.tully.sh/uploads/${upload.id}.zip`}
-                    className="mt-auto flex items-center justify-center gap-2 w-full bg-neutral-800 hover:bg-[#f5b041] hover:text-black text-neutral-300 py-2 rounded text-sm font-medium transition-colors"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button 
+                    onClick={() => handleDownload(upload.id)}
+                    className="mt-auto flex items-center justify-center gap-2 w-full bg-neutral-800 hover:bg-[#f5b041] hover:text-black text-neutral-300 py-2 rounded text-sm font-medium transition-colors cursor-pointer"
                   >
                     <Download size={16} />
                     Download
-                  </a>
+                  </button>
                 </div>
               ))}
             </div>
@@ -194,6 +216,10 @@ export default function Uploads() {
           fetchUploads();
         }} 
       />
+      {authModalOpen && <AuthModal 
+        onClose={() => setAuthModalOpen(false)} 
+        checkAuth={checkAuth} 
+      />}
     </div>
   );
 }
