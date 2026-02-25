@@ -51,8 +51,8 @@ export default async function ScriptsPage() {
   };
 
   // Client-side prompt logic
-  const requestAuth = () => {
-    "use client";
+  const requestAuth = (window: Window) => {
+    "use server";
     const key = window.prompt("Please enter your access key:");
     if (key) {
       document.cookie = `auth=${encodeURIComponent(key)}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;

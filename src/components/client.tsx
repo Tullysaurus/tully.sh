@@ -7,7 +7,7 @@ export default function Client({
     callback,
     run
 }: {
-    fn: (...props: Array<unknown>) => unknown // Changed void to any to allow returning data
+    fn: (window: Window) => unknown // Changed void to any to allow returning data
     callback: (res: unknown) => void | null,
     run: boolean
 }) {
@@ -18,7 +18,7 @@ export default function Client({
                 try {
                     // Execute the function. We wrap it in Promise.resolve 
                     // in case fn is not async but returns a value.
-                    const result = await fn();
+                    const result = await fn(window);
                     if (callback){
                         callback(result);
                     }
