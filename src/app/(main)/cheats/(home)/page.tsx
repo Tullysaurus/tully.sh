@@ -13,13 +13,13 @@ export default function CheatsHome() {
     {
       id: "uploads",
       title: "Uploads Exchange",
-      description: "Browse and preview shared upload archives fast.",
+      description: "Share and view answers to full assignments and tests",
       tone: "bg-[#23211e] border-[#5b4f34]",
     },
     {
       id: "proxy",
-      title: "Proxy Experiments",
-      description: "In-progress routing and network bypass utilities.",
+      title: "Web Proxy",
+      description: "Built-in web proxy with network bypass utilities.",
       tone: "bg-[#1f2026] border-[#3f4665]",
     },
     {
@@ -41,7 +41,7 @@ export default function CheatsHome() {
       </p>
       <p className="reveal-up delay-2 max-w-3xl text-center text-sm text-neutral-300 sm:text-base">
         This section is focused on practical workflows: quickly accessing shared scripts,
-        previewing upload bundles, and testing features before they get promoted into core projects.
+        viewing and sharing answers to assignments, and browsing the internet without restrictions.
       </p>
       <div className="reveal-up delay-3 flex flex-wrap items-center justify-center gap-3">
         <Link
