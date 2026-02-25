@@ -37,7 +37,7 @@ export default function CheatsHome() {
       <h1 className="reveal-up text-center text-4xl italic font-light sm:text-5xl">tully.sh/<span className="text-[#FFC17B]">cheats</span></h1>
 
       <p className="reveal-up delay-1 max-w-2xl text-center text-base font-semibold sm:text-lg">
-        A private toolkit area for rapid utilities, script drops, and experimental tools.
+        A private toolkit area for easy-to-use utilities, script, and experimental tools.
       </p>
       <p className="reveal-up delay-2 max-w-3xl text-center text-sm text-neutral-300 sm:text-base">
         This section is focused on practical workflows: quickly accessing shared scripts,
