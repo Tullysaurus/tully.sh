@@ -23,7 +23,7 @@ export default function AuthModal({
 
     try {
       // Check auth using the server action
-      const res = await checkAuth(`auth=${encodeURIComponent(key)}`);
+      const res = await checkAuth(key);
 
       if (res) {
         // Set cookie only on success
