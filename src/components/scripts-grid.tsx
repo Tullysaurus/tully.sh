@@ -25,7 +25,7 @@ export default function ScriptsGrid({
   const handleItemClick = async (cookieString: string) => {
     const result = await checkAuth(Object.fromEntries(cookieString.split("; ").map((c) => c.split("=")))["auth"] || "");
     // If the server action returns "0", it means not authorized
-    if (result) {
+    if (!result) {
       setShowModal(true);
     }
     return result;
