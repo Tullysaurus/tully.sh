@@ -60,7 +60,7 @@ export default function AuthModal({
         <div className="text-center">
           <h2 className="text-xl font-bold text-[#f5b041] mb-2">Enter Access Key</h2>
           <p className="text-neutral-400 text-sm mt-1">
-            Keys are purchasable in person for <span className="text-[#f5b041] font-semibold">$5</span> cash
+            Keys are purchasable in-person for <span className="text-[#f5b041] font-semibold">$5</span> cash
           </p>
         </div>
 
