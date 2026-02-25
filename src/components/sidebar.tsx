@@ -76,7 +76,7 @@ export default function Sidebar() {
   }, [pathname, showAuthModal]);
 
   return (
-    <aside className="sticky top-0 z-30 w-full border-b border-neutral-800 bg-[#0f0f0f] px-4 py-3 lg:flex lg:h-screen lg:w-64 lg:min-w-64 lg:flex-col lg:border-b-0 lg:border-r lg:px-6 lg:py-8">
+    <aside className="relative sticky top-0 z-30 w-full border-b border-neutral-800 bg-[#0f0f0f] px-4 py-3 lg:flex lg:h-screen lg:w-64 lg:min-w-64 lg:flex-col lg:border-b-0 lg:border-r lg:px-6 lg:py-8">
       <h1 className="mb-3 flex h-fit w-full justify-center lg:mb-8">
         <Link href="/" className="flex h-fit w-fit justify-center text-2xl italic font-bold lg:text-4xl">
           <p>tully</p>
@@ -96,13 +96,6 @@ export default function Sidebar() {
       </nav>
 
       <div className="mt-3 flex w-full flex-col justify-center gap-3 lg:mt-auto">
-        {!pathname.startsWith("/cheats") && (
-          <a
-            href="/cheats"
-            aria-label="Go to cheats"
-            className="h-3 w-8 self-start rounded-sm bg-white/10 hover:bg-white/20 active:bg-white/30 cursor-pointer transition-colors"
-          />
-        )}
         {pathname.startsWith("/cheats") && (
           <button
             onClick={() => {
@@ -142,6 +135,14 @@ export default function Sidebar() {
         </div>
         <p className="hidden text-center text-sm lg:block">(c) 2026 Tully</p>
       </div>
+
+      {!pathname.startsWith("/cheats") && (
+        <a
+          href="/cheats"
+          aria-label="Go to cheats"
+          className="absolute bottom-2 left-2 h-3 w-8 rounded-sm bg-white/10 transition-colors hover:bg-white/20 active:bg-white/30 cursor-pointer lg:bottom-3 lg:left-3"
+        />
+      )}
 
       {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
     </aside>
