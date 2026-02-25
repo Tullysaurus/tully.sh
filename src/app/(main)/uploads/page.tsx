@@ -250,7 +250,7 @@ export default function Uploads() {
         }} 
         onSuccess={() => {
           setModalOpen(false);
-          fetchUploads();
+          window.location.reload();
         }} 
       />
       {authModalOpen && <AuthModal 
