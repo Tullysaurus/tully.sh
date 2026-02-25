@@ -152,12 +152,18 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Hour/Period</label>
-                <input
+                <select
                   name="hour"
-                  placeholder="e.g. 3rd"
+                  value={formData.hour}
                   onChange={handleInputChange}
                   className="bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white text-sm focus:border-[#f5b041] outline-none"
-                />
+                >
+                  <option value="" disabled>Select Hour</option>
+                  {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+                    <option key={num} value={num.toString()}>{num}</option>
+                  ))}
+                  <option value="Other">Other</option>
+                </select>
               </div>
             </div>
 
