@@ -30,7 +30,7 @@ export default async function ScriptsPage() {
       cookieString.split("; ").map((c) => c.split("="))
     );
     const authResult = await checkAuth(cookiesObj["auth"]);
-    return authResult ? "1" : "0";
+    return authResult;
   };
 
   return (
