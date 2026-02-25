@@ -3,6 +3,15 @@
 import GridItem from "@/components/grid-item";
 
 export default function Blog() {
+  const rowDelayClass = (index: number) => {
+    const row = Math.floor(index / 3);
+    if (row <= 0) return "";
+    if (row === 1) return "delay-1";
+    if (row === 2) return "delay-2";
+    if (row === 3) return "delay-3";
+    return "delay-4";
+  };
+
   const loremPosts = [
     {
       id: "201",
@@ -56,16 +65,17 @@ export default function Blog() {
         Lorem ipsum posts and writeups.
       </p>
       <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {loremPosts.map((item) => (
-          <GridItem
-            key={item.id}
-            id={item.id}
-            title={item.title}
-            description={item.description}
-            url={item.url}
-            date={item.date}
-            onclick={() => Promise.resolve(true)}
-          />
+        {loremPosts.map((item, index) => (
+          <div key={item.id} className={`reveal-up ${rowDelayClass(index)}`}>
+            <GridItem
+              id={item.id}
+              title={item.title}
+              description={item.description}
+              url={item.url}
+              date={item.date}
+              onclick={() => Promise.resolve(true)}
+            />
+          </div>
         ))}
       </div>
     </div>

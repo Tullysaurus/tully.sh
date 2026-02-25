@@ -3,6 +3,15 @@
 import GridItem from "@/components/grid-item";
 
 export default function Projects() {
+  const rowDelayClass = (index: number) => {
+    const row = Math.floor(index / 3);
+    if (row <= 0) return "";
+    if (row === 1) return "delay-1";
+    if (row === 2) return "delay-2";
+    if (row === 3) return "delay-3";
+    return "delay-4";
+  };
+
   const loremProjects = [
     {
       id: "101",
@@ -55,16 +64,17 @@ export default function Projects() {
         Lorem ipsum projects and experiments.
       </p>
       <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {loremProjects.map((item) => (
-          <GridItem
-            key={item.id}
-            id={item.id}
-            title={item.title}
-            description={item.description}
-            url={item.url}
-            date={item.date}
-            onclick={() => Promise.resolve(true)}
-          />
+        {loremProjects.map((item, index) => (
+          <div key={item.id} className={`reveal-up ${rowDelayClass(index)}`}>
+            <GridItem
+              id={item.id}
+              title={item.title}
+              description={item.description}
+              url={item.url}
+              date={item.date}
+              onclick={() => Promise.resolve(true)}
+            />
+          </div>
         ))}
       </div>
     </div>
