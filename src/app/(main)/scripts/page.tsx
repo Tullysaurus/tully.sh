@@ -51,7 +51,7 @@ export default async function ScriptsPage() {
   };
 
   // Client-side prompt logic
-  const requestAuth = (window: Window) => {
+  const requestAuth = async (window: Window) => {
     "use server";
     const key = window.prompt("Please enter your access key:");
     if (key) {
