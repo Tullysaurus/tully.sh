@@ -16,7 +16,7 @@ export default function GridItem({
   id: string | null;
   url: string | null;
   date: number | null;
-  onclick: (c: string) => Promise<string>;
+  onclick: (c: string) => Promise<boolean>;
 }) {
   const unixTime = new Date(date || 0);
   const dayOfMonth = unixTime.getDate();
@@ -33,7 +33,7 @@ export default function GridItem({
           return
         }
         onclick(document.cookie).then((res) => {
-          if (res === "1"){
+          if (res){
             setAuth(true)
             window.open(url || "", "_blank")
           }
