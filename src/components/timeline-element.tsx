@@ -15,31 +15,41 @@ export default function TimelineElement({
 }: TimelineElementProps) {
   const isRight = side === "r";
 
-  const containerClasses = [
-    "flex w-full items-center gap-3",
-    "md:h-8 md:flex-row md:justify-end",
-    isRight ? "md:flex-row-reverse md:pl-[calc(50%-16px)]" : "md:pr-[calc(50%-16px)]",
-  ].join(" ");
-
-  const contentClasses = [
-    "group relative flex h-full w-fit cursor-pointer items-center",
-    "md:after:absolute md:after:top-1/2 md:after:h-px md:after:w-4 md:after:bg-white",
-    isRight ? "md:justify-start md:after:left-0" : "md:justify-end md:after:right-0",
-  ].join(" ");
-
-  const paddingClass = isRight ? "md:pl-5" : "md:pr-5";
-
   return (
-    <div className={containerClasses}>
-      <div className="h-8 w-8 rounded-full border-2 border-white bg-background flex items-center justify-center">
-        {icon}
-      </div>
-      <div className={contentClasses}>
-        <div className={paddingClass}>
+    <>
+      <div className="flex w-full items-center gap-3 pl-0 lg:hidden">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-white bg-background">
+          {icon}
+        </div>
+        <div className="group relative min-w-0 cursor-pointer">
           <div className="text-sm group-hover:hidden">{text}</div>
           <div className="hidden text-sm group-hover:block">{hover}</div>
         </div>
       </div>
-    </div>
+
+      <div
+        className={
+          "hidden w-full items-center lg:flex " +
+          (isRight
+            ? "justify-start pl-[calc(50%-16px)]"
+            : "flex-row-reverse justify-end pr-[calc(50%-16px)]")
+        }
+      >
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-white bg-background">
+          {icon}
+        </div>
+        <div
+          className={
+            "group relative cursor-pointer " +
+            (isRight
+              ? "pl-5 before:absolute before:left-0 before:top-1/2 before:h-px before:w-4 before:-translate-y-1/2 before:bg-white"
+              : "pr-5 before:absolute before:right-0 before:top-1/2 before:h-px before:w-4 before:-translate-y-1/2 before:bg-white")
+          }
+        >
+          <div className="text-sm group-hover:hidden">{text}</div>
+          <div className="hidden text-sm group-hover:block">{hover}</div>
+        </div>
+      </div>
+    </>
   );
 }

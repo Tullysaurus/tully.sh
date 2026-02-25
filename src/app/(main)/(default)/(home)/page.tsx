@@ -1,7 +1,66 @@
-import TimelineElement from "@/components/timeline-element";
+import Timeline from "@/components/timeline";
 import { Code, Database, Gem, Github, GitPullRequestArrow, Laptop, MessageSquareText, Sword } from "lucide-react";
 
 export default function Home() {
+  const timelineItems = [
+    {
+      id: "2017",
+      period: "2017",
+      title: "My first laptop",
+      details: "Started experimenting with software and basic scripting.",
+      icon: <Laptop className="h-4 w-4 text-white" />,
+    },
+    {
+      id: "2018-cn",
+      period: "2018",
+      title: "Joined Code Ninjas",
+      details: "Built confidence by shipping small projects consistently.",
+      icon: <Sword className="h-4 w-4 text-white" />,
+    },
+    {
+      id: "2018-2022",
+      period: "2018-2022",
+      title: "Explored many languages",
+      details: "Worked across multiple stacks and learned fundamentals deeply.",
+      icon: <Code className="h-4 w-4 text-white" />,
+    },
+    {
+      id: "2023-gh",
+      period: "2023",
+      title: "Joined GitHub",
+      details: "Started publishing code publicly and collaborating in the open.",
+      icon: <Github className="h-4 w-4 text-white" />,
+    },
+    {
+      id: "2023-next",
+      period: "2023",
+      title: "Built with Next.js",
+      details: "Moved into full-stack web apps and better deployment workflows.",
+      icon: <Gem className="h-4 w-4 text-white" />,
+    },
+    {
+      id: "2024-repo",
+      period: "2024",
+      title: "First repository launch",
+      details: "Started releasing polished, reusable project code.",
+      icon: <GitPullRequestArrow className="h-4 w-4 text-white" />,
+    },
+    {
+      id: "2024-scratch",
+      period: "2024",
+      title: "Scratch clone project",
+      details: "Shipped a larger product-style app with real user workflows.",
+      icon: <MessageSquareText className="h-4 w-4 text-white" />,
+    },
+    {
+      id: "2025-aws",
+      period: "2025",
+      title: "Learned AWS",
+      details: "Expanded into cloud infra and production deployment patterns.",
+      icon: <Database className="h-4 w-4 text-white" />,
+    },
+  ];
+
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-8 px-4 pb-10 pt-10 lg:pt-16">
       <h1 className="text-center text-4xl italic font-light sm:text-5xl">tully.sh/</h1>
@@ -24,15 +83,8 @@ export default function Home() {
             in the learning environment.
           </p>
         </div>
-        <div className="relative h-fit w-full min-h-[10vh] flex flex-col gap-4 lg:w-2/5 lg:after:absolute lg:after:left-1/2 lg:after:top-1 lg:after:z-[-1] lg:after:h-[39vh] lg:after:w-px lg:after:rounded-full lg:after:border-white lg:after:bg-white">
-            <TimelineElement side="l" text="2017" hover="My first laptop" icon={<Laptop className="w-4 h-4 text-white"/>}/>
-            <TimelineElement side="r" text="2018" hover="Joined Code ninjas" icon={<Sword className="w-4 h-4 text-white"/>}/>
-            <TimelineElement side="l" text="2018 - 2022" hover="Misc. languages" icon={<Code className="w-4 h-4 text-white"/>}/>
-            <TimelineElement side="r" text="2023" hover="Joined Github" icon={<Github className="w-4 h-4 text-white"/>}/>
-            <TimelineElement side="l" text="2023" hover="Next.JS" icon={<Gem className="w-4 h-4 text-white"/>}/>
-            <TimelineElement side="r" text="2024" hover="First repository" icon={<GitPullRequestArrow className="w-4 h-4 text-white"/>}/>
-            <TimelineElement side="l" text="2024" hover="Scratch Clone" icon={<MessageSquareText className="w-4 h-4 text-white"/>}/>
-            <TimelineElement side="r" text="2025" hover="Learned AWS" icon={<Database className="w-4 h-4 text-white"/>}/>
+        <div className="h-fit w-full lg:w-2/5">
+            <Timeline items={timelineItems} />
         </div>
       </div>
     </div>
