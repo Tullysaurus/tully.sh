@@ -243,7 +243,6 @@ export default function Uploads() {
       />
       {authModalOpen && <AuthModal 
         onClose={() => setAuthModalOpen(false)} 
-        checkAuth={checkAuth} 
       />}
     </div>
   );

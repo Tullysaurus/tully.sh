@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { BugPlay, CloudUpload, Github, House, Megaphone, Server, Terminal, Key } from 'lucide-react';
 import SocialLink from './social-link';
 import AuthModal from './auth-modal';
-import checkAuth from '@/lib/auth';
 
 export default function Sidebar() {
     const pathname = usePathname();
@@ -64,7 +63,7 @@ export default function Sidebar() {
                     © 2026 Tully
                 </p>
             </div>
-            {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} checkAuth={checkAuth} />}
+            {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
         </div>
     )
 }

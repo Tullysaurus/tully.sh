@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import { X, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import checkAuth from "@/lib/auth";
 
 export default function AuthModal({
   onClose,
-  checkAuth,
 }: {
   onClose: () => void;
-  checkAuth: (cookieString: string) => Promise<boolean>;
 }) {
   const [key, setKey] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
