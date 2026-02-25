@@ -35,7 +35,7 @@ export default async function ScriptsPage() {
 
   return (
     <div className="flex flex-col min-h-screen w-full items-center pt-[10vh] gap-8">
-      <h1 className="text-5xl italic font-light">tully.sh/scripts</h1>
+      <h1 className="text-5xl italic font-light">tully.sh/cheats/<span className="text-[#FFC17B]">scripts</span></h1>
       <ScriptsGrid scripts={scripts} />
     </div>
   );

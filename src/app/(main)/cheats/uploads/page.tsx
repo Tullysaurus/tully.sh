@@ -112,7 +112,7 @@ export default function Uploads() {
     <div className="flex flex-col min-h-screen w-full items-center pt-[10vh] gap-8 px-4 pb-10">
       <div className="w-full max-w-6xl flex flex-col gap-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-4xl italic font-light">Uploads Browser</h1>
+          <h1 className="text-4xl italic font-light">tully.sh/cheats/<span className="text-[#FFC17B]">uploads</span></h1>
           <button
             onClick={() => setModalOpen(true)}
             className="bg-[#f5b041] hover:bg-[#d49b3b] text-black font-bold py-2 px-4 rounded flex items-center gap-2 transition-colors cursor-pointer"
