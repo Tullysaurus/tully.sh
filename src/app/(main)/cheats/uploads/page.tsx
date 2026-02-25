@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Download, FileText, Plus, Search, Trash2 } from "lucide-react";
+import JSZip from "jszip";
+import { ChevronLeft, ChevronRight, Download, Eye, FileText, Loader2, Plus, Search, Trash2, X } from "lucide-react";
 import checkAuth from "@/lib/auth";
 import { useModals } from "@/lib/modals";
 
@@ -27,6 +28,15 @@ interface Upload {
   deletable: boolean;
 }
 
+type PreviewImage = {
+  name: string;
+  url: string;
+};
+
+function revokePreviewImages(images: PreviewImage[]) {
+  images.forEach((img) => URL.revokeObjectURL(img.url));
+}
+
 export default function Uploads() {
   const [filters, setFilters] = useState<UploadFilter>({
     name: "",
@@ -37,7 +47,20 @@ export default function Uploads() {
   });
   const [uploads, setUploads] = useState<Upload[]>([]);
   const [loading, setLoading] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState("");
+  const [previewImages, setPreviewImages] = useState<PreviewImage[]>([]);
+  const [previewIndex, setPreviewIndex] = useState(0);
+  const [previewZipUrl, setPreviewZipUrl] = useState("");
+  const [previewZipName, setPreviewZipName] = useState("upload.zip");
   const { openAuthModal, openUploadModal } = useModals();
+
+  useEffect(() => {
+    return () => {
+      revokePreviewImages(previewImages);
+    };
+  }, [previewImages]);
 
   const fetchUploads = useCallback(async () => {
     setLoading(true);
@@ -76,14 +99,84 @@ export default function Uploads() {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleDownload = async (id: string) => {
+  const closePreview = () => {
+    setPreviewOpen(false);
+    setPreviewLoading(false);
+    setPreviewError("");
+    setPreviewIndex(0);
+    setPreviewZipUrl("");
+    setPreviewZipName("upload.zip");
+    setPreviewImages((prev) => {
+      revokePreviewImages(prev);
+      return [];
+    });
+  };
+
+  const handlePreview = async (upload: Upload) => {
     const key = Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))["auth"] || "";
     const isAuth = await checkAuth(key);
-    if (isAuth) {
-      window.open(`https://r2.tully.sh/uploads/${id}.zip`, "_blank");
-    } else {
+    if (!isAuth) {
       openAuthModal();
+      return;
     }
+
+    const zipUrl = `https://r2.tully.sh/uploads/${upload.id}.zip`;
+    setPreviewOpen(true);
+    setPreviewLoading(true);
+    setPreviewError("");
+    setPreviewIndex(0);
+    setPreviewZipUrl(zipUrl);
+    setPreviewZipName(`${upload.name || "upload"}.zip`);
+    setPreviewImages((prev) => {
+      revokePreviewImages(prev);
+      return [];
+    });
+
+    try {
+      const res = await fetch(zipUrl);
+      if (!res.ok) {
+        throw new Error("Failed to fetch upload archive.");
+      }
+      const zipBlob = await res.blob();
+      const zip = await JSZip.loadAsync(zipBlob);
+      const pngEntries = Object.values(zip.files).filter(
+        (file) => !file.dir && file.name.toLowerCase().endsWith(".png"),
+      );
+
+      if (pngEntries.length === 0) {
+        throw new Error("No PNG files were found in this archive.");
+      }
+
+      const images = await Promise.all(
+        pngEntries.map(async (file) => {
+          const blob = await file.async("blob");
+          return {
+            name: file.name.split("/").pop() || file.name,
+            url: URL.createObjectURL(blob),
+          };
+        }),
+      );
+
+      setPreviewImages(images);
+    } catch (error) {
+      setPreviewError(error instanceof Error ? error.message : "Failed to open upload preview.");
+    } finally {
+      setPreviewLoading(false);
+    }
+  };
+
+  const showPrev = () => {
+    setPreviewIndex((prev) => {
+      if (previewImages.length === 0) return 0;
+      return (prev - 1 + previewImages.length) % previewImages.length;
+    });
+  };
+
+  const showNext = () => {
+    setPreviewIndex((prev) => {
+      if (previewImages.length === 0) return 0;
+      return (prev + 1) % previewImages.length;
+    });
   };
 
   const handleDelete = async (id: string) => {
@@ -210,18 +303,18 @@ export default function Uploads() {
                   </h3>
                   <div className="mb-4 flex flex-col gap-1 text-xs text-neutral-500">
                     <p className="truncate">
-                      {upload.teacher} • {upload.subject}
+                      {upload.teacher} - {upload.subject}
                     </p>
                     <p>Hour: {upload.hour}</p>
                     <p className="mt-1 text-[10px] text-neutral-600">{new Date(upload.createdAt).toLocaleDateString()}</p>
                   </div>
                   <div className="mt-auto flex w-full gap-2">
                     <button
-                      onClick={() => handleDownload(upload.id)}
+                      onClick={() => handlePreview(upload)}
                       className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded bg-neutral-800 py-2 text-sm font-medium text-neutral-300 transition-colors hover:bg-[#f5b041] hover:text-black"
                     >
-                      <Download size={16} />
-                      Download
+                      <Eye size={16} />
+                      View
                     </button>
                     {upload.deletable && (
                       <button
@@ -240,6 +333,76 @@ export default function Uploads() {
         </div>
       </div>
 
+      {previewOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+          <div className="relative flex h-[90vh] w-full max-w-5xl flex-col rounded-lg border border-neutral-700 bg-[#171717] p-4">
+            <button
+              onClick={closePreview}
+              className="absolute right-3 top-3 z-20 rounded bg-black/30 p-1 text-neutral-300 transition-colors hover:text-white"
+              aria-label="Close preview"
+            >
+              <X size={18} />
+            </button>
+
+            <a
+              href={previewZipUrl}
+              download={previewZipName}
+              className="absolute left-3 top-3 z-20 flex items-center gap-1 rounded bg-black/30 px-2 py-1 text-xs text-neutral-300 transition-colors hover:text-white"
+            >
+              <Download size={14} />
+              ZIP
+            </a>
+
+            {previewLoading ? (
+              <div className="flex h-full flex-col items-center justify-center gap-3 text-neutral-300">
+                <Loader2 className="animate-spin" size={28} />
+                <p>Loading and extracting images...</p>
+              </div>
+            ) : previewError ? (
+              <div className="flex h-full flex-col items-center justify-center gap-4 text-center text-neutral-300">
+                <p className="text-red-400">{previewError}</p>
+                <button
+                  onClick={closePreview}
+                  className="rounded bg-neutral-800 px-3 py-2 text-sm transition-colors hover:bg-neutral-700"
+                >
+                  Close
+                </button>
+              </div>
+            ) : previewImages.length > 0 ? (
+              <>
+                <div className="flex h-full items-center justify-center gap-3 pt-6">
+                  <button
+                    onClick={showPrev}
+                    className="rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft size={22} />
+                  </button>
+
+                  <div className="flex h-full min-h-0 flex-1 items-center justify-center overflow-hidden rounded-md border border-neutral-800 bg-[#111]">
+                    <img
+                      src={previewImages[previewIndex].url}
+                      alt={previewImages[previewIndex].name}
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  </div>
+
+                  <button
+                    onClick={showNext}
+                    className="rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight size={22} />
+                  </button>
+                </div>
+                <div className="pt-3 text-center text-sm text-neutral-300">
+                  {previewIndex + 1} / {previewImages.length}
+                </div>
+              </>
+            ) : null}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

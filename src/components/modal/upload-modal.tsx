@@ -4,6 +4,26 @@ import { useState } from "react";
 import { X, Loader2, CheckCircle, AlertCircle, Upload as UploadIcon } from "lucide-react";
 import JSZip from "jszip";
 
+const ALLOWED_IMAGE_EXTENSIONS = new Set([
+  "jpg",
+  "jpeg",
+  "png",
+  "gif",
+  "webp",
+  "bmp",
+  "svg",
+  "tif",
+  "tiff",
+  "heic",
+  "heif",
+  "avif",
+]);
+
+function isAllowedImageFile(file: File) {
+  const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
+  return file.type.startsWith("image/") || ALLOWED_IMAGE_EXTENSIONS.has(ext);
+}
+
 interface UploadModalProps {
   onClose: () => void;
   onSuccess?: () => void;
@@ -31,11 +51,21 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
+      const imageFiles = newFiles.filter(isAllowedImageFile);
+      const rejectedCount = newFiles.length - imageFiles.length;
+
       setFiles(prevFiles => {
         const existingFiles = new Set(prevFiles.map(f => `${f.name}-${f.size}`));
-        const uniqueNewFiles = newFiles.filter(f => !existingFiles.has(`${f.name}-${f.size}`));
+        const uniqueNewFiles = imageFiles.filter(f => !existingFiles.has(`${f.name}-${f.size}`));
         return [...prevFiles, ...uniqueNewFiles];
       });
+
+      if (rejectedCount > 0) {
+        setError("Only image files are allowed (including .heic/.heif).");
+      } else {
+        setError("");
+      }
+
       // Reset the input value to allow selecting the same file again after removing it
       e.target.value = '';
     }
@@ -49,6 +79,10 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
     e.preventDefault();
     if (files.length === 0) {
       setError("Please select at least one file.");
+      return;
+    }
+    if (files.some((file) => !isAllowedImageFile(file))) {
+      setError("Only image files are allowed (including .heic/.heif).");
       return;
     }
 
@@ -130,6 +164,7 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
                 className="hidden"
                 id="file-upload"
                 multiple
+                accept="image/*,.heic,.heif"
               />
               {files.length === 0 ? (
                 <label
@@ -137,7 +172,7 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
                   className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed rounded-lg cursor-pointer transition-colors border-neutral-700 hover:border-neutral-500 bg-neutral-900"
                 >
                   <UploadIcon size={20} className="text-neutral-500" />
-                  <span className="text-sm text-neutral-400 mt-2">Select or drag files</span>
+                  <span className="text-sm text-neutral-400 mt-2">Select or drag image files</span>
                 </label>
               ) : (
                 <div className="bg-neutral-900 border border-neutral-700 rounded-lg">
