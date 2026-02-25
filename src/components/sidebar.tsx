@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import SidebarLink from './sidebar-link';
 import Link from 'next/link';
-import { BugPlay, Github, House, Megaphone, Server, Terminal } from 'lucide-react';
+import { BugPlay, CloudUpload, Github, House, Megaphone, Server, Terminal } from 'lucide-react';
 import SocialLink from './social-link';
 
 export default function Sidebar() {
@@ -36,10 +36,15 @@ export default function Sidebar() {
                         <BugPlay className={`w-[${textClamp}]`}/>
                         Scripts
                     </SidebarLink>
+                    <SidebarLink href="/uploads" pathname={pathname}>
+                        <CloudUpload className={`w-[${textClamp}]`}/>
+                        Uploads
+                    </SidebarLink>
                     <SidebarLink href="/proxy" pathname={pathname}>
                         <Server className={`w-[${textClamp}]`}/>
-                        Web Proxy
+                        Proxy
                     </SidebarLink>
+                    
                 </div>
             </div>
             <div className="w-full flex flex-col justify-center gap-2">
