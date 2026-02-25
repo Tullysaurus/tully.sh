@@ -1,8 +1,13 @@
 "use client";
 
 import UploadModal from "@/components/upload-modal";
+import { useState } from "react";
 
 export default function Proxy() {
+  const [modalOpen, setModalOpen] = useState(true)
+
+
+
   return (
     <div
       className="flex flex-col h-100vh w-100vh items-center pt-[10vh] gap-8"
@@ -13,9 +18,10 @@ export default function Proxy() {
       </p>
       <UploadModal onClose={()=>{
         console.log("modal closed")
+        setModalOpen(false)
       }} onSuccess={()=>{
         console.log('modal success')
-      }}/>
+      }} visible={modalOpen}/>
     </div>
   );
 }

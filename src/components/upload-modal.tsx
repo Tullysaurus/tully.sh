@@ -7,9 +7,10 @@ import JSZip from "jszip";
 interface UploadModalProps {
   onClose: () => void;
   onSuccess?: () => void;
+  visible: boolean;
 }
 
-export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
+export default function UploadModal({ onClose, onSuccess, visible }: UploadModalProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [formData, setFormData] = useState({
     type: "ASSIGNMENT", // Default value
@@ -90,6 +91,12 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
       setError(err instanceof Error ? err.message : "An unexpected error occurred.");
     }
   };
+
+  if (!visible){
+    return (
+      <div></div>
+    )
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
