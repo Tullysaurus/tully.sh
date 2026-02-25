@@ -381,11 +381,11 @@ export default function Uploads() {
                     <ChevronLeft size={22} />
                   </button>
 
-                  <div className="flex h-full min-h-0 flex-1 items-center justify-center overflow-hidden rounded-md border border-neutral-800 bg-[#111]">
+                  <div className="flex h-[68vh] w-full max-w-4xl items-center justify-center overflow-hidden rounded-md border border-neutral-800 bg-[#111]">
                     <img
                       src={previewImages[previewIndex].url}
                       alt={previewImages[previewIndex].name}
-                      className="max-h-full max-w-full object-contain"
+                      className="h-full w-full object-contain"
                     />
                   </div>
 
