@@ -100,7 +100,7 @@ export default function Sidebar() {
           <a
             href="/cheats"
             aria-label="Go to cheats"
-            className="hidden h-3 w-8 self-start rounded-sm bg-transparent lg:block"
+            className="h-3 w-8 self-start rounded-sm bg-white/10 hover:bg-white/20 active:bg-white/30 cursor-pointer transition-colors"
           />
         )}
         {pathname.startsWith("/cheats") && (
