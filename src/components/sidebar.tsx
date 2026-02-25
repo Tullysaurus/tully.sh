@@ -137,7 +137,7 @@ export default function Sidebar() {
           />
           <SocialLink href="https://github.com/tullysaurus" icon={<Github className="w-6 fill-white" />} />
         </div>
-        <p className="hidden text-center text-sm lg:block">(c) 2026 Tully</p>
+        <p className="hidden text-center text-sm lg:block">© 2026 Tully</p>
       </div>
 
       {!pathname.startsWith("/cheats") && (
