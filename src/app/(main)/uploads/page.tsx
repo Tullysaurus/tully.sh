@@ -171,7 +171,7 @@ export default function Uploads() {
                     <p className="text-[10px] text-neutral-600 mt-1">{new Date(upload.createdAt).toLocaleDateString()}</p>
                   </div>
                   <a 
-                    href={`https://r2.tully.sh/uploads/${upload.id}`}
+                    href={`https://r2.tully.sh/uploads/${upload.id}.zip`}
                     className="mt-auto flex items-center justify-center gap-2 w-full bg-neutral-800 hover:bg-[#f5b041] hover:text-black text-neutral-300 py-2 rounded text-sm font-medium transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
