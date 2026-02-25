@@ -16,31 +16,29 @@ export default function TimelineElement({
   const isRight = side === "r";
 
   const containerClasses = [
-    "w-full h-8 flex flex-row justify-end",
-    isRight ? "flex-row-reverse" : "",
-    isRight ? "pl-[calc(50%-16px)]" : "pr-[calc(50%-16px)]"
+    "flex w-full items-center gap-3",
+    "md:h-8 md:flex-row md:justify-end",
+    isRight ? "md:flex-row-reverse md:pl-[calc(50%-16px)]" : "md:pr-[calc(50%-16px)]",
   ].join(" ");
 
   const contentClasses = [
-    "group relative w-fit h-full flex items-center cursor-pointer",
-    isRight ? "justify-start" : "justify-end",
-    "after:w-4 after:h-px after:bg-white after:absolute after:top-1/2",
-    isRight ? "after:left-0" : "after:right-0",
+    "group relative flex h-full w-fit cursor-pointer items-center",
+    "md:after:absolute md:after:top-1/2 md:after:h-px md:after:w-4 md:after:bg-white",
+    isRight ? "md:justify-start md:after:left-0" : "md:justify-end md:after:right-0",
   ].join(" ");
 
-  const paddingClass = isRight ? "pl-5" : "pr-5";
+  const paddingClass = isRight ? "md:pl-5" : "md:pr-5";
 
   return (
     <div className={containerClasses}>
+      <div className="h-8 w-8 rounded-full border-2 border-white bg-background flex items-center justify-center">
+        {icon}
+      </div>
       <div className={contentClasses}>
         <div className={paddingClass}>
           <div className="text-sm group-hover:hidden">{text}</div>
           <div className="hidden text-sm group-hover:block">{hover}</div>
         </div>
-      </div>
-
-      <div className="w-8 h-8 rounded-full border-2 border-white bg-background flex items-center justify-center">
-        {icon}
       </div>
     </div>
   );

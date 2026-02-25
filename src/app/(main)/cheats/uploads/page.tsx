@@ -1,9 +1,9 @@
 "use client";
 
-import UploadModal from "@/components/upload-modal";
-import { useState, useEffect, useCallback } from "react";
-import { Search, Plus, FileText, Download, Trash2 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Download, FileText, Plus, Search, Trash2 } from "lucide-react";
 import AuthModal from "@/components/auth-modal";
+import UploadModal from "@/components/upload-modal";
 import checkAuth from "@/lib/auth";
 
 type AssignmentType = "ASSIGNMENT" | "TEST" | "QUIZ" | "NOTES";
@@ -50,7 +50,7 @@ export default function Uploads() {
       if (filters.teacher) params.append("teacher", filters.teacher);
       if (filters.subject) params.append("subject", filters.subject);
       if (filters.hour) params.append("hour", filters.hour);
-      params.append("key", Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))['auth'] || "")
+      params.append("key", Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))["auth"] || "");
 
       const res = await fetch(`https://api.tully.sh/uploads?${params.toString()}`);
       if (res.ok) {
@@ -79,7 +79,8 @@ export default function Uploads() {
   };
 
   const handleDownload = async (id: string) => {
-    const isAuth = await checkAuth(document.cookie);
+    const key = Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))["auth"] || "";
+    const isAuth = await checkAuth(key);
     if (isAuth) {
       window.open(`https://r2.tully.sh/uploads/${id}.zip`, "_blank");
     } else {
@@ -89,14 +90,10 @@ export default function Uploads() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this upload?")) return;
-
-    const key = Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))['auth'] || "";
+    const key = Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))["auth"] || "";
 
     try {
-      const res = await fetch(`https://api.tully.sh/uploads?id=${id}&key=${key}`, {
-        method: "DELETE",
-      });
-
+      const res = await fetch(`https://api.tully.sh/uploads?id=${id}&key=${key}`, { method: "DELETE" });
       if (res.ok) {
         setUploads((prev) => prev.filter((u) => u.id !== id));
       } else {
@@ -109,37 +106,39 @@ export default function Uploads() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen w-full items-center pt-[10vh] gap-8 px-4 pb-10">
-      <div className="w-full max-w-6xl flex flex-col gap-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-4xl italic font-light">tully.sh/cheats/<span className="text-[#FFC17B]">uploads</span></h1>
+    <div className="flex min-h-screen w-full flex-col items-center gap-8 px-4 pb-10 pt-10 lg:pt-16">
+      <div className="flex w-full max-w-6xl flex-col gap-6">
+        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+          <h1 className="text-3xl italic font-light sm:text-4xl">
+            tully.sh/cheats/<span className="text-[#FFC17B]">uploads</span>
+          </h1>
           <button
             onClick={() => setModalOpen(true)}
-            className="bg-[#f5b041] hover:bg-[#d49b3b] text-black font-bold py-2 px-4 rounded flex items-center gap-2 transition-colors cursor-pointer"
+            className="flex cursor-pointer items-center gap-2 rounded bg-[#f5b041] px-4 py-2 font-bold text-black transition-colors hover:bg-[#d49b3b]"
           >
             <Plus size={20} />
             Upload New
           </button>
         </div>
 
-        <div className="bg-[#1f1f1f] p-4 rounded-lg border border-neutral-800 flex flex-col md:flex-row gap-4">
-          <div className="flex-1 flex items-center bg-neutral-900 border border-neutral-700 rounded px-3">
-            <Search size={18} className="text-neutral-500 mr-2" />
+        <div className="grid grid-cols-1 gap-4 rounded-lg border border-neutral-800 bg-[#1f1f1f] p-4 md:grid-cols-2 lg:grid-cols-5">
+          <div className="flex items-center rounded border border-neutral-700 bg-neutral-900 px-3 lg:col-span-2">
+            <Search size={18} className="mr-2 text-neutral-500" />
             <input
               type="text"
               name="name"
               placeholder="Search by name..."
               value={filters.name}
               onChange={handleFilterChange}
-              className="bg-transparent border-none outline-none text-white text-sm py-2 w-full placeholder:text-neutral-600"
+              className="w-full border-none bg-transparent py-2 text-sm text-white placeholder:text-neutral-600 outline-none"
             />
           </div>
-          
+
           <select
             name="type"
             value={filters.type}
             onChange={handleFilterChange}
-            className="bg-neutral-900 border border-neutral-700 rounded px-3 py-2 text-white text-sm outline-none focus:border-[#f5b041]"
+            className="rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none focus:border-[#f5b041]"
           >
             <option value="">All Types</option>
             <option value="ASSIGNMENT">Assignment</option>
@@ -154,7 +153,7 @@ export default function Uploads() {
             placeholder="Teacher"
             value={filters.teacher}
             onChange={handleFilterChange}
-            className="bg-neutral-900 border border-neutral-700 rounded px-3 py-2 text-white text-sm outline-none focus:border-[#f5b041] w-full md:w-32"
+            className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none focus:border-[#f5b041]"
           />
 
           <input
@@ -163,18 +162,20 @@ export default function Uploads() {
             placeholder="Subject"
             value={filters.subject}
             onChange={handleFilterChange}
-            className="bg-neutral-900 border border-neutral-700 rounded px-3 py-2 text-white text-sm outline-none focus:border-[#f5b041] w-full md:w-32"
+            className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none focus:border-[#f5b041]"
           />
 
-           <select
+          <select
             name="hour"
             value={filters.hour}
             onChange={handleFilterChange}
-            className="bg-neutral-900 border border-neutral-700 rounded px-3 py-2 text-white text-sm outline-none focus:border-[#f5b041]"
+            className="rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none focus:border-[#f5b041]"
           >
             <option value="">All Hours</option>
             {[1, 2, 3, 4, 5, 6, 7].map((num) => (
-              <option key={num} value={num.toString()}>{num}</option>
+              <option key={num} value={num.toString()}>
+                {num}
+              </option>
             ))}
             <option value="Other">Other</option>
           </select>
@@ -182,33 +183,38 @@ export default function Uploads() {
 
         <div className="flex flex-col gap-2">
           {loading ? (
-            <div className="text-center py-10 text-neutral-500">Loading uploads...</div>
+            <div className="py-10 text-center text-neutral-500">Loading uploads...</div>
           ) : uploads.length === 0 ? (
-            <div className="text-center py-10 text-neutral-500 bg-[#1f1f1f] rounded-lg border border-neutral-800">
+            <div className="rounded-lg border border-neutral-800 bg-[#1f1f1f] py-10 text-center text-neutral-500">
               No uploads found matching your filters.
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {uploads.map((upload) => (
-                <div key={upload.id} className="bg-[#1f1f1f] p-4 rounded-lg border border-neutral-800 hover:border-[#f5b041]/50 transition-colors group flex flex-col">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="p-2 bg-neutral-800 rounded text-[#f5b041]">
+                <div
+                  key={upload.id}
+                  className="group flex flex-col rounded-lg border border-neutral-800 bg-[#1f1f1f] p-4 transition-colors hover:border-[#f5b041]/50"
+                >
+                  <div className="mb-2 flex items-start justify-between">
+                    <div className="rounded bg-neutral-800 p-2 text-[#f5b041]">
                       <FileText size={24} />
                     </div>
-                    <span className="text-xs font-mono text-neutral-600 bg-neutral-900 px-2 py-1 rounded">
-                      {upload.type}
-                    </span>
+                    <span className="rounded bg-neutral-900 px-2 py-1 font-mono text-xs text-neutral-600">{upload.type}</span>
                   </div>
-                  <h3 className="text-white font-medium truncate mb-1" title={upload.name}>{upload.name}</h3>
-                  <div className="text-xs text-neutral-500 flex flex-col gap-1 mb-4">
-                    <p className="truncate">{upload.teacher} • {upload.subject}</p>
+                  <h3 className="mb-1 truncate font-medium text-white" title={upload.name}>
+                    {upload.name}
+                  </h3>
+                  <div className="mb-4 flex flex-col gap-1 text-xs text-neutral-500">
+                    <p className="truncate">
+                      {upload.teacher} • {upload.subject}
+                    </p>
                     <p>Hour: {upload.hour}</p>
-                    <p className="text-[10px] text-neutral-600 mt-1">{new Date(upload.createdAt).toLocaleDateString()}</p>
+                    <p className="mt-1 text-[10px] text-neutral-600">{new Date(upload.createdAt).toLocaleDateString()}</p>
                   </div>
-                  <div className="mt-auto flex gap-2 w-full">
-                    <button 
+                  <div className="mt-auto flex w-full gap-2">
+                    <button
                       onClick={() => handleDownload(upload.id)}
-                      className="flex-1 flex items-center justify-center gap-2 bg-neutral-800 hover:bg-[#f5b041] hover:text-black text-neutral-300 py-2 rounded text-sm font-medium transition-colors cursor-pointer"
+                      className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded bg-neutral-800 py-2 text-sm font-medium text-neutral-300 transition-colors hover:bg-[#f5b041] hover:text-black"
                     >
                       <Download size={16} />
                       Download
@@ -216,7 +222,7 @@ export default function Uploads() {
                     {upload.deletable && (
                       <button
                         onClick={() => handleDelete(upload.id)}
-                        className="flex items-center justify-center px-3 bg-neutral-800 hover:bg-red-500/20 hover:text-red-500 text-neutral-400 py-2 rounded transition-colors cursor-pointer"
+                        className="flex cursor-pointer items-center justify-center rounded bg-neutral-800 px-3 py-2 text-neutral-400 transition-colors hover:bg-red-500/20 hover:text-red-500"
                         title="Delete"
                       >
                         <Trash2 size={16} />
@@ -230,20 +236,18 @@ export default function Uploads() {
         </div>
       </div>
 
-      <UploadModal 
+      <UploadModal
         visible={modalOpen}
         onClose={() => {
-          setModalOpen(false)
+          setModalOpen(false);
           window.location.reload();
-        }} 
+        }}
         onSuccess={() => {
           setModalOpen(false);
           window.location.reload();
-        }} 
+        }}
       />
-      {authModalOpen && <AuthModal 
-        onClose={() => setAuthModalOpen(false)} 
-      />}
+      {authModalOpen && <AuthModal onClose={() => setAuthModalOpen(false)} />}
     </div>
   );
 }

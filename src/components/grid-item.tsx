@@ -1,7 +1,6 @@
-'use client';
+"use client";
 
 import { useState } from "react";
-
 
 export default function GridItem({
   title,
@@ -20,38 +19,33 @@ export default function GridItem({
 }) {
   const unixTime = new Date(date || 0);
   const dayOfMonth = unixTime.getDate();
-  const month = unixTime.toLocaleString('default', { month: 'short' });
-
+  const month = unixTime.toLocaleString("default", { month: "short" });
   const [auth, setAuth] = useState(false);
 
   return (
     <div
       onClick={() => {
-        
         if (auth) {
-          window.open(url || "", "_blank")
-          return
+          window.open(url || "", "_blank");
+          return;
         }
         onclick(document.cookie).then((res) => {
-          if (res){
-            setAuth(true)
-            window.open(url || "", "_blank")
+          if (res) {
+            setAuth(true);
+            window.open(url || "", "_blank");
           }
-        })
-
+        });
       }}
-      className="group cursor-pointer w-[22vw] h-[32vh] bg-[#1f1f1f] rounded-lg overflow-hidden flex flex-col transition hover:scale-[1.02]"
+      className="group flex h-full min-h-80 w-full cursor-pointer flex-col overflow-hidden rounded-lg bg-[#1f1f1f] transition hover:scale-[1.02]"
     >
-      {/* Image / Preview */}
-      <div className="relative w-full h-[55%] bg-neutral-800 overflow-hidden">
-        <img 
+      <div className="relative h-44 w-full overflow-hidden bg-neutral-800 sm:h-48">
+        <img
           src={`https://r2.tully.sh/scripts/preview/${id}.png`}
           alt="Preview"
-          className="w-full h-full object-cover"
+          className="h-full w-full object-cover"
         />
 
-        {/* Date badge */}
-        <div className="absolute top-3 right-3 bg-[#f5b041] text-black text-xs font-semibold px-2 py-1 rounded">
+        <div className="absolute right-3 top-3 rounded bg-[#f5b041] px-2 py-1 text-xs font-semibold text-black">
           <div className="leading-none text-center">
             <div>{dayOfMonth}</div>
             <div className="text-[10px]">{month}</div>
@@ -59,22 +53,14 @@ export default function GridItem({
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex flex-col gap-2 p-4 text-white">
-        {/* Title */}
-        <h3 className="font-semibold text-lg leading-tight group-hover:text-[#f5b041] transition">
+      <div className="flex flex-1 flex-col gap-2 p-4 text-white">
+        <h3 className="text-lg font-semibold leading-tight transition group-hover:text-[#f5b041]">
           {title}
         </h3>
 
-        {/* Description */}
-        <p className="text-sm text-neutral-400 line-clamp-3">
-          {description}
-        </p>
+        <p className="line-clamp-3 text-sm text-neutral-400">{description}</p>
 
-        {/* Get Now */}
-        <span className="mt-1 text-sm text-[#f5b041] font-medium">
-          Get Now →
-        </span>
+        <span className="mt-auto pt-1 text-sm font-medium text-[#f5b041]">Get Now {"->"}</span>
       </div>
     </div>
   );

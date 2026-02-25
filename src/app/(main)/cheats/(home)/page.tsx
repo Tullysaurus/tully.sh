@@ -1,15 +1,11 @@
 'use client';
 
-import GridItem from "@/components/grid-item";
-
 export default function Scripts() {
   return (
-    <div
-      className="flex flex-col h-fit w-full items-center pt-[10vh] gap-8"
-    >
-      <h1 className="text-5xl italic font-light">tully.sh/<span className="text-[#FFC17B]">cheats</span></h1>
+    <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-8 px-4 pb-10 pt-10 lg:pt-16">
+      <h1 className="text-center text-4xl italic font-light sm:text-5xl">tully.sh/<span className="text-[#FFC17B]">cheats</span></h1>
 
-      <p className="text-l text-center w-3/8 font-semibold">
+      <p className="max-w-xl text-center text-base font-semibold sm:text-lg">
         A collection of tools to cheat in school or bypass restrictions.
       </p>
     </div>

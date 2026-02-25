@@ -183,7 +183,7 @@ export default function UploadModal({ onClose, onSuccess, visible }: UploadModal
             </div>
 
             {/* Grid for Small Fields */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Type</label>
                 <select
@@ -218,7 +218,7 @@ export default function UploadModal({ onClose, onSuccess, visible }: UploadModal
             {/* General Fields */}
             <div className="flex flex-col gap-2">
               <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Teacher & Subject</label>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <input
                   name="teacher"
                   placeholder="Teacher Name"
