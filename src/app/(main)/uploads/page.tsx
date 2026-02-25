@@ -2,7 +2,7 @@
 
 import UploadModal from "@/components/upload-modal";
 import { useState, useEffect, useCallback } from "react";
-import { Search, Plus, FileText } from "lucide-react";
+import { Search, Plus, FileText, Download } from "lucide-react";
 
 type AssignmentType = "ASSIGNMENT" | "TEST" | "QUIZ" | "NOTES";
 
@@ -155,7 +155,7 @@ export default function Uploads() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {uploads.map((upload) => (
-                <div key={upload.id} className="bg-[#1f1f1f] p-4 rounded-lg border border-neutral-800 hover:border-[#f5b041]/50 transition-colors group">
+                <div key={upload.id} className="bg-[#1f1f1f] p-4 rounded-lg border border-neutral-800 hover:border-[#f5b041]/50 transition-colors group flex flex-col">
                   <div className="flex items-start justify-between mb-2">
                     <div className="p-2 bg-neutral-800 rounded text-[#f5b041]">
                       <FileText size={24} />
@@ -165,11 +165,20 @@ export default function Uploads() {
                     </span>
                   </div>
                   <h3 className="text-white font-medium truncate mb-1" title={upload.name}>{upload.name}</h3>
-                  <div className="text-xs text-neutral-500 flex flex-col gap-1">
+                  <div className="text-xs text-neutral-500 flex flex-col gap-1 mb-4">
                     <p className="truncate">{upload.teacher} • {upload.subject}</p>
                     <p>Hour: {upload.hour}</p>
                     <p className="text-[10px] text-neutral-600 mt-1">{new Date(upload.createdAt).toLocaleDateString()}</p>
                   </div>
+                  <a 
+                    href={`https://r2.tully.sh/uploads/${upload.id}`}
+                    className="mt-auto flex items-center justify-center gap-2 w-full bg-neutral-800 hover:bg-[#f5b041] hover:text-black text-neutral-300 py-2 rounded text-sm font-medium transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Download size={16} />
+                    Download
+                  </a>
                 </div>
               ))}
             </div>
