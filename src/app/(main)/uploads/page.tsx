@@ -2,7 +2,7 @@
 
 import UploadModal from "@/components/upload-modal";
 import { useState, useEffect, useCallback } from "react";
-import { Search, Plus, FileText, Download } from "lucide-react";
+import { Search, Plus, FileText, Download, Trash2 } from "lucide-react";
 import AuthModal from "@/components/auth-modal";
 
 type AssignmentType = "ASSIGNMENT" | "TEST" | "QUIZ" | "NOTES";
@@ -24,6 +24,7 @@ interface Upload {
   hour: string;
   comments: string;
   createdAt: string;
+  deletable: boolean;
 }
 
 export default function Uploads() {
@@ -48,6 +49,7 @@ export default function Uploads() {
       if (filters.teacher) params.append("teacher", filters.teacher);
       if (filters.subject) params.append("subject", filters.subject);
       if (filters.hour) params.append("hour", filters.hour);
+      params.append("key", Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))['auth'] || "")
 
       const res = await fetch(`https://api.tully.sh/uploads?${params.toString()}`);
       if (res.ok) {
@@ -94,6 +96,27 @@ export default function Uploads() {
       window.open(`https://r2.tully.sh/uploads/${id}.zip`, "_blank");
     } else {
       setAuthModalOpen(true);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this upload?")) return;
+
+    const key = Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))['auth'] || "";
+
+    try {
+      const res = await fetch(`https://api.tully.sh/uploads?id=${id}&key=${key}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setUploads((prev) => prev.filter((u) => u.id !== id));
+      } else {
+        alert("Failed to delete upload");
+      }
+    } catch (error) {
+      console.error("Error deleting upload:", error);
+      alert("Error deleting upload");
     }
   };
 
@@ -194,13 +217,24 @@ export default function Uploads() {
                     <p>Hour: {upload.hour}</p>
                     <p className="text-[10px] text-neutral-600 mt-1">{new Date(upload.createdAt).toLocaleDateString()}</p>
                   </div>
-                  <button 
-                    onClick={() => handleDownload(upload.id)}
-                    className="mt-auto flex items-center justify-center gap-2 w-full bg-neutral-800 hover:bg-[#f5b041] hover:text-black text-neutral-300 py-2 rounded text-sm font-medium transition-colors cursor-pointer"
-                  >
-                    <Download size={16} />
-                    Download
-                  </button>
+                  <div className="mt-auto flex gap-2 w-full">
+                    <button 
+                      onClick={() => handleDownload(upload.id)}
+                      className="flex-1 flex items-center justify-center gap-2 bg-neutral-800 hover:bg-[#f5b041] hover:text-black text-neutral-300 py-2 rounded text-sm font-medium transition-colors cursor-pointer"
+                    >
+                      <Download size={16} />
+                      Download
+                    </button>
+                    {upload.deletable && (
+                      <button
+                        onClick={() => handleDelete(upload.id)}
+                        className="flex items-center justify-center px-3 bg-neutral-800 hover:bg-red-500/20 hover:text-red-500 text-neutral-400 py-2 rounded transition-colors cursor-pointer"
+                        title="Delete"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
