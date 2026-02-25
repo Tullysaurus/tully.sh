@@ -67,8 +67,8 @@ export default function Home() {
       <p className="max-w-xl text-center text-base font-semibold sm:text-lg">
         Self-taught developer programming as a hobby since the age of eight.
       </p>
-      <div className="mt-2 flex w-full flex-col gap-8 lg:mt-4 lg:flex-row">
-        <div className="h-fit w-full lg:w-3/5 flex flex-col gap-4 lg:gap-6">
+      <div className="mt-2 flex w-full flex-col gap-8 lg:mt-4">
+        <div className="h-fit w-full flex flex-col gap-4 lg:gap-6">
           <h2 className="mt-2 text-3xl font-bold text-[#FFC17B] lg:mt-4">Tully C.</h2>
           <p className="text-lg font-semibold">Full-Stack Developer</p>
           <p className="h-fit wrap-normal text-sm sm:text-base">
@@ -83,7 +83,7 @@ export default function Home() {
             in the learning environment.
           </p>
         </div>
-        <div className="h-fit w-full lg:w-2/5">
+        <div className="h-fit w-full">
             <Timeline items={timelineItems} />
         </div>
       </div>
