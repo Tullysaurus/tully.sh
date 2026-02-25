@@ -8,7 +8,7 @@ export default function AuthModal({
   checkAuth,
 }: {
   onClose: () => void;
-  checkAuth: (cookieString: string) => Promise<string>;
+  checkAuth: (cookieString: string) => Promise<boolean>;
 }) {
   const [key, setKey] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -25,7 +25,7 @@ export default function AuthModal({
       // Check auth using the server action
       const res = await checkAuth(`auth=${encodeURIComponent(key)}`);
 
-      if (res === "1") {
+      if (res) {
         // Set cookie only on success
         document.cookie = `auth=${encodeURIComponent(key)}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
         setStatus("success");

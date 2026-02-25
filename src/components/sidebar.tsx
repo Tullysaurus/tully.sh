@@ -1,13 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import SidebarLink from './sidebar-link';
 import Link from 'next/link';
-import { BugPlay, CloudUpload, Github, House, Megaphone, Server, Terminal } from 'lucide-react';
+import { BugPlay, CloudUpload, Github, House, Megaphone, Server, Terminal, Key } from 'lucide-react';
 import SocialLink from './social-link';
+import AuthModal from './auth-modal';
+import checkAuth from '@/lib/auth';
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const [showAuthModal, setShowAuthModal] = useState(false);
 
     const textClamp = "clamp(1em,1.5vw,1.75em)"
     return (
@@ -47,17 +51,20 @@ export default function Sidebar() {
                     
                 </div>
             </div>
-            <div className="w-full flex flex-col justify-center gap-2">
+            <div className="w-full flex flex-col justify-center gap-3">
+                <button onClick={() => setShowAuthModal(true)} className="h-[30%] w-full bg-[#f5b041] hover:bg-[#d49b3b] text-black font-bold py-2 rounded transition-transform active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2">
+                    <Key size={20}/>
+                    Enter Key
+                </button>
                 <div className="w-full flex flex-row justify-around items-center h-fit">
                     <SocialLink href="https://discord.com/users/694274948071555154" icon={<img src="https://r2.tully.sh/icons/discord.png" className="w-[clamp(8px,2vw,20px)] h-fit" />} />
                     <SocialLink href="https://github.com/tullysaurus" icon={<Github className="w-[clamp(1em,2vw,1.75em)] fill-white"/>} />
-
-
                 </div>
                 <p className="text-center text-[clamp(0.5em,2vw,1em)]">
                     © 2026 Tully
                 </p>
             </div>
+            {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} checkAuth={checkAuth} />}
         </div>
     )
 }

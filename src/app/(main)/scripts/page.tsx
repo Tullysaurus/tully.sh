@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import ScriptsGrid from "@/components/scripts-grid";
+import checkAuth from "@/lib/auth";
 
 // Type definition for your R2 data
 interface Scripts {
@@ -10,20 +11,6 @@ interface Scripts {
     url: string | null;
     date: number | null;
   };
-}
-
-async function checkAuth(auth: string) {
-  if (!auth) return false;
-
-  try {
-    const res = await fetch(`https://api.tully.sh/check?key=${auth}`, {
-      cache: "no-store", // Ensure we don't cache auth results
-    });
-    return res.ok;
-  } catch (err) {
-    console.error("Auth check failed:", err);
-    return false;
-  }
 }
 
 export default async function ScriptsPage() {

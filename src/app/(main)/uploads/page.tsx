@@ -4,6 +4,7 @@ import UploadModal from "@/components/upload-modal";
 import { useState, useEffect, useCallback } from "react";
 import { Search, Plus, FileText, Download, Trash2 } from "lucide-react";
 import AuthModal from "@/components/auth-modal";
+import checkAuth from "@/lib/auth";
 
 type AssignmentType = "ASSIGNMENT" | "TEST" | "QUIZ" | "NOTES";
 
@@ -77,22 +78,9 @@ export default function Uploads() {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const checkAuth = async (cookieString: string) => {
-    const cookies = Object.fromEntries(cookieString.split("; ").map((c) => c.split("=")));
-    const key = cookies['auth'];
-    if (!key) return "0";
-    
-    try {
-      const res = await fetch(`https://api.tully.sh/check?key=${key}`);
-      return res.ok ? "1" : "0";
-    } catch (e) {
-      return "0";
-    }
-  };
-
   const handleDownload = async (id: string) => {
     const isAuth = await checkAuth(document.cookie);
-    if (isAuth === "1") {
+    if (isAuth) {
       window.open(`https://r2.tully.sh/uploads/${id}.zip`, "_blank");
     } else {
       setAuthModalOpen(true);
