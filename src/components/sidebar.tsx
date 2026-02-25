@@ -85,13 +85,15 @@ export default function Sidebar() {
       </h1>
 
       <nav className="w-full lg:flex-1">
-        <div className="flex w-full flex-wrap items-center justify-center gap-2 text-sm lg:flex-col lg:items-start lg:gap-1 lg:text-base">
-          {Object.keys(urls).map((key) => (
-            <SidebarLink key={key} href={key} pathname={pathname}>
-              {urls[key].icon}
-              {urls[key].name}
-            </SidebarLink>
-          ))}
+        <div className="w-full overflow-x-auto pb-1 lg:overflow-visible lg:pb-0">
+          <div className="mx-auto flex w-max min-w-full flex-nowrap items-center justify-center gap-2 text-sm lg:w-full lg:min-w-0 lg:flex-col lg:items-start lg:gap-1 lg:text-base">
+            {Object.keys(urls).map((key) => (
+              <SidebarLink key={key} href={key} pathname={pathname}>
+                {urls[key].icon}
+                {urls[key].name}
+              </SidebarLink>
+            ))}
+          </div>
         </div>
       </nav>
 
