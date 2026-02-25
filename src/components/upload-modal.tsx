@@ -172,8 +172,8 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
                   onChange={handleInputChange}
                   className="bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white text-sm focus:border-[#f5b041] outline-none"
                 >
-                  <option value="HOMEWORK">Homework</option>
-                  <option value="EXAM">Exam</option>
+                  <option value="HOMEWORK">Assignment</option>
+                  <option value="EXAM">Test</option>
                   <option value="QUIZ">Quiz</option>
                   <option value="NOTE">Notes</option>
                 </select>
