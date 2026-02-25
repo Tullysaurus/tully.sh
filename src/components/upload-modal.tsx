@@ -13,6 +13,7 @@ interface UploadModalProps {
 export default function UploadModal({ onClose, onSuccess, visible }: UploadModalProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [formData, setFormData] = useState({
+    name: "",
     type: "ASSIGNMENT", // Default value
     teacher: "",
     subject: "",
@@ -66,7 +67,7 @@ export default function UploadModal({ onClose, onSuccess, visible }: UploadModal
 
       const data = new FormData();
       data.append("file", zipFile);
-      data.append("name", "upload.zip");
+      data.append("name", formData.name || "upload.zip");
       data.append("type", formData.type.toUpperCase());
       if (formData.teacher) data.append("teacher", formData.teacher);
       if (formData.subject) data.append("subject", formData.subject);
@@ -170,6 +171,17 @@ export default function UploadModal({ onClose, onSuccess, visible }: UploadModal
               )}
             </div>
 
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Assignment Name</label>
+              <input
+                name="name"
+                placeholder="e.g. Geometry Quiz 2"
+                value={formData.name}
+                onChange={handleInputChange}
+                className="bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white text-sm focus:border-[#f5b041] outline-none"
+              />
+            </div>
+
             {/* Grid for Small Fields */}
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
@@ -254,6 +266,9 @@ export default function UploadModal({ onClose, onSuccess, visible }: UploadModal
                 "Upload Content"
               )}
             </button>
+            <p className="text-center text-xs text-neutral-500">
+              Any inappropriate uploads will be removed and have your key revoked
+            </p>
           </form>
         )}
       </div>
