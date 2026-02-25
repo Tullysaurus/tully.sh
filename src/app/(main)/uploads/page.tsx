@@ -244,7 +244,10 @@ export default function Uploads() {
 
       <UploadModal 
         visible={modalOpen}
-        onClose={() => setModalOpen(false)} 
+        onClose={() => {
+          setModalOpen(false)
+          window.location.reload();
+        }} 
         onSuccess={() => {
           setModalOpen(false);
           fetchUploads();
