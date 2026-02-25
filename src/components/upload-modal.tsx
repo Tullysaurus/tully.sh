@@ -12,7 +12,7 @@ interface UploadModalProps {
 export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [formData, setFormData] = useState({
-    type: "HOMEWORK", // Default value
+    type: "ASSIGNMENT", // Default value
     teacher: "",
     subject: "",
     hour: "",
