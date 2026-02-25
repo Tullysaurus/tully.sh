@@ -172,10 +172,10 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
                   onChange={handleInputChange}
                   className="bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white text-sm focus:border-[#f5b041] outline-none"
                 >
-                  <option value="HOMEWORK">Assignment</option>
-                  <option value="EXAM">Test</option>
+                  <option value="ASSIGNMENT">Assignment</option>
+                  <option value="TEST">Test</option>
                   <option value="QUIZ">Quiz</option>
-                  <option value="NOTE">Notes</option>
+                  <option value="NOTES">Notes</option>
                 </select>
               </div>
               <div className="flex flex-col gap-2">
