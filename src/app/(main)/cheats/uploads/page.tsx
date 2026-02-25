@@ -120,7 +120,7 @@ export default function Uploads() {
       return;
     }
 
-    const zipUrl = `https://r2.tully.sh/uploads/${upload.id}.zip`;
+    const zipUrl = `/api/uploads/${upload.id}`;
     setPreviewOpen(true);
     setPreviewLoading(true);
     setPreviewError("");
