@@ -34,7 +34,7 @@ export default function ScriptsGrid({
 
   return (
     <>
-      {showModal && <AuthModal onClose={() => setShowModal(false)} />}
+      {showModal && <AuthModal onClose={() => setShowModal(false)} checkAuth={checkAuthAction} />}
       <div className="w-[70vw] grid grid-cols-1 md:grid-cols-3 gap-4">
         {Object.keys(scripts).map((key) => (
           <GridItem key={key} {...scripts[key]} onclick={handleItemClick} />
