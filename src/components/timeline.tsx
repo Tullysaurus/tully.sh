@@ -25,18 +25,20 @@ export default function Timeline({ items }: { items: TimelineItem[] }) {
 
   return (
     <div className="w-full">
-      <div className="relative pl-8 lg:hidden">
-        <div className="absolute bottom-2 left-4 top-2 w-px bg-white/35" />
+      <div className="relative lg:hidden">
+        <div className="absolute bottom-2 left-[14px] top-2 w-px bg-white/35" />
         <div className="flex flex-col gap-2">
           {items.map((item) => (
-            <article key={item.id} className="relative rounded-md border border-white/15 bg-[#1a1a1a] px-3 py-2">
-              <div className="absolute left-4 top-4 z-10 flex h-7 w-7 -translate-x-1/2 items-center justify-center rounded-full border-2 border-white bg-background">
-                {item.icon}
-              </div>
-              <div className="pl-4">
-                <p className="text-xs font-semibold uppercase tracking-wider text-[#FFC17B]">{item.period}</p>
-                <h3 className="mt-0.5 text-sm font-semibold text-white sm:text-base">{item.title}</h3>
-                <p className="mt-1 text-xs leading-relaxed text-neutral-300 sm:text-sm">{item.details}</p>
+            <article key={item.id} className="rounded-md border border-white/15 bg-[#1a1a1a] px-2 py-2">
+              <div className="flex items-start gap-3">
+                <div className="z-10 mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 border-white bg-background">
+                  {item.icon}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-[#FFC17B]">{item.period}</p>
+                  <h3 className="mt-0.5 text-sm font-semibold text-white sm:text-base">{item.title}</h3>
+                  <p className="mt-1 text-xs leading-relaxed text-neutral-300 sm:text-sm">{item.details}</p>
+                </div>
               </div>
             </article>
           ))}
