@@ -5,15 +5,15 @@ import type { ReactElement } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BugPlay, CheckCircle2, CloudUpload, Github, House, Key, Loader2, Megaphone, Router, Terminal } from "lucide-react";
-import AuthModal from "./auth-modal";
 import SidebarLink from "./sidebar-link";
 import SocialLink from "./social-link";
 import checkAuth from "@/lib/auth";
+import { useModals } from "@/lib/modals";
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const [showAuthModal, setShowAuthModal] = useState(false);
   const [authStatus, setAuthStatus] = useState<"idle" | "checking" | "valid" | "invalid">("idle");
+  const { openAuthModal } = useModals();
 
   const urls: {
     [key: string]: {
@@ -73,7 +73,7 @@ export default function Sidebar() {
       .catch(() => {
         setAuthStatus("invalid");
       });
-  }, [pathname, showAuthModal]);
+  }, [pathname]);
 
   return (
     <aside className="relative sticky top-0 z-30 w-full border-b border-neutral-800 bg-[#0f0f0f] px-4 py-3 lg:flex lg:h-screen lg:w-64 lg:min-w-64 lg:flex-col lg:border-b-0 lg:border-r lg:px-6 lg:py-8">
@@ -99,7 +99,11 @@ export default function Sidebar() {
         {pathname.startsWith("/cheats") && (
           <button
             onClick={() => {
-              if (authStatus !== "valid") setShowAuthModal(true);
+              if (authStatus !== "valid") {
+                openAuthModal({
+                  onSuccess: () => setAuthStatus("valid"),
+                });
+              }
             }}
             className={
               "flex w-full items-center justify-center gap-2 rounded py-2 font-bold transition-transform active:scale-[0.98] " +
@@ -144,7 +148,6 @@ export default function Sidebar() {
         />
       )}
 
-      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
     </aside>
   );
 }

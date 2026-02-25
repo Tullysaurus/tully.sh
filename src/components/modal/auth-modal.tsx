@@ -6,8 +6,10 @@ import checkAuth from "@/lib/auth";
 
 export default function AuthModal({
   onClose,
+  onSuccess,
 }: {
   onClose: () => void;
+  onSuccess?: () => void;
 }) {
   const [key, setKey] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -29,6 +31,7 @@ export default function AuthModal({
         document.cookie = `auth=${encodeURIComponent(key)}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
         setStatus("success");
         setMessage("Access granted. You may close this window.");
+        onSuccess?.();
       } else {
         setStatus("error");
         setMessage("Invalid access key.");
@@ -40,11 +43,7 @@ export default function AuthModal({
   };
 
   const handleClose = () => {
-    if (status === "success") {
-      window.location.reload();
-    } else {
-      onClose();
-    }
+    onClose();
   };
 
   return (

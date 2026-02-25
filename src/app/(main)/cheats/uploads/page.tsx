@@ -2,9 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Download, FileText, Plus, Search, Trash2 } from "lucide-react";
-import AuthModal from "@/components/auth-modal";
-import UploadModal from "@/components/upload-modal";
 import checkAuth from "@/lib/auth";
+import { useModals } from "@/lib/modals";
 
 type AssignmentType = "ASSIGNMENT" | "TEST" | "QUIZ" | "NOTES";
 
@@ -29,8 +28,6 @@ interface Upload {
 }
 
 export default function Uploads() {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [authModalOpen, setAuthModalOpen] = useState(false);
   const [filters, setFilters] = useState<UploadFilter>({
     name: "",
     type: "",
@@ -40,6 +37,7 @@ export default function Uploads() {
   });
   const [uploads, setUploads] = useState<Upload[]>([]);
   const [loading, setLoading] = useState(false);
+  const { openAuthModal, openUploadModal } = useModals();
 
   const fetchUploads = useCallback(async () => {
     setLoading(true);
@@ -84,7 +82,7 @@ export default function Uploads() {
     if (isAuth) {
       window.open(`https://r2.tully.sh/uploads/${id}.zip`, "_blank");
     } else {
-      setAuthModalOpen(true);
+      openAuthModal();
     }
   };
 
@@ -113,7 +111,13 @@ export default function Uploads() {
             tully.sh/cheats/<span className="text-[#FFC17B]">uploads</span>
           </h1>
           <button
-            onClick={() => setModalOpen(true)}
+            onClick={() =>
+              openUploadModal({
+                onSuccess: () => {
+                  fetchUploads();
+                },
+              })
+            }
             className="flex cursor-pointer items-center gap-2 rounded bg-[#f5b041] px-4 py-2 font-bold text-black transition-colors hover:bg-[#d49b3b]"
           >
             <Plus size={20} />
@@ -236,18 +240,6 @@ export default function Uploads() {
         </div>
       </div>
 
-      <UploadModal
-        visible={modalOpen}
-        onClose={() => {
-          setModalOpen(false);
-          window.location.reload();
-        }}
-        onSuccess={() => {
-          setModalOpen(false);
-          window.location.reload();
-        }}
-      />
-      {authModalOpen && <AuthModal onClose={() => setAuthModalOpen(false)} />}
     </div>
   );
 }

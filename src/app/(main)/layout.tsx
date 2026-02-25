@@ -1,4 +1,5 @@
 import Sidebar from "@/components/sidebar";
+import { ModalProvider } from "@/components/modal-system";
 
 export default function RootLayout({
   children,
@@ -6,11 +7,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="min-h-screen w-full bg-background lg:flex lg:flex-row">
-      <Sidebar />
-      <div className="min-h-screen flex-1 overflow-x-hidden">
-        <main className="w-full pb-8 lg:pb-0">{children}</main>
+    <ModalProvider>
+      <div className="min-h-screen w-full bg-background lg:flex lg:flex-row">
+        <Sidebar />
+        <div className="min-h-screen flex-1 overflow-x-hidden">
+          <main className="w-full pb-8 lg:pb-0">{children}</main>
+        </div>
       </div>
-    </div>
+    </ModalProvider>
   );
 }
