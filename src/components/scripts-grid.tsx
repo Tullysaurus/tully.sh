@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo, useState } from "react";
+import { Search } from "lucide-react";
 import GridItem from "./grid-item";
 import checkAuth from "@/lib/auth";
 import { useModals } from "@/lib/modals";
@@ -20,6 +22,7 @@ export default function ScriptsGrid({
   scripts: Scripts;
 }) {
   const { openAuthModal } = useModals();
+  const [searchName, setSearchName] = useState("");
 
   const rowDelayClass = (index: number) => {
     const row = Math.floor(index / 3);
@@ -39,12 +42,32 @@ export default function ScriptsGrid({
     return result;
   };
 
+  const filteredEntries = useMemo(
+    () =>
+      Object.entries(scripts).filter(([, script]) =>
+        (script.title || "").toLowerCase().includes(searchName.toLowerCase()),
+      ),
+    [scripts, searchName],
+  );
+
   return (
     <>
+      <div className="w-full max-w-6xl px-4 lg:px-0">
+        <div className="mb-4 flex items-center rounded border border-neutral-700 bg-neutral-900 px-3">
+          <Search size={18} className="mr-2 text-neutral-500" />
+          <input
+            type="text"
+            placeholder="Search scripts by name..."
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
+            className="w-full border-none bg-transparent py-2 text-sm text-white placeholder:text-neutral-600 outline-none"
+          />
+        </div>
+      </div>
       <div className="grid w-full max-w-6xl grid-cols-1 gap-4 px-4 sm:grid-cols-2 lg:grid-cols-3 lg:px-0">
-        {Object.keys(scripts).map((key, index) => (
+        {filteredEntries.map(([key, script], index) => (
           <div key={key} className={`reveal-up ${rowDelayClass(index)}`}>
-            <GridItem {...scripts[key]} onclick={handleItemClick} />
+            <GridItem {...script} onclick={handleItemClick} />
           </div>
         ))}
       </div>

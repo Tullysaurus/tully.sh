@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import JSZip from "jszip";
 import { ChevronLeft, ChevronRight, Download, Eye, FileText, Loader2, Plus, Search, Trash2, X } from "lucide-react";
 import checkAuth from "@/lib/auth";
@@ -198,6 +198,14 @@ export default function Uploads() {
     }
   };
 
+  const filteredUploads = useMemo(
+    () =>
+      uploads.filter((upload) =>
+        upload.name.toLowerCase().includes(filters.name.toLowerCase()),
+      ),
+    [uploads, filters.name],
+  );
+
   return (
     <div className="flex min-h-screen w-full flex-col items-center gap-8 px-4 pb-10 pt-10 lg:pt-16">
       <div className="flex w-full max-w-6xl flex-col gap-6">
@@ -226,7 +234,7 @@ export default function Uploads() {
             <input
               type="text"
               name="name"
-              placeholder="Search by name..."
+              placeholder="Search uploads by name..."
               value={filters.name}
               onChange={handleFilterChange}
               className="w-full border-none bg-transparent py-2 text-sm text-white placeholder:text-neutral-600 outline-none"
@@ -283,13 +291,13 @@ export default function Uploads() {
         <div className="flex flex-col gap-2">
           {loading ? (
             <div className="py-10 text-center text-neutral-500">Loading uploads...</div>
-          ) : uploads.length === 0 ? (
+          ) : filteredUploads.length === 0 ? (
             <div className="rounded-lg border border-neutral-800 bg-[#1f1f1f] py-10 text-center text-neutral-500">
               No uploads found matching your filters.
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {uploads.map((upload) => (
+              {filteredUploads.map((upload) => (
                 <div
                   key={upload.id}
                   className="group flex flex-col rounded-lg border border-neutral-800 bg-[#1f1f1f] p-4 transition-colors hover:border-[#f5b041]/50"

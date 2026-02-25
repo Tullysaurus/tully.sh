@@ -11,7 +11,7 @@ export default function RootLayout({
     <ModalProvider>
       <div className="min-h-screen w-full bg-background lg:flex lg:flex-row">
         <Sidebar />
-        <div className="min-h-screen flex-1 overflow-x-hidden">
+        <div className="min-h-screen flex-1 overflow-x-hidden overflow-y-auto">
           <main className="w-full pb-8 lg:pb-0">
             <PageReveal>{children}</PageReveal>
           </main>
