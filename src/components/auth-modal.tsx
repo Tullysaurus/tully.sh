@@ -96,6 +96,9 @@ export default function AuthModal({
             </button>
           </form>
         )}
+        <p className="text-center text-xs text-neutral-500">
+          Sharing keys will result in your key being revoked
+        </p>
       </div>
     </div>
   );
