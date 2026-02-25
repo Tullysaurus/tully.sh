@@ -139,16 +139,18 @@ export default function Uploads() {
       }
       const zipBlob = await res.blob();
       const zip = await JSZip.loadAsync(zipBlob);
-      const pngEntries = Object.values(zip.files).filter(
-        (file) => !file.dir && file.name.toLowerCase().endsWith(".png"),
+      const imageEntries = Object.values(zip.files).filter(
+        (file) =>
+          !file.dir &&
+          (file.name.toLowerCase().endsWith(".jpg") || file.name.toLowerCase().endsWith(".jpeg")),
       );
 
-      if (pngEntries.length === 0) {
-        throw new Error("No PNG files were found in this archive.");
+      if (imageEntries.length === 0) {
+        throw new Error("No JPG files were found in this archive.");
       }
 
       const images = await Promise.all(
-        pngEntries.map(async (file) => {
+        imageEntries.map(async (file) => {
           const blob = await file.async("blob");
           return {
             name: file.name.split("/").pop() || file.name,
