@@ -340,7 +340,7 @@ export default function Uploads() {
           <div className="relative flex h-[90vh] w-full max-w-5xl flex-col rounded-lg border border-neutral-700 bg-[#171717] p-4">
             <button
               onClick={closePreview}
-              className="absolute right-3 top-3 z-20 rounded bg-black/30 p-1 text-neutral-300 transition-colors hover:text-white"
+              className="absolute right-3 top-3 z-20 rounded bg-black/30 p-1 text-neutral-300 transition-colors hover:text-white cursor-pointer"
               aria-label="Close preview"
             >
               <X size={18} />
@@ -375,7 +375,7 @@ export default function Uploads() {
                 <div className="flex h-full items-center justify-center gap-3 pt-6">
                   <button
                     onClick={showPrev}
-                    className="rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white"
+                    className="rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white cursor-pointer"
                     aria-label="Previous image"
                   >
                     <ChevronLeft size={22} />
@@ -391,7 +391,7 @@ export default function Uploads() {
 
                   <button
                     onClick={showNext}
-                    className="rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white"
+                    className="rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white cursor-pointer"
                     aria-label="Next image"
                   >
                     <ChevronRight size={22} />
