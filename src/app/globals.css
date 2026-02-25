@@ -44,3 +44,52 @@ body {
 .timeline-scroll::-webkit-scrollbar-thumb:hover {
   background: #777777;
 }
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-up {
+  opacity: 0;
+  animation: reveal-up 520ms ease-out forwards;
+}
+
+.reveal-up.delay-1 {
+  animation-delay: 100ms;
+}
+
+.reveal-up.delay-2 {
+  animation-delay: 180ms;
+}
+
+.reveal-up.delay-3 {
+  animation-delay: 260ms;
+}
+
+.reveal-up.delay-4 {
+  animation-delay: 340ms;
+}
+
+@keyframes home-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.home-card-track {
+  animation: home-marquee 46s linear infinite;
+}
+
+.home-card-marquee:hover .home-card-track {
+  animation-play-state: paused;
+}

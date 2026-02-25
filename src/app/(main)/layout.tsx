@@ -1,5 +1,6 @@
 import Sidebar from "@/components/sidebar";
 import { ModalProvider } from "@/components/modal-system";
+import PageReveal from "@/components/page-reveal";
 
 export default function RootLayout({
   children,
@@ -11,7 +12,9 @@ export default function RootLayout({
       <div className="min-h-screen w-full bg-background lg:flex lg:flex-row">
         <Sidebar />
         <div className="min-h-screen flex-1 overflow-x-hidden">
-          <main className="w-full pb-8 lg:pb-0">{children}</main>
+          <main className="w-full pb-8 lg:pb-0">
+            <PageReveal>{children}</PageReveal>
+          </main>
         </div>
       </div>
     </ModalProvider>
