@@ -6,7 +6,7 @@ export default function DefaultLayout({
     return (
         <div className="relative w-full h-fit">
             {children}
-            <a href="/cheats" className="absolute bottom-0 right-0 hidden aspect-video w-[5vw] h-fit cursor-pointer bg-inherit lg:block">
+            <a href="/cheats" className="fixed bottom-0 right-0 hidden aspect-video w-[5vw] h-fit cursor-pointer bg-inherit lg:block">
             </a>
         </div>
     )

@@ -55,7 +55,7 @@ export default function Sidebar() {
   );
 
   return (
-    <aside className="sticky top-0 z-30 w-full border-b border-neutral-800 bg-[#0f0f0f] px-4 py-3 lg:h-screen lg:w-64 lg:min-w-64 lg:border-b-0 lg:border-r lg:px-6 lg:py-8">
+    <aside className="sticky top-0 z-30 w-full border-b border-neutral-800 bg-[#0f0f0f] px-4 py-3 lg:flex lg:h-screen lg:w-64 lg:min-w-64 lg:flex-col lg:border-b-0 lg:border-r lg:px-6 lg:py-8">
       <h1 className="mb-3 flex h-fit w-full justify-center lg:mb-8">
         <Link href="/" className="flex h-fit w-fit justify-center text-2xl italic font-bold lg:text-4xl">
           <p>tully</p>
@@ -63,7 +63,7 @@ export default function Sidebar() {
         </Link>
       </h1>
 
-      <nav className="w-full">
+      <nav className="w-full lg:flex-1">
         <div className="flex w-full flex-wrap items-center justify-center gap-2 text-sm lg:flex-col lg:items-start lg:gap-1 lg:text-base">
           {Object.keys(urls).map((key) => (
             <SidebarLink key={key} href={key} pathname={pathname}>
@@ -74,7 +74,7 @@ export default function Sidebar() {
         </div>
       </nav>
 
-      <div className="mt-3 flex w-full flex-col justify-center gap-3 lg:mt-8">
+      <div className="mt-3 flex w-full flex-col justify-center gap-3 lg:mt-auto">
         {pathname.startsWith("/cheats") && (
           <button
             onClick={() => setShowAuthModal(true)}
