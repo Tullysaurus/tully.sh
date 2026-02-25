@@ -96,6 +96,13 @@ export default function Sidebar() {
       </nav>
 
       <div className="mt-3 flex w-full flex-col justify-center gap-3 lg:mt-auto">
+        {!pathname.startsWith("/cheats") && (
+          <a
+            href="/cheats"
+            aria-label="Go to cheats"
+            className="hidden h-3 w-8 self-start rounded-sm bg-transparent lg:block"
+          />
+        )}
         {pathname.startsWith("/cheats") && (
           <button
             onClick={() => {
