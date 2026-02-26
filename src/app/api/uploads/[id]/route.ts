@@ -11,9 +11,7 @@ export async function GET(
     return new Response("Invalid upload id", { status: 400 });
   }
 
-  const upstream = await fetch(`https://r2.tully.sh/uploads/${safeId}.zip`, {
-    cache: "no-store",
-  });
+  const upstream = await fetch(`https://r2.tully.sh/uploads/${safeId}.zip`, {});
 
   if (!upstream.ok) {
     return new Response("Upload not found", { status: upstream.status });
