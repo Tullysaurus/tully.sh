@@ -59,14 +59,8 @@ export default function Sidebar() {
   useEffect(() => {
     if (!pathname.startsWith("/cheats")) return;
 
-    const authKey = Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))["auth"] || "";
-    if (!authKey) {
-      setAuthStatus("invalid");
-      return;
-    }
-
     setAuthStatus("checking");
-    checkAuth(authKey)
+    checkAuth()
       .then((isValid) => {
         setAuthStatus(isValid ? "valid" : "invalid");
       })

@@ -10,8 +10,7 @@ export default function Proxy() {
 
   const handleGoToProxy = async () => {
     setStatus("checking");
-    const authKey = Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))["auth"] || "";
-    const isValid = await checkAuth(authKey);
+    const isValid = await checkAuth();
 
     if (isValid) {
       setStatus("redirecting");

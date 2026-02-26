@@ -1,8 +1,6 @@
-export default async function checkAuth(auth: string) {
-  if (!auth) return false;
-
+export default async function checkAuth() {
   try {
-    const res = await fetch(`https://api.tully.sh/check?key=${auth}`, {});
+    const res = await fetch("/api/auth/check", { cache: "no-store" });
     return res.ok;
   } catch (err) {
     console.error("Auth check failed:", err);

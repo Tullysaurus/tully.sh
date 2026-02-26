@@ -106,9 +106,8 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
       if (formData.subject) data.append("subject", formData.subject);
       if (formData.hour) data.append("hour", formData.hour);
       if (formData.comments) data.append("comments", formData.comments);
-      data.append("key", Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))['auth'] || "")
 
-      const response = await fetch("https://api.tully.sh/uploads", {
+      const response = await fetch("/api/uploads", {
         method: "POST",
         body: data,
       });

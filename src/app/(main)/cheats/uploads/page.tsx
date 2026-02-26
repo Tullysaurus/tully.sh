@@ -66,9 +66,8 @@ export default function Uploads() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      params.append("key", Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))["auth"] || "");
 
-      const res = await fetch(`https://api.tully.sh/uploads?${params.toString()}`);
+      const res = await fetch(`/api/uploads?${params.toString()}`);
       if (res.ok) {
         const data = await res.json();
         setUploads(data as Upload[]);
@@ -105,8 +104,7 @@ export default function Uploads() {
   };
 
   const handlePreview = async (upload: Upload) => {
-    const key = Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))["auth"] || "";
-    const isAuth = await checkAuth(key);
+    const isAuth = await checkAuth();
     if (!isAuth) {
       openAuthModal();
       return;
@@ -175,10 +173,9 @@ export default function Uploads() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this upload?")) return;
-    const key = Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))["auth"] || "";
 
     try {
-      const res = await fetch(`https://api.tully.sh/uploads?id=${id}&key=${key}`, { method: "DELETE" });
+      const res = await fetch(`/api/uploads?id=${id}`, { method: "DELETE" });
       if (res.ok) {
         setUploads((prev) => prev.filter((u) => u.id !== id));
       } else {

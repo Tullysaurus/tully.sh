@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { X, Loader2, CheckCircle, AlertCircle } from "lucide-react";
-import checkAuth from "@/lib/auth";
-
 export default function AuthModal({
   onClose,
   onSuccess,
@@ -23,12 +21,15 @@ export default function AuthModal({
     setMessage("");
 
     try {
-      // Check auth using the server action
-      const res = await checkAuth(key);
+      const response = await fetch("/api/auth/session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ key }),
+      });
 
-      if (res) {
-        // Set cookie only on success
-        document.cookie = `auth=${encodeURIComponent(key)}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
+      if (response.ok) {
         setStatus("success");
         setMessage("Access granted. You may close this window.");
         onSuccess?.();
