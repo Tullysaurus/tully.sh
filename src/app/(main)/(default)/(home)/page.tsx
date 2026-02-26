@@ -48,14 +48,14 @@ export default function Home() {
     },
     {
       id: "2020-cn",
-      period: "2018",
+      period: "2020",
       title: "Joined Code Ninjas",
       details: "Built confidence by shipping small projects consistently.",
       icon: <Sword className="h-4 w-4 text-white" />,
     },
     {
-      id: "2018-2022",
-      period: "2018-2022",
+      id: "2022",
+      period: "2022",
       title: "Explored many languages",
       details: "Worked across multiple stacks and learned fundamentals deeply.",
       icon: <Code className="h-4 w-4 text-white" />,
