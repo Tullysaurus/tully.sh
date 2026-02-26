@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 const AUTH_COOKIE_NAME = "auth_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
@@ -11,16 +12,21 @@ type SessionPayload = {
 
 let cachedCryptoKey: Promise<CryptoKey> | null = null;
 
-function getSessionSecret() {
-  const secret = process.env.AUTH_SESSION_SECRET;
+
+
+const readEnv = async () => (await getCloudflareContext()).env
+
+
+async function getSessionSecret() {
+  const secret = (await readEnv()).AUTH_SESSION_SECRET
   if (!secret || secret.length < 32) {
     throw new Error("AUTH_SESSION_SECRET must be set and at least 32 characters long.");
   }
   return secret;
 }
 
-export function hasAuthSessionSecret() {
-  const secret = process.env.AUTH_SESSION_SECRET;
+export async function hasAuthSessionSecret() {
+  const secret = (await readEnv()).AUTH_SESSION_SECRET
   return Boolean(secret && secret.length >= 32);
 }
 
@@ -48,14 +54,14 @@ function base64UrlDecode(input: string) {
     typeof atob === "function"
       ? atob(padded)
       : Buffer.from(padded, "base64").toString("binary");
-  return Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  return Uint8Array.from(binary, (char) => (char as string).charCodeAt(0));
 }
 
 async function getCryptoKey() {
   if (!cachedCryptoKey) {
     cachedCryptoKey = (async () => {
       const encoder = new TextEncoder();
-      const secretBytes = encoder.encode(getSessionSecret());
+      const secretBytes = encoder.encode(await getSessionSecret());
       const keyMaterial = await crypto.subtle.digest("SHA-256", secretBytes);
       return crypto.subtle.importKey("raw", keyMaterial, { name: "AES-GCM" }, false, [
         "encrypt",

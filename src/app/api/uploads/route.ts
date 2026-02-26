@@ -15,7 +15,7 @@ function forwardResponse(upstream: Response) {
 }
 
 async function requireAuthKey() {
-  if (!hasAuthSessionSecret()) {
+  if (!(await hasAuthSessionSecret())) {
     return NextResponse.json({ error: "Auth session is not configured." }, { status: 503 });
   }
 

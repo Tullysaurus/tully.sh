@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { clearAuthSession, getAuthSessionKey, hasAuthSessionSecret } from "@/lib/server/auth-session";
 
 export async function GET() {
-  if (!hasAuthSessionSecret()) {
+  if (!(await hasAuthSessionSecret())) {
     return NextResponse.json({ ok: false, error: "Auth session is not configured." }, { status: 503 });
   }
 
