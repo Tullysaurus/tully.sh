@@ -16,6 +16,7 @@ interface UploadFilter {
   teacher: string;
   subject: string;
   hour: string;
+  sortBy: "newest" | "oldest";
 }
 
 interface Upload {
@@ -32,8 +33,7 @@ interface Upload {
 }
 
 interface UploadFromApi extends Omit<Upload, "answers"> {
-  answer?: boolean | string | number | null;
-  answers?: boolean | string | number | null;
+  answers?: boolean;
 }
 
 type PreviewImage = {
@@ -53,6 +53,7 @@ export default function Uploads() {
     teacher: "",
     subject: "",
     hour: "",
+    sortBy: "newest",
   });
   const [uploads, setUploads] = useState<Upload[]>([]);
   const [loading, setLoading] = useState(false);
@@ -83,14 +84,7 @@ export default function Uploads() {
           data.map((upload) => ({
             ...upload,
             answers:
-              upload.answer === true ||
-              upload.answer === "true" ||
-              upload.answer === 1 ||
-              upload.answer === "1" ||
-              upload.answers === true ||
-              upload.answers === "true" ||
-              upload.answers === 1 ||
-              upload.answers === "1",
+              upload.answers ? true : false
           })),
         );
       } else {
@@ -215,7 +209,7 @@ export default function Uploads() {
       const teacherFilter = filters.teacher.trim().toLowerCase();
       const subjectFilter = filters.subject.trim().toLowerCase();
 
-      return uploads.filter((upload) => {
+      const filtered = uploads.filter((upload) => {
         const matchesName = !nameFilter || upload.name.toLowerCase().includes(nameFilter);
         const matchesType = !filters.type || upload.type === filters.type;
         const matchesAnswers = !filters.answersOnly || upload.answers;
@@ -224,6 +218,15 @@ export default function Uploads() {
         const matchesHour = !filters.hour || upload.hour === filters.hour;
 
         return matchesName && matchesType && matchesAnswers && matchesTeacher && matchesSubject && matchesHour;
+      });
+
+      return filtered.sort((a, b) => {
+        const timeA = new Date(a.createdAt).getTime();
+        const timeB = new Date(b.createdAt).getTime();
+        const safeTimeA = Number.isNaN(timeA) ? 0 : timeA;
+        const safeTimeB = Number.isNaN(timeB) ? 0 : timeB;
+
+        return filters.sortBy === "oldest" ? safeTimeA - safeTimeB : safeTimeB - safeTimeA;
       });
     },
     [uploads, filters],
@@ -290,6 +293,16 @@ export default function Uploads() {
               </option>
             ))}
             <option value="Other">Other</option>
+          </select>
+
+          <select
+            name="sortBy"
+            value={filters.sortBy}
+            onChange={handleFilterChange}
+            className="rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none focus:border-[#f5b041]"
+          >
+            <option value="newest">Most Recent</option>
+            <option value="oldest">Oldest</option>
           </select>
 
           <Checkbox
