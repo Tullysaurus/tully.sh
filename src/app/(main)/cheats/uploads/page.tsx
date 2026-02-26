@@ -20,12 +20,18 @@ interface Upload {
   id: string;
   name: string;
   type: AssignmentType;
+  answers: boolean;
   teacher: string;
   subject: string;
   hour: string;
   comments: string;
   createdAt: string;
   deletable: boolean;
+}
+
+interface UploadFromApi extends Omit<Upload, "answers"> {
+  answer?: boolean | string | number | null;
+  answers?: boolean | string | number | null;
 }
 
 type PreviewImage = {
@@ -69,8 +75,21 @@ export default function Uploads() {
 
       const res = await fetch(`/api/uploads?${params.toString()}`);
       if (res.ok) {
-        const data = await res.json();
-        setUploads(data as Upload[]);
+        const data = (await res.json()) as UploadFromApi[];
+        setUploads(
+          data.map((upload) => ({
+            ...upload,
+            answers:
+              upload.answer === true ||
+              upload.answer === "true" ||
+              upload.answer === 1 ||
+              upload.answer === "1" ||
+              upload.answers === true ||
+              upload.answers === "true" ||
+              upload.answers === 1 ||
+              upload.answers === "1",
+          })),
+        );
       } else {
         console.error("Failed to fetch uploads");
       }
@@ -306,7 +325,14 @@ export default function Uploads() {
                     <div className="rounded bg-neutral-800 p-2 text-[#f5b041]">
                       <FileText size={24} />
                     </div>
-                    <span className="rounded bg-neutral-900 px-2 py-1 font-mono text-xs text-neutral-600">{upload.type}</span>
+                    <div className="flex items-center gap-2">
+                      {upload.answers && (
+                        <span className="rounded bg-green-500/10 px-2 py-1 font-mono text-xs text-green-200">
+                          Answers
+                        </span>
+                      )}
+                      <span className="rounded bg-neutral-900 px-2 py-1 font-mono text-xs text-neutral-600">{upload.type}</span>
+                    </div>
                   </div>
                   <h3 className="mb-1 truncate font-medium text-white" title={upload.name}>
                     {upload.name}

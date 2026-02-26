@@ -34,6 +34,7 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
   const [formData, setFormData] = useState({
     name: "",
     type: "ASSIGNMENT", // Default value
+    answer: false,
     teacher: "",
     subject: "",
     hour: "",
@@ -45,6 +46,11 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    if (name === "answer") {
+      const input = e.target as HTMLInputElement;
+      setFormData((prev) => ({ ...prev, answer: input.checked }));
+      return;
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -102,6 +108,7 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
       data.append("file", zipFile);
       data.append("name", formData.name || "upload.zip");
       data.append("type", formData.type.toUpperCase());
+      data.append("answer", String(formData.answer));
       if (formData.teacher) data.append("teacher", formData.teacher);
       if (formData.subject) data.append("subject", formData.subject);
       if (formData.hour) data.append("hour", formData.hour);
@@ -227,6 +234,19 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
                   <option value="QUIZ">Quiz</option>
                   <option value="NOTES">Notes</option>
                 </select>
+              </div>
+              <div className="flex items-center rounded border border-neutral-700 bg-neutral-900 px-3 py-2.5 sm:mt-6">
+                <input
+                  id="answer"
+                  name="answer"
+                  type="checkbox"
+                  checked={formData.answer}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 cursor-pointer rounded-[4px] border border-neutral-500 bg-transparent accent-[#f5b041]"
+                />
+                <label htmlFor="answer" className="ml-2 cursor-pointer text-sm text-neutral-200">
+                  Includes answers
+                </label>
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Hour/Period</label>
