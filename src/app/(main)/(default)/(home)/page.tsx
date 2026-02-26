@@ -47,7 +47,7 @@ export default function Home() {
       icon: <Laptop className="h-4 w-4 text-white" />,
     },
     {
-      id: "2018-cn",
+      id: "2020-cn",
       period: "2018",
       title: "Joined Code Ninjas",
       details: "Built confidence by shipping small projects consistently.",
