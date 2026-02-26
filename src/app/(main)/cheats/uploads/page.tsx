@@ -5,12 +5,14 @@ import JSZip from "jszip";
 import { ChevronLeft, ChevronRight, Download, Eye, FileText, Loader2, Plus, Search, Trash2, X } from "lucide-react";
 import checkAuth from "@/lib/auth";
 import { useModals } from "@/lib/modals";
+import Checkbox from "@/components/checkbox";
 
 type AssignmentType = "ASSIGNMENT" | "TEST" | "QUIZ" | "NOTES";
 
 interface UploadFilter {
   name: string;
   type: AssignmentType | "";
+  answersOnly: boolean;
   teacher: string;
   subject: string;
   hour: string;
@@ -47,6 +49,7 @@ export default function Uploads() {
   const [filters, setFilters] = useState<UploadFilter>({
     name: "",
     type: "",
+    answersOnly: false,
     teacher: "",
     subject: "",
     hour: "",
@@ -215,11 +218,12 @@ export default function Uploads() {
       return uploads.filter((upload) => {
         const matchesName = !nameFilter || upload.name.toLowerCase().includes(nameFilter);
         const matchesType = !filters.type || upload.type === filters.type;
+        const matchesAnswers = !filters.answersOnly || upload.answers;
         const matchesTeacher = !teacherFilter || upload.teacher.toLowerCase().includes(teacherFilter);
         const matchesSubject = !subjectFilter || upload.subject.toLowerCase().includes(subjectFilter);
         const matchesHour = !filters.hour || upload.hour === filters.hour;
 
-        return matchesName && matchesType && matchesTeacher && matchesSubject && matchesHour;
+        return matchesName && matchesType && matchesAnswers && matchesTeacher && matchesSubject && matchesHour;
       });
     },
     [uploads, filters],
@@ -247,8 +251,8 @@ export default function Uploads() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 rounded-lg border border-neutral-800 bg-[#1f1f1f] p-4 md:grid-cols-2 lg:grid-cols-5">
-          <div className="flex items-center rounded border border-neutral-700 bg-neutral-900 px-3 lg:col-span-2">
+        <div className="grid grid-cols-1 gap-4 rounded-lg border border-neutral-800 bg-[#1f1f1f] p-4 md:grid-cols-2 lg:grid-cols-6">
+          <div className="flex items-center rounded border border-neutral-700 bg-neutral-900 px-3 lg:col-span-3">
             <Search size={18} className="mr-2 text-neutral-500" />
             <input
               type="text"
@@ -273,6 +277,31 @@ export default function Uploads() {
             <option value="NOTES">Notes</option>
           </select>
 
+          <select
+            name="hour"
+            value={filters.hour}
+            onChange={handleFilterChange}
+            className="rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none focus:border-[#f5b041]"
+          >
+            <option value="">All Hours</option>
+            {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+              <option key={num} value={num.toString()}>
+                {num}
+              </option>
+            ))}
+            <option value="Other">Other</option>
+          </select>
+
+          <Checkbox
+            id="answers-only"
+            name="answersOnly"
+            checked={filters.answersOnly}
+            onChange={(checked) => setFilters((prev) => ({ ...prev, answersOnly: checked }))}
+            label="Only Answers"
+            containerClassName="flex cursor-pointer items-center gap-2 rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white"
+            labelClassName="cursor-pointer"
+          />
+
           <input
             type="text"
             name="teacher"
@@ -290,21 +319,6 @@ export default function Uploads() {
             onChange={handleFilterChange}
             className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none focus:border-[#f5b041]"
           />
-
-          <select
-            name="hour"
-            value={filters.hour}
-            onChange={handleFilterChange}
-            className="rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none focus:border-[#f5b041]"
-          >
-            <option value="">All Hours</option>
-            {[1, 2, 3, 4, 5, 6, 7].map((num) => (
-              <option key={num} value={num.toString()}>
-                {num}
-              </option>
-            ))}
-            <option value="Other">Other</option>
-          </select>
         </div>
 
         <div className="flex flex-col gap-2">

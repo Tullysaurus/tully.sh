@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { X, Loader2, CheckCircle, AlertCircle, Upload as UploadIcon } from "lucide-react";
 import JSZip from "jszip";
+import Checkbox from "@/components/checkbox";
 
 const ALLOWED_IMAGE_EXTENSIONS = new Set([
   "jpg",
@@ -220,7 +221,7 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
             </div>
 
             {/* Grid for Small Fields */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Type</label>
                 <select
@@ -235,19 +236,7 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
                   <option value="NOTES">Notes</option>
                 </select>
               </div>
-              <div className="flex items-center rounded border border-neutral-700 bg-neutral-900 px-3 py-2.5 sm:mt-6">
-                <input
-                  id="answer"
-                  name="answer"
-                  type="checkbox"
-                  checked={formData.answer}
-                  onChange={handleInputChange}
-                  className="h-4 w-4 cursor-pointer rounded-[4px] border border-neutral-500 bg-transparent accent-[#f5b041]"
-                />
-                <label htmlFor="answer" className="ml-2 cursor-pointer text-sm text-neutral-200">
-                  Includes answers
-                </label>
-              </div>
+             
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Hour/Period</label>
                 <select
@@ -261,8 +250,18 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
                     <option key={num} value={num.toString()}>{num}</option>
                   ))}
                   <option value="Other">Other</option>
-                </select>
+               </select>
               </div>
+              <Checkbox
+                id="answer"
+                name="answer"
+                checked={formData.answer}
+                onChange={(checked) => setFormData((prev) => ({ ...prev, answer: checked }))}
+                label="Answers"
+                title="Do these files contain answers?"
+                containerClassName="flex items-center rounded border border-neutral-700 bg-neutral-900 px-3 py-2.5 sm:mt-6"
+                labelClassName="ml-2 cursor-pointer text-sm text-neutral-200"
+              />
             </div>
 
             {/* General Fields */}
