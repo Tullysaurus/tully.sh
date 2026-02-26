@@ -258,7 +258,6 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
                 checked={formData.answer}
                 onChange={(checked) => setFormData((prev) => ({ ...prev, answer: checked }))}
                 label="Answers"
-                title="Do these files contain answers?"
                 containerClassName="flex items-center rounded border border-neutral-700 bg-neutral-900 px-3 py-2.5 sm:mt-6"
                 labelClassName="ml-2 cursor-pointer text-sm text-neutral-200"
               />
