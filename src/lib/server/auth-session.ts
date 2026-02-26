@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 const AUTH_COOKIE_NAME = "auth_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
@@ -14,19 +13,17 @@ let cachedCryptoKey: Promise<CryptoKey> | null = null;
 
 
 
-const readEnv = async () => (await getCloudflareContext()).env
 
-
-async function getSessionSecret() {
-  const secret = (await readEnv()).AUTH_SESSION_SECRET
+function getSessionSecret() {
+  const secret = process.env.AUTH_SESSION_SECRET
   if (!secret || secret.length < 32) {
     throw new Error("AUTH_SESSION_SECRET must be set and at least 32 characters long.");
   }
   return secret;
 }
 
-export async function hasAuthSessionSecret() {
-  const secret = (await readEnv()).AUTH_SESSION_SECRET
+export function hasAuthSessionSecret() {
+  const secret = process.env.AUTH_SESSION_SECRET
   return Boolean(secret && secret.length >= 32);
 }
 
