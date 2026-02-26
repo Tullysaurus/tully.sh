@@ -11,6 +11,9 @@ type SessionPayload = {
 
 let cachedCryptoKey: Promise<CryptoKey> | null = null;
 
+function isSecureCookie() {
+  return process.env.NODE_ENV === "production";
+}
 
 
 
@@ -23,7 +26,7 @@ function getSessionSecret() {
 }
 
 export function hasAuthSessionSecret() {
-  const secret = process.env.AUTH_SESSION_SECRET
+  const secret = process.env.AUTH_SESSION_SECRET;
   return Boolean(secret && secret.length >= 32);
 }
 
@@ -102,7 +105,7 @@ export async function setAuthSession(response: NextResponse, rawKey: string) {
 
   response.cookies.set(AUTH_COOKIE_NAME, await encryptPayload(payload), {
     httpOnly: true,
-    secure: true,
+    secure: isSecureCookie(),
     sameSite: "lax",
     path: "/",
     maxAge: SESSION_MAX_AGE_SECONDS,
@@ -112,7 +115,7 @@ export async function setAuthSession(response: NextResponse, rawKey: string) {
 export function clearAuthSession(response: NextResponse) {
   response.cookies.set(AUTH_COOKIE_NAME, "", {
     httpOnly: true,
-    secure: true,
+    secure: isSecureCookie(),
     sameSite: "lax",
     path: "/",
     maxAge: 0,
