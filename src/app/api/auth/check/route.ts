@@ -20,9 +20,7 @@ export async function GET() {
   }
 
   try {
-    const upstream = await fetch(`https://api.tully.sh/check?key=${encodeURIComponent(key)}`, {
-      cache: "no-store",
-    });
+    const upstream = await fetch(`https://api.tully.sh/check?key=${encodeURIComponent(key)}`);
 
     if (!upstream.ok) {
       const response = NextResponse.json({ ok: false }, { status: 401 });

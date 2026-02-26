@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAuthSessionKey, hasAuthSessionSecret } from "@/lib/server/auth-session";
+import { enforceRateLimit } from "@/lib/server/rate-limit";
 
 function forwardResponse(upstream: Response) {
   const headers = new Headers();
@@ -34,6 +35,13 @@ async function requireAuthKey() {
 }
 
 export async function GET(request: Request) {
+  const rateLimited = enforceRateLimit(request, {
+    bucket: "api-uploads",
+    windowMs: 60 * 1000,
+    maxRequests: 120,
+  });
+  if (rateLimited) return rateLimited;
+
   // disable authentication requirement for viewing uploads list
   const keyOrResponse = await requireAuthKey();
   // if (keyOrResponse instanceof NextResponse) return keyOrResponse;
@@ -53,6 +61,13 @@ export async function GET(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const rateLimited = enforceRateLimit(request, {
+    bucket: "api-uploads",
+    windowMs: 60 * 1000,
+    maxRequests: 30,
+  });
+  if (rateLimited) return rateLimited;
+
   const keyOrResponse = await requireAuthKey();
   if (keyOrResponse instanceof NextResponse) return keyOrResponse;
   
@@ -68,6 +83,13 @@ export async function DELETE(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const rateLimited = enforceRateLimit(request, {
+    bucket: "api-uploads",
+    windowMs: 60 * 1000,
+    maxRequests: 30,
+  });
+  if (rateLimited) return rateLimited;
+
   const keyOrResponse = await requireAuthKey();
   if (keyOrResponse instanceof NextResponse) return keyOrResponse;
 

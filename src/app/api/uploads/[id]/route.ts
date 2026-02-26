@@ -1,10 +1,17 @@
 import { getAuthSessionKey } from "@/lib/server/auth-session";
 import { NextRequest } from "next/server";
+import { enforceRateLimit } from "@/lib/server/rate-limit";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const rateLimited = enforceRateLimit(request, {
+    bucket: "api-upload-download",
+    windowMs: 60 * 1000,
+    maxRequests: 20,
+  });
+  if (rateLimited) return rateLimited;
 
   try {
     const authKey = await getAuthSessionKey();

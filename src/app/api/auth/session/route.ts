@@ -1,7 +1,15 @@
 import { NextResponse } from "next/server";
 import { clearAuthSession, hasAuthSessionSecret, setAuthSession } from "@/lib/server/auth-session";
+import { enforceRateLimit } from "@/lib/server/rate-limit";
 
 export async function POST(request: Request) {
+  const rateLimited = enforceRateLimit(request, {
+    bucket: "api-auth-session",
+    windowMs: 60 * 1000,
+    maxRequests: 20,
+  });
+  if (rateLimited) return rateLimited;
+
   if (!(await hasAuthSessionSecret())) {
     return NextResponse.json(
       { error: "Server auth session is not configured (missing AUTH_SESSION_SECRET)." },
@@ -40,7 +48,14 @@ export async function POST(request: Request) {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
+  const rateLimited = enforceRateLimit(request, {
+    bucket: "api-auth-session",
+    windowMs: 60 * 1000,
+    maxRequests: 20,
+  });
+  if (rateLimited) return rateLimited;
+
   const response = NextResponse.json({ ok: true });
   clearAuthSession(response);
   return response;
