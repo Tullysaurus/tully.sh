@@ -35,7 +35,7 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
   const [formData, setFormData] = useState({
     name: "",
     type: "ASSIGNMENT", // Default value
-    answer: false,
+    answers: false,
     teacher: "",
     subject: "",
     hour: "",
@@ -47,9 +47,9 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    if (name === "answer") {
+    if (name === "answers") {
       const input = e.target as HTMLInputElement;
-      setFormData((prev) => ({ ...prev, answer: input.checked }));
+      setFormData((prev) => ({ ...prev, answers: input.checked }));
       return;
     }
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -109,7 +109,7 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
       data.append("file", zipFile);
       data.append("name", formData.name || "upload.zip");
       data.append("type", formData.type.toUpperCase());
-      data.append("answer", String(formData.answer));
+      data.append("answers", formData.answers ? "t" : "f");
       if (formData.teacher) data.append("teacher", formData.teacher);
       if (formData.subject) data.append("subject", formData.subject);
       if (formData.hour) data.append("hour", formData.hour);
@@ -253,10 +253,10 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
                </select>
               </div>
               <Checkbox
-                id="answer"
-                name="answer"
-                checked={formData.answer}
-                onChange={(checked) => setFormData((prev) => ({ ...prev, answer: checked }))}
+                id="answers"
+                name="answers"
+                checked={formData.answers}
+                onChange={(checked) => setFormData((prev) => ({ ...prev, answers: checked }))}
                 label="Answers"
                 containerClassName="flex items-center rounded border border-neutral-700 bg-neutral-900 px-3 py-2.5 sm:mt-6"
                 labelClassName="ml-2 cursor-pointer text-sm text-neutral-200"

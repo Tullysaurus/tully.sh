@@ -95,15 +95,9 @@ export async function POST(request: Request) {
 
   const incoming = await request.formData();
   const outgoing = new FormData();
-  const rawAnswer = incoming.get("answer");
-  const normalizedAnswer =
-    typeof rawAnswer === "string" &&
-    (rawAnswer === "true" || rawAnswer === "1" || rawAnswer === "on");
-
   incoming.forEach((value, key) => {
-    if (key !== "key" && key !== "answer") outgoing.append(key, value);
+    if (key !== "key") outgoing.append(key, value);
   });
-  outgoing.set("answer", String(normalizedAnswer));
   outgoing.set("key", keyOrResponse);
 
   const upstream = await fetch("https://api.tully.sh/uploads", {
