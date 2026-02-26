@@ -136,6 +136,9 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
             <X size={20} />
           </button>
         </div>
+        <p className="text-neutral-400 text-sm mt-1">
+            Be sure to remove any personally-identifiable content
+        </p>
 
         {status === "success" ? (
           <div className="flex flex-col items-center justify-center py-8 gap-4 text-center">
@@ -294,7 +297,7 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
               )}
             </button>
             <p className="text-center text-xs text-neutral-500">
-              Any inappropriate uploads will be removed and have your key revoked
+              Repeated uploads of innapropriate or illegible content will result in penalties.
             </p>
           </form>
         )}
