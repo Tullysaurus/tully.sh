@@ -315,7 +315,7 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
               )}
             </button>
             <p className="text-center text-xs text-neutral-500">
-              Repeated uploads of innapropriate or illegible content will result in penalties.
+              Uploads of innapropriate or illegible content may result in penalties.
             </p>
           </form>
         )}
