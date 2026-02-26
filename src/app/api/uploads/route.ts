@@ -34,15 +34,16 @@ async function requireAuthKey() {
 }
 
 export async function GET(request: Request) {
-  const keyOrResponse = await requireAuthKey();
-  if (keyOrResponse instanceof NextResponse) return keyOrResponse;
+  // disable authentication requirement for viewing uploads list
+  // const keyOrResponse = await requireAuthKey();
+  // if (keyOrResponse instanceof NextResponse) return keyOrResponse;
 
   const requestUrl = new URL(request.url);
   const upstreamUrl = new URL("https://api.tully.sh/uploads");
   requestUrl.searchParams.forEach((value, name) => {
     if (name !== "key") upstreamUrl.searchParams.append(name, value);
   });
-  upstreamUrl.searchParams.set("key", keyOrResponse);
+  // upstreamUrl.searchParams.set("key", keyOrResponse);
 
   const upstream = await fetch(upstreamUrl.toString(), { cache: "no-store" });
   return forwardResponse(upstream);

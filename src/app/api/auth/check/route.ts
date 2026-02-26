@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { clearAuthSession, getAuthSessionKey, hasAuthSessionSecret } from "@/lib/server/auth-session";
 
 export async function GET() {
