@@ -1,9 +1,23 @@
+import { getAuthSessionKey } from "@/lib/server/auth-session";
 import { NextRequest } from "next/server";
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+
+  try {
+    const authKey = await getAuthSessionKey();
+    const res = await fetch(`https://api.tully.sh/check?key=${authKey}`)
+    if (!res.ok) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+  } catch (e) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+
+
   const { id } = await params;
   const safeId = id.replace(/[^a-zA-Z0-9_-]/g, "");
 

@@ -15,7 +15,7 @@ function forwardResponse(upstream: Response) {
 }
 
 async function requireAuthKey() {
-  if (!(await hasAuthSessionSecret())) {
+  if (!(hasAuthSessionSecret())) {
     return NextResponse.json({ error: "Auth session is not configured." }, { status: 503 });
   }
 
@@ -35,31 +35,34 @@ async function requireAuthKey() {
 
 export async function GET(request: Request) {
   // disable authentication requirement for viewing uploads list
-  // const keyOrResponse = await requireAuthKey();
+  const keyOrResponse = await requireAuthKey();
   // if (keyOrResponse instanceof NextResponse) return keyOrResponse;
-
-  const requestUrl = new URL(request.url);
+  
+  const requestUrl = new URL(request.url)
   const upstreamUrl = new URL("https://api.tully.sh/uploads");
   requestUrl.searchParams.forEach((value, name) => {
     if (name !== "key") upstreamUrl.searchParams.append(name, value);
-  });
-  // upstreamUrl.searchParams.set("key", keyOrResponse);
+  })
+  if (keyOrResponse && !(keyOrResponse instanceof NextResponse)){
+    upstreamUrl.searchParams.set("key", keyOrResponse)
+  }
 
   const upstream = await fetch(upstreamUrl.toString(), { cache: "no-store" });
+  
   return forwardResponse(upstream);
 }
 
 export async function DELETE(request: Request) {
   const keyOrResponse = await requireAuthKey();
   if (keyOrResponse instanceof NextResponse) return keyOrResponse;
-
+  
   const requestUrl = new URL(request.url);
   const upstreamUrl = new URL("https://api.tully.sh/uploads");
   requestUrl.searchParams.forEach((value, name) => {
     if (name !== "key") upstreamUrl.searchParams.append(name, value);
   });
   upstreamUrl.searchParams.set("key", keyOrResponse);
-
+  
   const upstream = await fetch(upstreamUrl.toString(), { method: "DELETE", cache: "no-store" });
   return forwardResponse(upstream);
 }
