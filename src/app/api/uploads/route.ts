@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAuthSessionKey } from "@/lib/server/auth-session";
+import { getAuthSessionKey, hasAuthSessionSecret } from "@/lib/server/auth-session";
 
 function forwardResponse(upstream: Response) {
   const headers = new Headers();
@@ -15,7 +15,18 @@ function forwardResponse(upstream: Response) {
 }
 
 async function requireAuthKey() {
-  const key = await getAuthSessionKey();
+  if (!hasAuthSessionSecret()) {
+    return NextResponse.json({ error: "Auth session is not configured." }, { status: 503 });
+  }
+
+  let key: string | null = null;
+  try {
+    key = await getAuthSessionKey();
+  } catch (error) {
+    console.error("Failed to read auth session:", error);
+    return NextResponse.json({ error: "Failed to read auth session." }, { status: 500 });
+  }
+
   if (!key) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

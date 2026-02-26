@@ -19,13 +19,23 @@ function getSessionSecret() {
   return secret;
 }
 
+export function hasAuthSessionSecret() {
+  const secret = process.env.AUTH_SESSION_SECRET;
+  return Boolean(secret && secret.length >= 32);
+}
+
 function base64UrlEncode(input: Uint8Array) {
   let binary = "";
   input.forEach((byte) => {
     binary += String.fromCharCode(byte);
   });
 
-  return btoa(binary)
+  const base64 =
+    typeof btoa === "function"
+      ? btoa(binary)
+      : Buffer.from(binary, "binary").toString("base64");
+
+  return base64
     .replace(/\+/g, "-")
     .replace(/\//g, "_")
     .replace(/=+$/g, "");
@@ -34,7 +44,10 @@ function base64UrlEncode(input: Uint8Array) {
 function base64UrlDecode(input: string) {
   const normalized = input.replace(/-/g, "+").replace(/_/g, "/");
   const padded = normalized + "=".repeat((4 - (normalized.length % 4)) % 4);
-  const binary = atob(padded);
+  const binary =
+    typeof atob === "function"
+      ? atob(padded)
+      : Buffer.from(padded, "base64").toString("binary");
   return Uint8Array.from(binary, (char) => char.charCodeAt(0));
 }
 

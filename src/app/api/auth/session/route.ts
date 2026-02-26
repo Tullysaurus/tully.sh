@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
-import { clearAuthSession, setAuthSession } from "@/lib/server/auth-session";
+import { clearAuthSession, hasAuthSessionSecret, setAuthSession } from "@/lib/server/auth-session";
 
 export async function POST(request: Request) {
+  if (!hasAuthSessionSecret()) {
+    return NextResponse.json(
+      { error: "Server auth session is not configured (missing AUTH_SESSION_SECRET)." },
+      { status: 503 },
+    );
+  }
+
   let key = "";
 
   try {
@@ -23,9 +30,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid access key." }, { status: 401 });
   }
 
-  const response = NextResponse.json({ ok: true });
-  await setAuthSession(response, key);
-  return response;
+  try {
+    const response = NextResponse.json({ ok: true });
+    await setAuthSession(response, key);
+    return response;
+  } catch (error) {
+    console.error("Failed to set auth session:", error);
+    return NextResponse.json({ error: "Failed to create secure session." }, { status: 500 });
+  }
 }
 
 export async function DELETE() {

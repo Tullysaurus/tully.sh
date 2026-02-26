@@ -1,8 +1,19 @@
 import { NextResponse } from "next/server";
-import { clearAuthSession, getAuthSessionKey } from "@/lib/server/auth-session";
+import { clearAuthSession, getAuthSessionKey, hasAuthSessionSecret } from "@/lib/server/auth-session";
 
 export async function GET() {
-  const key = await getAuthSessionKey();
+  if (!hasAuthSessionSecret()) {
+    return NextResponse.json({ ok: false, error: "Auth session is not configured." }, { status: 503 });
+  }
+
+  let key: string | null = null;
+  try {
+    key = await getAuthSessionKey();
+  } catch (error) {
+    console.error("Failed to read auth session:", error);
+    return NextResponse.json({ ok: false }, { status: 500 });
+  }
+
   if (!key) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
