@@ -66,11 +66,6 @@ export default function Uploads() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (filters.name) params.append("name", filters.name);
-      if (filters.type) params.append("type", filters.type);
-      if (filters.teacher) params.append("teacher", filters.teacher);
-      if (filters.subject) params.append("subject", filters.subject);
-      if (filters.hour) params.append("hour", filters.hour);
       params.append("key", Object.fromEntries(document.cookie.split("; ").map((c) => c.split("=")))["auth"] || "");
 
       const res = await fetch(`https://api.tully.sh/uploads?${params.toString()}`);
@@ -85,13 +80,10 @@ export default function Uploads() {
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchUploads();
-    }, 500);
-    return () => clearTimeout(timer);
+    fetchUploads();
   }, [fetchUploads]);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -199,11 +191,22 @@ export default function Uploads() {
   };
 
   const filteredUploads = useMemo(
-    () =>
-      uploads.filter((upload) =>
-        upload.name.toLowerCase().includes(filters.name.toLowerCase()),
-      ),
-    [uploads, filters.name],
+    () => {
+      const nameFilter = filters.name.trim().toLowerCase();
+      const teacherFilter = filters.teacher.trim().toLowerCase();
+      const subjectFilter = filters.subject.trim().toLowerCase();
+
+      return uploads.filter((upload) => {
+        const matchesName = !nameFilter || upload.name.toLowerCase().includes(nameFilter);
+        const matchesType = !filters.type || upload.type === filters.type;
+        const matchesTeacher = !teacherFilter || upload.teacher.toLowerCase().includes(teacherFilter);
+        const matchesSubject = !subjectFilter || upload.subject.toLowerCase().includes(subjectFilter);
+        const matchesHour = !filters.hour || upload.hour === filters.hour;
+
+        return matchesName && matchesType && matchesTeacher && matchesSubject && matchesHour;
+      });
+    },
+    [uploads, filters],
   );
 
   return (
