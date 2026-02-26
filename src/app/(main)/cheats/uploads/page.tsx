@@ -1,9 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import JSZip from "jszip";
-import { ChevronLeft, ChevronRight, Download, Eye, FileText, Loader2, Plus, Search, Trash2, X } from "lucide-react";
-import checkAuth from "@/lib/auth";
+import { Eye, FileText, Plus, Search, Trash2 } from "lucide-react";
 import { useModals } from "@/lib/modals";
 import Checkbox from "@/components/checkbox";
 
@@ -36,15 +34,6 @@ interface UploadFromApi extends Omit<Upload, "answers"> {
   answers?: boolean;
 }
 
-type PreviewImage = {
-  name: string;
-  url: string;
-};
-
-function revokePreviewImages(images: PreviewImage[]) {
-  images.forEach((img) => URL.revokeObjectURL(img.url));
-}
-
 export default function Uploads() {
   const [filters, setFilters] = useState<UploadFilter>({
     name: "",
@@ -57,20 +46,7 @@ export default function Uploads() {
   });
   const [uploads, setUploads] = useState<Upload[]>([]);
   const [loading, setLoading] = useState(false);
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewLoading, setPreviewLoading] = useState(false);
-  const [previewError, setPreviewError] = useState("");
-  const [previewImages, setPreviewImages] = useState<PreviewImage[]>([]);
-  const [previewIndex, setPreviewIndex] = useState(0);
-  const [previewZipUrl, setPreviewZipUrl] = useState("");
-  const [previewZipName, setPreviewZipName] = useState("upload.zip");
-  const { openAuthModal, openUploadModal } = useModals();
-
-  useEffect(() => {
-    return () => {
-      revokePreviewImages(previewImages);
-    };
-  }, [previewImages]);
+  const { openUploadModal } = useModals();
 
   const fetchUploads = useCallback(async () => {
     setLoading(true);
@@ -106,85 +82,10 @@ export default function Uploads() {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const closePreview = () => {
-    setPreviewOpen(false);
-    setPreviewLoading(false);
-    setPreviewError("");
-    setPreviewIndex(0);
-    setPreviewZipUrl("");
-    setPreviewZipName("upload.zip");
-    setPreviewImages((prev) => {
-      revokePreviewImages(prev);
-      return [];
-    });
-  };
-
-  const handlePreview = async (upload: Upload) => {
-    const isAuth = await checkAuth();
-    if (!isAuth) {
-      openAuthModal();
-      return;
-    }
-
-    const zipUrl = `/api/uploads/${upload.id}`;
-    setPreviewOpen(true);
-    setPreviewLoading(true);
-    setPreviewError("");
-    setPreviewIndex(0);
-    setPreviewZipUrl(zipUrl);
-    setPreviewZipName(`${upload.name || "upload"}.zip`);
-    setPreviewImages((prev) => {
-      revokePreviewImages(prev);
-      return [];
-    });
-
-    try {
-      const res = await fetch(zipUrl);
-      if (!res.ok) {
-        throw new Error("Failed to fetch upload archive.");
-      }
-      const zipBlob = await res.blob();
-      const zip = await JSZip.loadAsync(zipBlob);
-      const imageEntries = Object.values(zip.files).filter(
-        (file) =>
-          !file.dir &&
-          (file.name.toLowerCase().endsWith(".jpg") || file.name.toLowerCase().endsWith(".jpeg")),
-      );
-
-      if (imageEntries.length === 0) {
-        throw new Error("No JPG files were found in this archive.");
-      }
-
-      const images = await Promise.all(
-        imageEntries.map(async (file) => {
-          const blob = await file.async("blob");
-          return {
-            name: file.name.split("/").pop() || file.name,
-            url: URL.createObjectURL(blob),
-          };
-        }),
-      );
-
-      setPreviewImages(images);
-    } catch (error) {
-      setPreviewError(error instanceof Error ? error.message : "Failed to open upload preview.");
-    } finally {
-      setPreviewLoading(false);
-    }
-  };
-
-  const showPrev = () => {
-    setPreviewIndex((prev) => {
-      if (previewImages.length === 0) return 0;
-      return (prev - 1 + previewImages.length) % previewImages.length;
-    });
-  };
-
-  const showNext = () => {
-    setPreviewIndex((prev) => {
-      if (previewImages.length === 0) return 0;
-      return (prev + 1) % previewImages.length;
-    });
+  const handlePreview = (upload: Upload) => {
+    const name = upload.name?.trim() || "upload";
+    const viewerUrl = `/cheats/uploads/view/${encodeURIComponent(upload.id)}?name=${encodeURIComponent(name)}`;
+    window.open(viewerUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleDelete = async (id: string) => {
@@ -396,76 +297,6 @@ export default function Uploads() {
         </div>
       </div>
 
-      {previewOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-          <div className="relative flex h-[90vh] w-full max-w-5xl flex-col rounded-lg border border-neutral-700 bg-[#171717] p-4">
-            <button
-              onClick={closePreview}
-              className="absolute right-3 top-3 z-20 rounded bg-black/30 p-1 text-neutral-300 transition-colors hover:text-white cursor-pointer"
-              aria-label="Close preview"
-            >
-              <X size={18} />
-            </button>
-
-            <a
-              href={previewZipUrl}
-              download={previewZipName}
-              className="absolute left-3 top-3 z-20 flex items-center gap-1 rounded bg-black/30 px-2 py-1 text-xs text-neutral-300 transition-colors hover:text-white"
-            >
-              <Download size={14} />
-              ZIP
-            </a>
-
-            {previewLoading ? (
-              <div className="flex h-full flex-col items-center justify-center gap-3 text-neutral-300">
-                <Loader2 className="animate-spin" size={28} />
-                <p>Loading and extracting images...</p>
-              </div>
-            ) : previewError ? (
-              <div className="flex h-full flex-col items-center justify-center gap-4 text-center text-neutral-300">
-                <p className="text-red-400">{previewError}</p>
-                <button
-                  onClick={closePreview}
-                  className="rounded bg-neutral-800 px-3 py-2 text-sm transition-colors hover:bg-neutral-700"
-                >
-                  Close
-                </button>
-              </div>
-            ) : previewImages.length > 0 ? (
-              <>
-                <div className="flex h-full items-center justify-center gap-3 pt-6">
-                  <button
-                    onClick={showPrev}
-                    className="rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white cursor-pointer"
-                    aria-label="Previous image"
-                  >
-                    <ChevronLeft size={22} />
-                  </button>
-
-                  <div className="flex h-[68vh] w-full max-w-4xl items-center justify-center overflow-hidden rounded-md border border-neutral-800 bg-[#111]">
-                    <img
-                      src={previewImages[previewIndex].url}
-                      alt={previewImages[previewIndex].name}
-                      className="h-full w-full object-contain"
-                    />
-                  </div>
-
-                  <button
-                    onClick={showNext}
-                    className="rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white cursor-pointer"
-                    aria-label="Next image"
-                  >
-                    <ChevronRight size={22} />
-                  </button>
-                </div>
-                <div className="pt-3 text-center text-sm text-neutral-300">
-                  {previewIndex + 1} / {previewImages.length}
-                </div>
-              </>
-            ) : null}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
