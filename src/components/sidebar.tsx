@@ -142,7 +142,7 @@ export default function Sidebar() {
             window.location.replace("/cheats")
           }}
           aria-label="Go to cheats"
-          className="absolute bottom-2 left-2 h-3 w-8 rounded-sm bg-white/10 transition-colors hover:bg-white/20 active:bg-white/30 cursor-pointer lg:bottom-3 lg:left-3"
+          className="absolute bottom-0 left-0 h-6 w-12 cursor-pointer"
         />
       )}
 
