@@ -34,7 +34,7 @@ export default function Proxy() {
       <p className="max-w-xl text-center text-base font-semibold sm:text-lg">
         {status === "idle" && "Click below to continue to the proxy."}
         {status === "checking" && "Checking access key..."}
-        {status === "redirecting" && "Access granted. Redirecting to proxy.tully.sh..."}
+        {status === "redirecting" && "Access granted. Redirecting to proxy"}
         {status === "blocked" && "A valid access key is required. Enter your key in the modal to continue."}
       </p>
       <button
@@ -42,7 +42,7 @@ export default function Proxy() {
         disabled={status === "checking" || status === "redirecting"}
         className="cursor-pointer rounded bg-[#f5b041] px-5 py-2 font-bold text-black transition-colors hover:bg-[#d49b3b] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Go to proxy.tully.sh
+        Go to proxy
       </button>
     </div>
   );

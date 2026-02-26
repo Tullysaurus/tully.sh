@@ -143,8 +143,10 @@ export default function Sidebar() {
       </div>
 
       {!pathname.startsWith("/cheats") && (
-        <a
-          href="/cheats"
+        <button
+          onClick={()=>{
+            window.location.replace("/cheats")
+          }}
           aria-label="Go to cheats"
           className="absolute bottom-2 left-2 h-3 w-8 rounded-sm bg-white/10 transition-colors hover:bg-white/20 active:bg-white/30 cursor-pointer lg:bottom-3 lg:left-3"
         />
