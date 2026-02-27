@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Eye, FileText, Plus, Search, Trash2 } from "lucide-react";
 import { useModals } from "@/lib/modals";
 import checkAuth from "@/lib/auth";
@@ -33,10 +33,6 @@ interface Upload {
   createdAt: string;
   deletable: boolean;
   moderationStatus: "PENDING" | "APPROVED" | "REJECTED" | "FLAGGED";
-}
-
-interface UploadFromApi extends Partial<Upload> {
-  id?: string;
 }
 
 function asModerationStatus(value: unknown): "PENDING" | "APPROVED" | "REJECTED" | "FLAGGED" {
@@ -109,23 +105,13 @@ export default function Uploads() {
   const [error, setError] = useState("");
   const { openUploadModal, openAuthModal } = useModals();
 
-  const fetchUploads = useCallback(async (activeFilters: UploadFilter, signal?: AbortSignal) => {
+  const fetchUploads = async () => {
     setLoading(true);
     setError("");
     try {
-      const params = new URLSearchParams();
-      if (activeFilters.name.trim()) params.set("name", activeFilters.name.trim());
-      if (activeFilters.type) params.set("type", activeFilters.type);
-      if (activeFilters.answersOnly) params.set("answers", "t");
-      if (activeFilters.freeOnly) params.set("free", "t");
-      if (activeFilters.teacher.trim()) params.set("teacher", activeFilters.teacher.trim());
-      if (activeFilters.subject.trim()) params.set("subject", activeFilters.subject.trim());
-      if (activeFilters.hour.trim()) params.set("hour", activeFilters.hour.trim());
-
-      const res = await fetch(apiUrl(`/uploads?${params.toString()}`), {
+      const res = await fetch(apiUrl("/uploads"), {
         credentials: "include",
         cache: "no-store",
-        signal,
       });
       if (res.ok) {
         const data = (await res.json()) as unknown;
@@ -140,24 +126,16 @@ export default function Uploads() {
         setError(payload?.error ?? `Failed to fetch uploads (${res.status}).`);
       }
     } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") return;
       console.error("Error fetching uploads:", error);
       setError("Error fetching uploads.");
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      fetchUploads(filters, controller.signal);
-    }, 200);
-    return () => {
-      controller.abort();
-      clearTimeout(timeout);
-    };
-  }, [filters, fetchUploads]);
+    fetchUploads();
+  }, []);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -213,7 +191,22 @@ export default function Uploads() {
   };
 
   const visibleUploads = useMemo(() => {
-    const sorted = [...uploads];
+    const nameFilter = filters.name.trim().toLowerCase();
+    const teacherFilter = filters.teacher.trim().toLowerCase();
+    const subjectFilter = filters.subject.trim().toLowerCase();
+
+    const filtered = uploads.filter((upload) => {
+      const matchesName = !nameFilter || upload.name.toLowerCase().includes(nameFilter);
+      const matchesType = !filters.type || upload.type === filters.type;
+      const matchesAnswers = !filters.answersOnly || upload.answers;
+      const matchesFree = !filters.freeOnly || upload.free;
+      const matchesTeacher = !teacherFilter || upload.teacher.toLowerCase().includes(teacherFilter);
+      const matchesSubject = !subjectFilter || upload.subject.toLowerCase().includes(subjectFilter);
+      const matchesHour = !filters.hour || upload.hour === filters.hour;
+      return matchesName && matchesType && matchesAnswers && matchesFree && matchesTeacher && matchesSubject && matchesHour;
+    });
+
+    const sorted = [...filtered];
     sorted.sort((a, b) => {
         const timeA = new Date(a.createdAt).getTime();
         const timeB = new Date(b.createdAt).getTime();
@@ -223,7 +216,7 @@ export default function Uploads() {
         return filters.sortBy === "oldest" ? safeTimeA - safeTimeB : safeTimeB - safeTimeA;
     });
     return sorted;
-  }, [uploads, filters.sortBy]);
+  }, [uploads, filters]);
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center gap-8 px-4 pb-10 pt-10 lg:pt-16">
@@ -236,7 +229,7 @@ export default function Uploads() {
             onClick={() =>
               openUploadModal({
                 onSuccess: () => {
-                  fetchUploads(filters);
+                  fetchUploads();
                 },
               })
             }
