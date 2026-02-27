@@ -84,8 +84,13 @@ export default function UploadViewerPage() {
     return raw?.trim() || "upload";
   }, [searchParams]);
   const isFreeUpload = useMemo(() => searchParams.get("free") === "1", [searchParams]);
+  const source = useMemo(() => searchParams.get("source") || "uploads", [searchParams]);
 
-  const zipUrl = useMemo(() => (uploadId ? apiUrl(`/uploads/${uploadId}`) : ""), [uploadId]);
+  const zipUrl = useMemo(() => {
+    if (!uploadId) return "";
+    if (source === "moderation") return apiUrl(`/moderation/uploads/${uploadId}`);
+    return apiUrl(`/uploads/${uploadId}`);
+  }, [uploadId, source]);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -121,7 +126,8 @@ export default function UploadViewerPage() {
       });
 
       try {
-        const zipBlob = await fetchZipBlobWithCache(zipUrl, isFreeUpload);
+        const allowCache = source !== "moderation" && isFreeUpload;
+        const zipBlob = await fetchZipBlobWithCache(zipUrl, allowCache);
         const zip = await JSZip.loadAsync(zipBlob);
         const imageEntries = Object.values(zip.files).filter(
           (file) =>
@@ -175,7 +181,7 @@ export default function UploadViewerPage() {
     return () => {
       cancelled = true;
     };
-  }, [uploadId, zipUrl, isFreeUpload, openAuthModal]);
+  }, [uploadId, zipUrl, isFreeUpload, openAuthModal, source]);
 
   const showPrev = () => {
     setIndex((prev) => {

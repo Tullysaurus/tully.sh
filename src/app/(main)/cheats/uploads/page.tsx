@@ -34,9 +34,44 @@ interface Upload {
   deletable: boolean;
 }
 
-interface UploadFromApi extends Omit<Upload, "answers" | "free"> {
-  answers?: boolean;
-  free?: boolean;
+interface UploadFromApi extends Partial<Upload> {
+  id?: string;
+}
+
+function asBoolean(value: unknown): boolean {
+  if (typeof value === "boolean") return value;
+  if (typeof value === "number") return value !== 0;
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+    return normalized === "t" || normalized === "true" || normalized === "1" || normalized === "yes";
+  }
+  return false;
+}
+
+function normalizeUpload(raw: unknown): Upload | null {
+  if (!raw || typeof raw !== "object") return null;
+  const item = raw as Record<string, unknown>;
+
+  const id = typeof item.id === "string" ? item.id : "";
+  if (!id) return null;
+
+  const typeValue = typeof item.type === "string" ? item.type : "ASSIGNMENT";
+  const type: AssignmentType =
+    typeValue === "TEST" || typeValue === "QUIZ" || typeValue === "ASSIGNMENT" || typeValue === "NOTES" ? typeValue : "ASSIGNMENT";
+
+  return {
+    id,
+    name: typeof item.name === "string" && item.name.trim() ? item.name : "Untitled upload",
+    type,
+    answers: asBoolean(item.answers),
+    free: asBoolean(item.free),
+    teacher: typeof item.teacher === "string" ? item.teacher : "",
+    subject: typeof item.subject === "string" ? item.subject : "",
+    hour: typeof item.hour === "string" ? item.hour : "",
+    comments: typeof item.comments === "string" ? item.comments : "",
+    createdAt: typeof item.createdAt === "string" ? item.createdAt : new Date().toISOString(),
+    deletable: asBoolean(item.deletable),
+  };
 }
 
 export default function Uploads() {
@@ -52,38 +87,56 @@ export default function Uploads() {
   });
   const [uploads, setUploads] = useState<Upload[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const { openUploadModal, openAuthModal } = useModals();
 
-  const fetchUploads = useCallback(async () => {
+  const fetchUploads = useCallback(async (activeFilters: UploadFilter, signal?: AbortSignal) => {
     setLoading(true);
+    setError("");
     try {
       const params = new URLSearchParams();
+      if (activeFilters.name.trim()) params.set("name", activeFilters.name.trim());
+      if (activeFilters.type) params.set("type", activeFilters.type);
+      if (activeFilters.answersOnly) params.set("answers", "t");
+      if (activeFilters.free === "free") params.set("free", "t");
+      if (activeFilters.free === "paid") params.set("free", "f");
+      if (activeFilters.teacher.trim()) params.set("teacher", activeFilters.teacher.trim());
+      if (activeFilters.subject.trim()) params.set("subject", activeFilters.subject.trim());
+      if (activeFilters.hour.trim()) params.set("hour", activeFilters.hour.trim());
 
       const res = await fetch(apiUrl(`/uploads?${params.toString()}`), {
         credentials: "include",
+        cache: "no-store",
+        signal,
       });
       if (res.ok) {
-        const data = (await res.json()) as UploadFromApi[];
-        setUploads(
-          data.map((upload) => ({
-            ...upload,
-            answers: upload.answers ? true : false,
-            free: upload.free ? true : false,
-          })),
-        );
+        const data = (await res.json()) as unknown;
+        const list = Array.isArray(data) ? data : [];
+        const normalized = list.map(normalizeUpload).filter((u): u is Upload => Boolean(u));
+        setUploads(normalized);
       } else {
-        console.error("Failed to fetch uploads");
+        const payload = (await res.json().catch(() => null)) as { error?: string } | null;
+        setError(payload?.error ?? `Failed to fetch uploads (${res.status}).`);
       }
     } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
       console.error("Error fetching uploads:", error);
+      setError("Error fetching uploads.");
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchUploads();
-  }, [fetchUploads]);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      fetchUploads(filters, controller.signal);
+    }, 200);
+    return () => {
+      controller.abort();
+      clearTimeout(timeout);
+    };
+  }, [filters, fetchUploads]);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -127,6 +180,8 @@ export default function Uploads() {
       });
       if (res.ok) {
         setUploads((prev) => prev.filter((u) => u.id !== id));
+      } else if (res.status === 401 || res.status === 403) {
+        openAuthModal();
       } else {
         alert("Failed to delete upload");
       }
@@ -136,44 +191,18 @@ export default function Uploads() {
     }
   };
 
-  const filteredUploads = useMemo(
-    () => {
-      const nameFilter = filters.name.trim().toLowerCase();
-      const teacherFilter = filters.teacher.trim().toLowerCase();
-      const subjectFilter = filters.subject.trim().toLowerCase();
-
-      const filtered = uploads.filter((upload) => {
-        const matchesName = !nameFilter || upload.name.toLowerCase().includes(nameFilter);
-        const matchesType = !filters.type || upload.type === filters.type;
-        const matchesAnswers = !filters.answersOnly || upload.answers;
-        const matchesFree =
-          !filters.free || (filters.free === "free" ? upload.free : !upload.free);
-        const matchesTeacher = !teacherFilter || upload.teacher.toLowerCase().includes(teacherFilter);
-        const matchesSubject = !subjectFilter || upload.subject.toLowerCase().includes(subjectFilter);
-        const matchesHour = !filters.hour || upload.hour === filters.hour;
-
-        return (
-          matchesName &&
-          matchesType &&
-          matchesAnswers &&
-          matchesFree &&
-          matchesTeacher &&
-          matchesSubject &&
-          matchesHour
-        );
-      });
-
-      return filtered.sort((a, b) => {
+  const visibleUploads = useMemo(() => {
+    const sorted = [...uploads];
+    sorted.sort((a, b) => {
         const timeA = new Date(a.createdAt).getTime();
         const timeB = new Date(b.createdAt).getTime();
         const safeTimeA = Number.isNaN(timeA) ? 0 : timeA;
         const safeTimeB = Number.isNaN(timeB) ? 0 : timeB;
 
         return filters.sortBy === "oldest" ? safeTimeA - safeTimeB : safeTimeB - safeTimeA;
-      });
-    },
-    [uploads, filters],
-  );
+    });
+    return sorted;
+  }, [uploads, filters.sortBy]);
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center gap-8 px-4 pb-10 pt-10 lg:pt-16">
@@ -186,7 +215,7 @@ export default function Uploads() {
             onClick={() =>
               openUploadModal({
                 onSuccess: () => {
-                  fetchUploads();
+                  fetchUploads(filters);
                 },
               })
             }
@@ -289,15 +318,20 @@ export default function Uploads() {
         </div>
 
         <div className="flex flex-col gap-2">
+          {error && (
+            <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+              {error}
+            </div>
+          )}
           {loading ? (
             <div className="py-10 text-center text-neutral-500">Loading uploads...</div>
-          ) : filteredUploads.length === 0 ? (
+          ) : visibleUploads.length === 0 ? (
             <div className="rounded-lg border border-neutral-800 bg-[#1f1f1f] py-10 text-center text-neutral-500">
               No uploads found matching your filters.
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {filteredUploads.map((upload) => (
+              {visibleUploads.map((upload) => (
                 <div
                   key={upload.id}
                   className="group flex flex-col rounded-lg border border-neutral-800 bg-[#1f1f1f] p-4 transition-colors hover:border-[#f5b041]/50"
