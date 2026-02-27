@@ -105,7 +105,7 @@ export default function ModerationPage() {
       if (res.status === 401 || res.status === 403) {
         setError("Moderator access required.");
         openAuthModal();
-        setUploads([]);
+        // setUploads([]);
         return;
       }
 
