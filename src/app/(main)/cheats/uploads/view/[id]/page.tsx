@@ -177,7 +177,7 @@ export default function UploadViewerPage() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-2rem)] w-full flex-col overflow-hidden bg-[#171717] p-4 lg:h-screen">
+    <div className="flex h-dvh w-full flex-col overflow-hidden bg-[#171717] p-4 lg:h-screen">
       <div className="mb-4 flex items-center justify-between gap-3">
         <button
           onClick={goBack}
