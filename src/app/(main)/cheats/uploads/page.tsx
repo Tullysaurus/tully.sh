@@ -13,7 +13,7 @@ interface UploadFilter {
   name: string;
   type: AssignmentType | "";
   answersOnly: boolean;
-  free: "" | "free" | "paid";
+  freeOnly: boolean;
   teacher: string;
   subject: string;
   hour: string;
@@ -98,7 +98,7 @@ export default function Uploads() {
     name: "",
     type: "",
     answersOnly: false,
-    free: "",
+    freeOnly: false,
     teacher: "",
     subject: "",
     hour: "",
@@ -117,8 +117,7 @@ export default function Uploads() {
       if (activeFilters.name.trim()) params.set("name", activeFilters.name.trim());
       if (activeFilters.type) params.set("type", activeFilters.type);
       if (activeFilters.answersOnly) params.set("answers", "t");
-      if (activeFilters.free === "free") params.set("free", "t");
-      if (activeFilters.free === "paid") params.set("free", "f");
+      if (activeFilters.freeOnly) params.set("free", "t");
       if (activeFilters.teacher.trim()) params.set("teacher", activeFilters.teacher.trim());
       if (activeFilters.subject.trim()) params.set("subject", activeFilters.subject.trim());
       if (activeFilters.hour.trim()) params.set("hour", activeFilters.hour.trim());
@@ -274,16 +273,15 @@ export default function Uploads() {
             <option value="NOTES">Notes</option>
           </select>
 
-          <select
-            name="free"
-            value={filters.free}
-            onChange={handleFilterChange}
-            className="rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none focus:border-[#f5b041]"
-          >
-            <option value="">All Access</option>
-            <option value="free">Free</option>
-            <option value="paid">Paid</option>
-          </select>
+          <Checkbox
+            id="free-only"
+            name="freeOnly"
+            checked={filters.freeOnly}
+            onChange={(checked) => setFilters((prev) => ({ ...prev, freeOnly: checked }))}
+            label="Free Only"
+            containerClassName="flex cursor-pointer items-center gap-2 rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white"
+            labelClassName="cursor-pointer"
+          />
 
           <Checkbox
             id="answers-only"
