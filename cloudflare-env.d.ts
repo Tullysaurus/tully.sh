@@ -10,7 +10,6 @@ declare namespace Cloudflare {
 		IMAGES: ImagesBinding;
 		ASSETS: Fetcher;
 		NEXTJS_ENV: string;
-		DATABASE_URL: string;
 		AUTH_SESSION_SECRET: string;
 		WORKER_SELF_REFERENCE: Service<typeof import("./.open-next/worker").default>;
 	}
@@ -20,7 +19,7 @@ type StringifyValues<EnvType extends Record<string, unknown>> = {
 	[Binding in keyof EnvType]: EnvType[Binding] extends string ? EnvType[Binding] : string;
 };
 declare namespace NodeJS {
-	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "NEXTJS_ENV" | "DATABASE_URL" | "AUTH_SESSION_SECRET">> {}
+	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "NEXTJS_ENV" | "AUTH_SESSION_SECRET">> {}
 }
 
 // Begin runtime types

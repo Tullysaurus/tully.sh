@@ -1,26 +1,34 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 import JSZip from "jszip";
 import { ChevronLeft, ChevronRight, Download, Loader2, Maximize2, Minimize2 } from "lucide-react";
-import checkAuth from "@/lib/auth";
 import { useModals } from "@/lib/modals";
+import { apiUrl } from "@/lib/api-client";
 
 type PreviewImage = {
   name: string;
   url: string;
 };
 
-type AuthStatus = "checking" | "valid" | "invalid";
+class UnauthorizedError extends Error {
+  constructor() {
+    super("Unauthorized");
+    this.name = "UnauthorizedError";
+  }
+}
 
 function revokePreviewImages(images: PreviewImage[]) {
   images.forEach((img) => URL.revokeObjectURL(img.url));
 }
 
-async function fetchZipBlobWithCache(uploadId: string, zipUrl: string) {
+async function fetchZipBlobWithCache(zipUrl: string) {
   if (typeof window === "undefined" || !("caches" in window)) {
-    const response = await fetch(zipUrl, { cache: "no-store" });
+    const response = await fetch(zipUrl, { cache: "no-store", credentials: "include" });
+    if (response.status === 401) {
+      throw new UnauthorizedError();
+    }
     if (!response.ok) {
       throw new Error("Failed to fetch upload archive.");
     }
@@ -28,14 +36,17 @@ async function fetchZipBlobWithCache(uploadId: string, zipUrl: string) {
   }
 
   const cache = await caches.open("uploads-viewer-v1");
-  const cacheKey = new Request(`/api/uploads/${uploadId}?viewer-cache=1`, { method: "GET" });
+  const cacheKey = new Request(zipUrl, { method: "GET" });
   const cachedResponse = await cache.match(cacheKey);
 
   if (cachedResponse) {
     return cachedResponse.blob();
   }
 
-  const response = await fetch(zipUrl, { cache: "no-store" });
+  const response = await fetch(zipUrl, { cache: "no-store", credentials: "include" });
+  if (response.status === 401) {
+    throw new UnauthorizedError();
+  }
   if (!response.ok) {
     throw new Error("Failed to fetch upload archive.");
   }
@@ -47,7 +58,6 @@ async function fetchZipBlobWithCache(uploadId: string, zipUrl: string) {
 export default function UploadViewerPage() {
   const params = useParams<{ id: string | string[] }>();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const { openAuthModal } = useModals();
 
   const uploadId = useMemo(() => {
@@ -61,15 +71,16 @@ export default function UploadViewerPage() {
     return raw?.trim() || "upload";
   }, [searchParams]);
 
-  const zipUrl = useMemo(() => (uploadId ? `/api/uploads/${uploadId}` : ""), [uploadId]);
+  const zipUrl = useMemo(() => (uploadId ? apiUrl(`/uploads/${uploadId}`) : ""), [uploadId]);
 
-  const [authStatus, setAuthStatus] = useState<AuthStatus>("checking");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [needsAuth, setNeedsAuth] = useState(false);
   const [images, setImages] = useState<PreviewImage[]>([]);
   const [index, setIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const imagePaneRef = useRef<HTMLDivElement | null>(null);
+  const authPromptShownRef = useRef(false);
 
   useEffect(() => {
     return () => {
@@ -77,37 +88,18 @@ export default function UploadViewerPage() {
     };
   }, [images]);
 
-  const checkAccess = useCallback(async () => {
-    const isValid = await checkAuth();
-    if (isValid) {
-      setAuthStatus("valid");
-      return;
-    }
-
-    setAuthStatus("invalid");
-    openAuthModal({
-      onSuccess: () => setAuthStatus("valid"),
-    });
-  }, [openAuthModal]);
-
   useEffect(() => {
-    if (!uploadId) {
-      setAuthStatus("invalid");
+    if (!uploadId || !zipUrl) {
       setError("Missing upload id.");
       return;
     }
-
-    checkAccess();
-  }, [checkAccess, uploadId]);
-
-  useEffect(() => {
-    if (authStatus !== "valid" || !uploadId || !zipUrl) return;
 
     let cancelled = false;
 
     const load = async () => {
       setLoading(true);
       setError("");
+      setNeedsAuth(false);
       setIndex(0);
       setImages((prev) => {
         revokePreviewImages(prev);
@@ -115,7 +107,7 @@ export default function UploadViewerPage() {
       });
 
       try {
-        const zipBlob = await fetchZipBlobWithCache(uploadId, zipUrl);
+        const zipBlob = await fetchZipBlobWithCache(zipUrl);
         const zip = await JSZip.loadAsync(zipBlob);
         const imageEntries = Object.values(zip.files).filter(
           (file) =>
@@ -144,6 +136,17 @@ export default function UploadViewerPage() {
         }
       } catch (loadError) {
         if (!cancelled) {
+          if (loadError instanceof UnauthorizedError) {
+            setNeedsAuth(true);
+            setError("A valid key is required to view this upload.");
+            if (!authPromptShownRef.current) {
+              authPromptShownRef.current = true;
+              openAuthModal({
+                onSuccess: () => window.location.reload(),
+              });
+            }
+            return;
+          }
           setError(loadError instanceof Error ? loadError.message : "Failed to open upload preview.");
         }
       } finally {
@@ -158,7 +161,7 @@ export default function UploadViewerPage() {
     return () => {
       cancelled = true;
     };
-  }, [authStatus, uploadId, zipUrl]);
+  }, [uploadId, zipUrl, openAuthModal]);
 
   const showPrev = () => {
     setIndex((prev) => {
@@ -202,29 +205,31 @@ export default function UploadViewerPage() {
         </a>
       </div>
 
-      {authStatus === "checking" || loading ? (
+      {loading ? (
         <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 text-neutral-300">
           <Loader2 className="animate-spin" size={28} />
-          <p>{authStatus === "checking" ? "Checking access key..." : "Loading and extracting images..."}</p>
+          <p>Loading and extracting images...</p>
         </div>
       ) : error ? (
         <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 text-center text-neutral-300">
           <p className="text-red-400">{error}</p>
+          {needsAuth && (
+            <button
+              onClick={() =>
+                openAuthModal({
+                  onSuccess: () => window.location.reload(),
+                })
+              }
+              className="rounded bg-neutral-800 px-3 py-2 text-sm transition-colors hover:bg-neutral-700"
+            >
+              Authenticate and Retry
+            </button>
+          )}
           <button
             onClick={goBack}
             className="rounded bg-neutral-800 px-3 py-2 text-sm transition-colors hover:bg-neutral-700"
           >
             Back to uploads
-          </button>
-        </div>
-      ) : authStatus === "invalid" ? (
-        <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 text-neutral-300">
-          <p>A valid key is required to view this upload.</p>
-          <button
-            onClick={checkAccess}
-            className="rounded bg-neutral-800 px-3 py-2 text-sm transition-colors hover:bg-neutral-700"
-          >
-            Check access again
           </button>
         </div>
       ) : images.length > 0 ? (

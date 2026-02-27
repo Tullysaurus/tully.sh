@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { X, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { apiUrl } from "@/lib/api-client";
 export default function AuthModal({
   onClose,
   onSuccess,
@@ -21,8 +22,9 @@ export default function AuthModal({
     setMessage("");
 
     try {
-      const response = await fetch("/api/auth/session", {
+      const response = await fetch(apiUrl("/auth/session"), {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -37,7 +39,7 @@ export default function AuthModal({
         setStatus("error");
         setMessage("Invalid access key.");
       }
-    } catch (err) {
+    } catch {
       setStatus("error");
       setMessage("An error occurred. Please try again.");
     }

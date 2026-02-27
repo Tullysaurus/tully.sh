@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-export default function CheatsHome() {
+export default function GetKey() {
   const cheatsTags = [
     {
       id: "scripts",
@@ -34,13 +34,13 @@ export default function CheatsHome() {
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-8 px-4 pb-10 pt-10 lg:pt-16">
-      <h1 className="reveal-up text-center text-4xl italic font-light sm:text-5xl">tully.sh/<span className="text-[#FFC17B]">cheats</span></h1>
+      <h1 className="reveal-up text-center text-4xl italic font-light sm:text-5xl">tully.sh/cheats/<span className="text-[#FFC17B]">get-key</span></h1>
 
-      <p className="reveal-up delay-1 max-w-3xl text-center text-base font-semibold sm:text-lg">
-        A private toolkit area for simple scripts, answer sharing tools, and internet bypasses.
+      <p className="reveal-up delay-1 max-w-2xl text-center text-base font-semibold sm:text-lg">
+        Step-by-step instructions on how to get an access key.
       </p>
       <p className="reveal-up delay-2 max-w-3xl text-center text-sm text-neutral-300 sm:text-base">
-        This is your place to cheat in school; pre-made and tested scripts to cheat on online assignments,
+        This section is focused on practical workflows: quickly accessing shared scripts,
         viewing and sharing answers to assignments, and browsing the internet without restrictions.
       </p>
       <div className="reveal-up delay-3 flex flex-wrap items-center justify-center gap-3">
@@ -55,12 +55,6 @@ export default function CheatsHome() {
           className="rounded border border-white/20 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/5"
         >
           Browse Uploads
-        </Link>
-        <Link
-          href="/cheats/proxy"
-          className="rounded border border-white/20 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/5"
-        >
-          Search Freely
         </Link>
       </div>
       <div className="reveal-up delay-4 home-card-marquee w-full overflow-hidden">

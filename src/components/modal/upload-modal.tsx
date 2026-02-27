@@ -4,6 +4,7 @@ import { useState } from "react";
 import { X, Loader2, CheckCircle, AlertCircle, Upload as UploadIcon } from "lucide-react";
 import JSZip from "jszip";
 import Checkbox from "@/components/checkbox";
+import { apiUrl } from "@/lib/api-client";
 
 const ALLOWED_IMAGE_EXTENSIONS = new Set([
   "jpg",
@@ -115,8 +116,9 @@ export default function UploadModal({ onClose, onSuccess }: UploadModalProps) {
       if (formData.hour) data.append("hour", formData.hour);
       if (formData.comments) data.append("comments", formData.comments);
 
-      const response = await fetch("/api/uploads", {
+      const response = await fetch(apiUrl("/uploads"), {
         method: "POST",
+        credentials: "include",
         body: data,
       });
 
