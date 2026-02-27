@@ -296,7 +296,7 @@ export default function Uploads() {
             name="freeOnly"
             checked={filters.freeOnly}
             onChange={(checked) => setFilters((prev) => ({ ...prev, freeOnly: checked }))}
-            label="Free Only"
+            label="Only Free"
             containerClassName="flex cursor-pointer items-center gap-2 rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white"
             labelClassName="cursor-pointer"
           />
