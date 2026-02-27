@@ -24,8 +24,8 @@ export default function CheatsHome() {
     },
     {
       id: "private",
-      title: "Active users",
-      description: "Active users uploading the answers as they come out.",
+      title: "Moderation",
+      description: "Review pending and flagged uploads before they become public.",
       tone: "bg-[#241f26] border-[#4f3d61]",
     },
   ];
@@ -60,6 +60,12 @@ export default function CheatsHome() {
           className="inline-flex min-w-[10.5rem] items-center justify-center rounded-md border border-[#58a585] bg-transparent px-4 py-2 text-sm font-semibold text-[#8fd6b7] transition-colors hover:bg-[#58a585]/10"
         >
           Search Freely
+        </Link>
+        <Link
+          href="/cheats/moderation"
+          className="inline-flex min-w-[10.5rem] items-center justify-center rounded-md border border-[#d07cff] bg-transparent px-4 py-2 text-sm font-semibold text-[#e4b7ff] transition-colors hover:bg-[#d07cff]/10"
+        >
+          Moderation Queue
         </Link>
       </div>
       <div className="reveal-up delay-4 home-card-marquee w-full overflow-hidden">

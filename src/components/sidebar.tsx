@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { ReactElement } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BugPlay, CheckCircle2, CloudUpload, Github, House, Key, Loader2, Megaphone, Router, Terminal } from "lucide-react";
+import { BugPlay, CheckCircle2, CloudUpload, Github, House, Key, Loader2, Megaphone, Router, Shield, Terminal } from "lucide-react";
 import SidebarLink from "./sidebar-link";
 import SocialLink from "./social-link";
 import checkAuth from "@/lib/auth";
@@ -45,6 +45,10 @@ export default function Sidebar() {
       "/cheats/uploads": {
         name: "Uploads",
         icon: <CloudUpload className="h-4 w-4 lg:h-5 lg:w-5" />,
+      },
+      "/cheats/moderation": {
+        name: "Moderation",
+        icon: <Shield className="h-4 w-4 lg:h-5 lg:w-5" />,
       },
       "/cheats/proxy": {
         name: "Proxy",
