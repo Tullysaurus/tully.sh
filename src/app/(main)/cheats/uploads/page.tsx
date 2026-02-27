@@ -92,7 +92,11 @@ export default function Uploads() {
 
   const openViewer = (upload: Upload) => {
     const name = upload.name?.trim() || "upload";
-    const viewerUrl = `/cheats/uploads/view/${encodeURIComponent(upload.id)}?name=${encodeURIComponent(name)}`;
+    const viewerParams = new URLSearchParams({
+      name,
+      free: upload.free ? "1" : "0",
+    });
+    const viewerUrl = `/cheats/uploads/view/${encodeURIComponent(upload.id)}?${viewerParams.toString()}`;
     window.open(viewerUrl, "_blank", "noopener,noreferrer");
   };
 

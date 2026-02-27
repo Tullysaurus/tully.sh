@@ -23,7 +23,7 @@ function revokePreviewImages(images: PreviewImage[]) {
   images.forEach((img) => URL.revokeObjectURL(img.url));
 }
 
-async function fetchZipBlobWithCache(zipUrl: string) {
+async function fetchZipBlobWithCache(zipUrl: string, allowCache: boolean) {
   if (typeof window === "undefined" || !("caches" in window)) {
     const response = await fetch(zipUrl, { cache: "no-store", credentials: "include" });
     if (response.status === 401) {
@@ -37,6 +37,19 @@ async function fetchZipBlobWithCache(zipUrl: string) {
 
   const cache = await caches.open("uploads-viewer-v1");
   const cacheKey = new Request(zipUrl, { method: "GET" });
+
+  if (!allowCache) {
+    await cache.delete(cacheKey);
+    const response = await fetch(zipUrl, { cache: "no-store", credentials: "include" });
+    if (response.status === 401) {
+      throw new UnauthorizedError();
+    }
+    if (!response.ok) {
+      throw new Error("Failed to fetch upload archive.");
+    }
+    return response.blob();
+  }
+
   const cachedResponse = await cache.match(cacheKey);
 
   if (cachedResponse) {
@@ -70,6 +83,7 @@ export default function UploadViewerPage() {
     const raw = searchParams.get("name");
     return raw?.trim() || "upload";
   }, [searchParams]);
+  const isFreeUpload = useMemo(() => searchParams.get("free") === "1", [searchParams]);
 
   const zipUrl = useMemo(() => (uploadId ? apiUrl(`/uploads/${uploadId}`) : ""), [uploadId]);
 
@@ -107,9 +121,8 @@ export default function UploadViewerPage() {
       });
 
       try {
-        const zipBlob = await fetchZipBlobWithCache(zipUrl);
+        const zipBlob = await fetchZipBlobWithCache(zipUrl, isFreeUpload);
         const zip = await JSZip.loadAsync(zipBlob);
-        console.log(zip);
         const imageEntries = Object.values(zip.files).filter(
           (file) =>
             !file.dir &&
@@ -162,7 +175,7 @@ export default function UploadViewerPage() {
     return () => {
       cancelled = true;
     };
-  }, [uploadId, zipUrl, openAuthModal]);
+  }, [uploadId, zipUrl, isFreeUpload, openAuthModal]);
 
   const showPrev = () => {
     setIndex((prev) => {
