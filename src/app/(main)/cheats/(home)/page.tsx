@@ -31,7 +31,6 @@ export default function CheatsHome() {
   ];
 
   const scrollingTags = [...cheatsTags, ...cheatsTags];
-
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-8 px-4 pb-10 pt-10 lg:pt-16">
       <h1 className="reveal-up text-center text-4xl italic font-light sm:text-5xl">tully.sh/<span className="text-[#FFC17B]">cheats</span></h1>
@@ -46,19 +45,19 @@ export default function CheatsHome() {
       <div className="reveal-up delay-3 flex flex-wrap items-center justify-center gap-3">
         <Link
           href="/cheats/scripts"
-          className="rounded bg-[#f5b041] px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-[#d49b3b]"
+          className="inline-flex min-w-[10.5rem] items-center justify-center rounded-md bg-[#f5b041] px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-[#d49b3b]"
         >
           Explore Scripts
         </Link>
         <Link
           href="/cheats/uploads"
-          className="rounded border border-white/20 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/5"
+          className="inline-flex min-w-[10.5rem] items-center justify-center rounded-md border border-[#6f8dff] bg-transparent px-4 py-2 text-sm font-semibold text-[#b9c8ff] transition-colors hover:bg-[#6f8dff]/10"
         >
           Browse Uploads
         </Link>
         <Link
           href="/cheats/proxy"
-          className="rounded border border-white/20 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/5"
+          className="inline-flex min-w-[10.5rem] items-center justify-center rounded-md border border-[#58a585] bg-transparent px-4 py-2 text-sm font-semibold text-[#8fd6b7] transition-colors hover:bg-[#58a585]/10"
         >
           Search Freely
         </Link>
