@@ -152,7 +152,7 @@ export default function Sidebar() {
         <div className="hidden h-fit w-full flex-row items-center justify-around lg:flex">
           <SocialLink
             href="https://discord.com/users/694274948071555154"
-            icon={<img src="https://r2.tully.sh/icons/discord.png" className="h-fit w-5" />}
+            icon={<img src="https://tully.sh/icons/discord.png" className="h-fit w-5" />}
           />
           <SocialLink href="https://github.com/tullysaurus" icon={<Github className="w-6 fill-white" />} />
         </div>
