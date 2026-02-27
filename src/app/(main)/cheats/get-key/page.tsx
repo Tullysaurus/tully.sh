@@ -61,6 +61,8 @@ export default function GetKey() {
       </section>
       <p className="reveal-up delay-4 text-center text-xs text-neutral-500">
         Access keys are limited. Buy once and start using everything immediately.
+        <br />
+        We reserve the right to revoke any access keys without a refund if you violate our policies.
       </p>
     </div>
   );
