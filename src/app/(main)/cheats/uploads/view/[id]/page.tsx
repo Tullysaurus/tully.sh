@@ -68,7 +68,7 @@ export default function UploadViewerPage() {
   const [error, setError] = useState("");
   const [images, setImages] = useState<PreviewImage[]>([]);
   const [index, setIndex] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const imagePaneRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -76,17 +76,6 @@ export default function UploadViewerPage() {
       revokePreviewImages(images);
     };
   }, [images]);
-
-  useEffect(() => {
-    const onFullscreenChange = () => {
-      setIsFullscreen(document.fullscreenElement === imagePaneRef.current);
-    };
-
-    document.addEventListener("fullscreenchange", onFullscreenChange);
-    return () => {
-      document.removeEventListener("fullscreenchange", onFullscreenChange);
-    };
-  }, []);
 
   const checkAccess = useCallback(async () => {
     const isValid = await checkAuth();
@@ -189,17 +178,8 @@ export default function UploadViewerPage() {
     window.close();
   };
 
-  const toggleFullscreen = async () => {
-    try {
-      if (document.fullscreenElement === imagePaneRef.current) {
-        await document.exitFullscreen();
-        return;
-      }
-
-      await imagePaneRef.current?.requestFullscreen();
-    } catch (fullscreenError) {
-      console.error("Failed to toggle fullscreen:", fullscreenError);
-    }
+  const toggleExpanded = () => {
+    setIsExpanded((prev) => !prev);
   };
 
   return (
@@ -249,46 +229,74 @@ export default function UploadViewerPage() {
         </div>
       ) : images.length > 0 ? (
         <>
-          <div className="flex min-h-0 flex-1 items-center justify-center gap-3">
-            <button
-              onClick={showPrev}
-              className="cursor-pointer rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white"
-              aria-label="Previous image"
-            >
-              <ChevronLeft size={22} />
-            </button>
+          <div
+            className={
+              isExpanded
+                ? "fixed inset-0 z-50 flex items-center justify-center gap-2 bg-[#171717] p-2"
+                : "flex min-h-0 flex-1 items-center justify-center gap-3"
+            }
+          >
+            {!isExpanded && (
+              <button
+                onClick={showPrev}
+                className="cursor-pointer rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white"
+                aria-label="Previous image"
+              >
+                <ChevronLeft size={22} />
+              </button>
+            )}
 
             <div
               ref={imagePaneRef}
-              className={`relative flex h-full min-w-0 flex-1 items-center justify-center rounded-md border border-neutral-800 bg-[#111] ${
-                isFullscreen ? "overflow-hidden p-2" : "overflow-auto"
+              className={`relative flex h-full min-w-0 flex-1 items-center justify-center bg-[#111] ${
+                isExpanded ? "overflow-hidden rounded-none border-0 p-2" : "overflow-auto rounded-md border border-neutral-800"
               }`}
             >
+              {isExpanded && (
+                <button
+                  onClick={showPrev}
+                  className="absolute left-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft size={22} />
+                </button>
+              )}
               <button
-                onClick={toggleFullscreen}
+                onClick={toggleExpanded}
                 className="absolute right-2 top-2 z-10 cursor-pointer rounded bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
-                aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+                aria-label={isExpanded ? "Exit expanded view" : "Enter expanded view"}
               >
-                {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+                {isExpanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
               </button>
+              {isExpanded && (
+                <button
+                  onClick={showNext}
+                  className="absolute right-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
+                  aria-label="Next image"
+                >
+                  <ChevronRight size={22} />
+                </button>
+              )}
               <img
                 src={images[index].url}
                 alt={images[index].name}
                 className={
-                  isFullscreen
+                  isExpanded
                     ? "h-[calc(100%-0.5rem)] w-[calc(100%-0.5rem)] object-contain"
                     : "max-h-full max-w-full object-contain"
                 }
               />
             </div>
 
-            <button
-              onClick={showNext}
-              className="cursor-pointer rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white"
-              aria-label="Next image"
-            >
-              <ChevronRight size={22} />
-            </button>
+            {!isExpanded && (
+              <button
+                onClick={showNext}
+                className="cursor-pointer rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white"
+                aria-label="Next image"
+              >
+                <ChevronRight size={22} />
+              </button>
+            )}
           </div>
 
           <div className="pt-3 text-center text-sm text-neutral-300">
