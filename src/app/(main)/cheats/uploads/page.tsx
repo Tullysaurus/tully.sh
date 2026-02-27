@@ -32,10 +32,28 @@ interface Upload {
   comments: string;
   createdAt: string;
   deletable: boolean;
+  moderationStatus: "PENDING" | "APPROVED" | "REJECTED" | "FLAGGED";
 }
 
 interface UploadFromApi extends Partial<Upload> {
   id?: string;
+}
+
+function asModerationStatus(value: unknown): "PENDING" | "APPROVED" | "REJECTED" | "FLAGGED" {
+  if (value === "PENDING" || value === "APPROVED" || value === "REJECTED" || value === "FLAGGED") {
+    return value;
+  }
+  return "PENDING";
+}
+
+function getUploadList(payload: unknown): unknown[] {
+  if (Array.isArray(payload)) return payload;
+  if (payload && typeof payload === "object") {
+    const maybe = payload as { uploads?: unknown; items?: unknown };
+    if (Array.isArray(maybe.uploads)) return maybe.uploads;
+    if (Array.isArray(maybe.items)) return maybe.items;
+  }
+  return [];
 }
 
 function asBoolean(value: unknown): boolean {
@@ -71,6 +89,7 @@ function normalizeUpload(raw: unknown): Upload | null {
     comments: typeof item.comments === "string" ? item.comments : "",
     createdAt: typeof item.createdAt === "string" ? item.createdAt : new Date().toISOString(),
     deletable: asBoolean(item.deletable),
+    moderationStatus: asModerationStatus(item.moderationStatus),
   };
 }
 
@@ -111,8 +130,11 @@ export default function Uploads() {
       });
       if (res.ok) {
         const data = (await res.json()) as unknown;
-        const list = Array.isArray(data) ? data : [];
-        const normalized = list.map(normalizeUpload).filter((u): u is Upload => Boolean(u));
+        const list = getUploadList(data);
+        const normalized = list
+          .map(normalizeUpload)
+          .filter((u): u is Upload => Boolean(u))
+          .filter((u) => u.moderationStatus === "APPROVED");
         setUploads(normalized);
       } else {
         const payload = (await res.json().catch(() => null)) as { error?: string } | null;

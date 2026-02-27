@@ -22,6 +22,16 @@ type ModerationUpload = {
   moderationReason: string;
 };
 
+function getUploadList(payload: unknown): unknown[] {
+  if (Array.isArray(payload)) return payload;
+  if (payload && typeof payload === "object") {
+    const maybe = payload as { uploads?: unknown; items?: unknown };
+    if (Array.isArray(maybe.uploads)) return maybe.uploads;
+    if (Array.isArray(maybe.items)) return maybe.items;
+  }
+  return [];
+}
+
 function asBoolean(value: unknown): boolean {
   if (typeof value === "boolean") return value;
   if (typeof value === "number") return value !== 0;
@@ -107,7 +117,7 @@ export default function ModerationPage() {
       }
 
       const data = (await res.json()) as unknown;
-      const list = Array.isArray(data) ? data : [];
+      const list = getUploadList(data);
       setUploads(list.map(normalizeModerationUpload).filter((u): u is ModerationUpload => Boolean(u)));
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return;
