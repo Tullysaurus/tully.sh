@@ -8,11 +8,13 @@ import { BugPlay, CheckCircle2, CloudUpload, Github, House, Key, Loader2, Megaph
 import SidebarLink from "./sidebar-link";
 import SocialLink from "./social-link";
 import checkAuth from "@/lib/auth";
+import checkModeratorAccess from "@/lib/moderator";
 import { useModals } from "@/lib/modals";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [authStatus, setAuthStatus] = useState<"idle" | "checking" | "valid" | "invalid">("idle");
+  const [canSeeModeration, setCanSeeModeration] = useState(false);
   const { openAuthModal } = useModals();
 
   const urls: {
@@ -46,10 +48,14 @@ export default function Sidebar() {
         name: "Uploads",
         icon: <CloudUpload className="h-4 w-4 lg:h-5 lg:w-5" />,
       },
-      "/cheats/moderation": {
-        name: "Moderation",
-        icon: <Shield className="h-4 w-4 lg:h-5 lg:w-5" />,
-      },
+      ...(canSeeModeration
+        ? {
+          "/cheats/moderation": {
+            name: "Moderation",
+            icon: <Shield className="h-4 w-4 lg:h-5 lg:w-5" />,
+          },
+        }
+        : {}),
       "/cheats/proxy": {
         name: "Proxy",
         icon: <Router className="h-4 w-4 lg:h-5 lg:w-5" />,
@@ -65,15 +71,24 @@ export default function Sidebar() {
   );
 
   useEffect(() => {
-    if (!pathname.startsWith("/cheats")) return;
+    if (!pathname.startsWith("/cheats")) {
+      setCanSeeModeration(false);
+      return;
+    }
 
     setAuthStatus("checking");
+    setCanSeeModeration(false);
     checkAuth()
-      .then((isValid) => {
+      .then(async (isValid) => {
         setAuthStatus(isValid ? "valid" : "invalid");
+        if (!isValid) return;
+
+        const canModerate = await checkModeratorAccess();
+        setCanSeeModeration(canModerate);
       })
       .catch(() => {
         setAuthStatus("invalid");
+        setCanSeeModeration(false);
       });
   }, [pathname]);
 

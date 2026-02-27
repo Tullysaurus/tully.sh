@@ -266,26 +266,6 @@ export default function Uploads() {
             <option value="NOTES">Notes</option>
           </select>
 
-          <Checkbox
-            id="free-only"
-            name="freeOnly"
-            checked={filters.freeOnly}
-            onChange={(checked) => setFilters((prev) => ({ ...prev, freeOnly: checked }))}
-            label="Free Only"
-            containerClassName="flex cursor-pointer items-center gap-2 rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white"
-            labelClassName="cursor-pointer"
-          />
-
-          <Checkbox
-            id="answers-only"
-            name="answersOnly"
-            checked={filters.answersOnly}
-            onChange={(checked) => setFilters((prev) => ({ ...prev, answersOnly: checked }))}
-            label="Only Answers"
-            containerClassName="flex cursor-pointer items-center gap-2 rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white"
-            labelClassName="cursor-pointer"
-          />
-
           <select
             name="hour"
             value={filters.hour}
@@ -310,6 +290,26 @@ export default function Uploads() {
             <option value="newest">Most Recent</option>
             <option value="oldest">Oldest</option>
           </select>
+
+          <Checkbox
+            id="free-only"
+            name="freeOnly"
+            checked={filters.freeOnly}
+            onChange={(checked) => setFilters((prev) => ({ ...prev, freeOnly: checked }))}
+            label="Free Only"
+            containerClassName="flex cursor-pointer items-center gap-2 rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white"
+            labelClassName="cursor-pointer"
+          />
+
+          <Checkbox
+            id="answers-only"
+            name="answersOnly"
+            checked={filters.answersOnly}
+            onChange={(checked) => setFilters((prev) => ({ ...prev, answersOnly: checked }))}
+            label="Only Answers"
+            containerClassName="flex cursor-pointer items-center gap-2 rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white"
+            labelClassName="cursor-pointer"
+          />
 
           <input
             type="text"

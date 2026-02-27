@@ -1,9 +1,14 @@
 'use client';
 
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import checkAuth from "@/lib/auth";
+import checkModeratorAccess from "@/lib/moderator";
 
 export default function CheatsHome() {
-  const cheatsTags = [
+  const [canSeeModeration, setCanSeeModeration] = useState(false);
+
+  const cheatsTags = useMemo(() => ([
     {
       id: "scripts",
       title: "Scripts Library",
@@ -22,13 +27,34 @@ export default function CheatsHome() {
       description: "Built-in web proxy with network bypass utilities.",
       tone: "bg-[#1f2026] border-[#3f4665]",
     },
-    {
-      id: "private",
-      title: "Moderation",
-      description: "Review pending and flagged uploads before they become public.",
-      tone: "bg-[#241f26] border-[#4f3d61]",
-    },
-  ];
+    ...(canSeeModeration
+      ? [{
+        id: "private",
+        title: "Moderation",
+        description: "Review pending and flagged uploads before they become public.",
+        tone: "bg-[#241f26] border-[#4f3d61]",
+      }]
+      : []),
+  ]), [canSeeModeration]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      const authed = await checkAuth();
+      if (!authed) {
+        if (mounted) setCanSeeModeration(false);
+        return;
+      }
+
+      const canModerate = await checkModeratorAccess();
+      if (mounted) setCanSeeModeration(canModerate);
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const scrollingTags = [...cheatsTags, ...cheatsTags];
   return (
@@ -61,12 +87,14 @@ export default function CheatsHome() {
         >
           Search Freely
         </Link>
-        <Link
-          href="/cheats/moderation"
-          className="inline-flex min-w-[10.5rem] items-center justify-center rounded-md border border-[#d07cff] bg-transparent px-4 py-2 text-sm font-semibold text-[#e4b7ff] transition-colors hover:bg-[#d07cff]/10"
-        >
-          Moderation Queue
-        </Link>
+        {canSeeModeration && (
+          <Link
+            href="/cheats/moderation"
+            className="inline-flex min-w-[10.5rem] items-center justify-center rounded-md border border-[#d07cff] bg-transparent px-4 py-2 text-sm font-semibold text-[#e4b7ff] transition-colors hover:bg-[#d07cff]/10"
+          >
+            Moderation Queue
+          </Link>
+        )}
       </div>
       <div className="reveal-up delay-4 home-card-marquee w-full overflow-hidden">
         <div className="home-card-track flex w-max items-stretch gap-3 py-1">
