@@ -109,6 +109,7 @@ export default function UploadViewerPage() {
       try {
         const zipBlob = await fetchZipBlobWithCache(zipUrl);
         const zip = await JSZip.loadAsync(zipBlob);
+        console.log(zip);
         const imageEntries = Object.values(zip.files).filter(
           (file) =>
             !file.dir &&
