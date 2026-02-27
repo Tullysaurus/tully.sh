@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import JSZip from "jszip";
-import { ChevronLeft, ChevronRight, Download, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, Loader2, Maximize2, Minimize2 } from "lucide-react";
 import checkAuth from "@/lib/auth";
 import { useModals } from "@/lib/modals";
 
@@ -68,12 +68,25 @@ export default function UploadViewerPage() {
   const [error, setError] = useState("");
   const [images, setImages] = useState<PreviewImage[]>([]);
   const [index, setIndex] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const imagePaneRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     return () => {
       revokePreviewImages(images);
     };
   }, [images]);
+
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsFullscreen(document.fullscreenElement === imagePaneRef.current);
+    };
+
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
+    };
+  }, []);
 
   const checkAccess = useCallback(async () => {
     const isValid = await checkAuth();
@@ -176,6 +189,19 @@ export default function UploadViewerPage() {
     window.close();
   };
 
+  const toggleFullscreen = async () => {
+    try {
+      if (document.fullscreenElement === imagePaneRef.current) {
+        await document.exitFullscreen();
+        return;
+      }
+
+      await imagePaneRef.current?.requestFullscreen();
+    } catch (fullscreenError) {
+      console.error("Failed to toggle fullscreen:", fullscreenError);
+    }
+  };
+
   return (
     <div className="flex h-dvh w-full flex-col overflow-hidden bg-[#171717] p-4 lg:h-screen">
       <div className="mb-4 flex items-center justify-between gap-3">
@@ -232,11 +258,27 @@ export default function UploadViewerPage() {
               <ChevronLeft size={22} />
             </button>
 
-            <div className="flex h-full min-w-0 flex-1 items-center justify-center overflow-auto rounded-md border border-neutral-800 bg-[#111]">
+            <div
+              ref={imagePaneRef}
+              className={`relative flex h-full min-w-0 flex-1 items-center justify-center rounded-md border border-neutral-800 bg-[#111] ${
+                isFullscreen ? "overflow-hidden p-2" : "overflow-auto"
+              }`}
+            >
+              <button
+                onClick={toggleFullscreen}
+                className="absolute right-2 top-2 z-10 cursor-pointer rounded bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
+                aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+              >
+                {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+              </button>
               <img
                 src={images[index].url}
                 alt={images[index].name}
-                className="max-h-full max-w-full object-contain"
+                className={
+                  isFullscreen
+                    ? "h-[calc(100%-0.5rem)] w-[calc(100%-0.5rem)] object-contain"
+                    : "max-h-full max-w-full object-contain"
+                }
               />
             </div>
 
