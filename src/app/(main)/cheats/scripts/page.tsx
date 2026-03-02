@@ -12,7 +12,7 @@ interface Scripts {
 }
 
 export default async function ScriptsPage() {
-  const scripts: Scripts | null = await fetch("https://r2.tully.sh/scripts/scripts.json", {
+  const scripts: Scripts | null = await fetch("https://tully.sh/scripts/scripts.json", {
     next: { revalidate: 60 } // Cache for 1 minute
   })
     .then((res) => res.json()).then((json) => json as Scripts)
