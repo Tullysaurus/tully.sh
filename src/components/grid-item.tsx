@@ -40,7 +40,7 @@ export default function GridItem({
     >
       <div className="relative h-44 w-full overflow-hidden bg-neutral-800 sm:h-48">
         <img
-          src={`https://r2.tully.sh/scripts/preview/${id}.png`}
+          src={`https://tully.sh/preview/${id}.png`}
           alt="Preview"
           className="h-full w-full object-cover"
         />
