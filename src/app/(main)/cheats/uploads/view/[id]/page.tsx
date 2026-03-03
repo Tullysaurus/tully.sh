@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import JSZip from "jszip";
-import { ChevronLeft, ChevronRight, Loader2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, RotateCw, X } from "lucide-react";
 import { useModals } from "@/lib/modals";
 import { apiUrl } from "@/lib/api-client";
 
@@ -93,6 +93,7 @@ export default function UploadViewerPage() {
   const [needsAuth, setNeedsAuth] = useState(false);
   const [images, setImages] = useState<PreviewImage[]>([]);
   const [index, setIndex] = useState(0);
+  const [rotation, setRotation] = useState(0);
   const authPromptShownRef = useRef(false);
 
   useEffect(() => {
@@ -195,14 +196,27 @@ export default function UploadViewerPage() {
     window.close();
   };
 
+  const rotateClockwise = () => {
+    setRotation((prev) => (prev + 90) % 360);
+  };
+
+  const isSideways = rotation % 180 !== 0;
+
   return (
-    <div className="fixed inset-0 z-50 flex h-dvh w-full flex-col overflow-hidden bg-[#171717] lg:h-screen">
+    <div className="fixed inset-0 z-50 flex h-dvh w-full flex-col overflow-hidden bg-[#171717]">
       <button
         onClick={goBack}
         className="absolute left-3 top-3 z-20 cursor-pointer rounded-full bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
         aria-label="Close viewer"
       >
         <X size={18} />
+      </button>
+      <button
+        onClick={rotateClockwise}
+        className="absolute right-3 top-3 z-20 cursor-pointer rounded-full bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
+        aria-label="Rotate image clockwise"
+      >
+        <RotateCw size={18} />
       </button>
 
       {loading ? (
@@ -237,7 +251,16 @@ export default function UploadViewerPage() {
               >
                 <ChevronLeft size={22} />
               </button>
-              <img src={images[index].url} alt={images[index].name} className="h-full w-full object-contain p-2" />
+              <img
+                src={images[index].url}
+                alt={images[index].name}
+                className={
+                  isSideways
+                    ? "max-h-[calc(100vw-0.5rem)] max-w-[calc(100vh-0.5rem)] object-contain p-2"
+                    : "max-h-full max-w-full object-contain p-2"
+                }
+                style={{ transform: `rotate(${rotation}deg)` }}
+              />
               <button
                 onClick={showNext}
                 className="absolute right-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
