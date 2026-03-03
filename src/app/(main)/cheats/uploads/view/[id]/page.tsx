@@ -103,6 +103,27 @@ export default function UploadViewerPage() {
   }, [images]);
 
   useEffect(() => {
+    const bodyStyle = document.body.style;
+    const htmlStyle = document.documentElement.style;
+    const prevBodyOverflow = bodyStyle.overflow;
+    const prevBodyOverscroll = bodyStyle.overscrollBehavior;
+    const prevHtmlOverflow = htmlStyle.overflow;
+    const prevHtmlOverscroll = htmlStyle.overscrollBehavior;
+
+    bodyStyle.overflow = "hidden";
+    bodyStyle.overscrollBehavior = "none";
+    htmlStyle.overflow = "hidden";
+    htmlStyle.overscrollBehavior = "none";
+
+    return () => {
+      bodyStyle.overflow = prevBodyOverflow;
+      bodyStyle.overscrollBehavior = prevBodyOverscroll;
+      htmlStyle.overflow = prevHtmlOverflow;
+      htmlStyle.overscrollBehavior = prevHtmlOverscroll;
+    };
+  }, []);
+
+  useEffect(() => {
     if (!uploadId || !zipUrl) {
       setError("Missing upload id.");
       return;
@@ -203,7 +224,7 @@ export default function UploadViewerPage() {
   const isSideways = rotation % 180 !== 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex h-dvh w-full flex-col overflow-hidden bg-[#171717]">
+    <div className="fixed inset-0 z-50 flex h-dvh w-full flex-col overflow-hidden overscroll-none bg-[#171717]">
       <button
         onClick={goBack}
         className="absolute left-3 top-3 z-20 cursor-pointer rounded-full bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
