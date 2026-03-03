@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import JSZip from "jszip";
-import { ChevronLeft, ChevronRight, Download, Loader2, Maximize2, Minimize2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, X } from "lucide-react";
 import { useModals } from "@/lib/modals";
 import { apiUrl } from "@/lib/api-client";
 
@@ -79,10 +79,6 @@ export default function UploadViewerPage() {
     return id || "";
   }, [params]);
 
-  const displayName = useMemo(() => {
-    const raw = searchParams.get("name");
-    return raw?.trim() || "upload";
-  }, [searchParams]);
   const isFreeUpload = useMemo(() => searchParams.get("free") === "1", [searchParams]);
   const source = useMemo(() => searchParams.get("source") || "uploads", [searchParams]);
 
@@ -97,8 +93,6 @@ export default function UploadViewerPage() {
   const [needsAuth, setNeedsAuth] = useState(false);
   const [images, setImages] = useState<PreviewImage[]>([]);
   const [index, setIndex] = useState(0);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const imagePaneRef = useRef<HTMLDivElement | null>(null);
   const authPromptShownRef = useRef(false);
 
   useEffect(() => {
@@ -201,29 +195,15 @@ export default function UploadViewerPage() {
     window.close();
   };
 
-  const toggleExpanded = () => {
-    setIsExpanded((prev) => !prev);
-  };
-
   return (
-    <div className="flex h-dvh w-full flex-col overflow-hidden bg-[#171717] p-4 lg:h-screen">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <button
-          onClick={goBack}
-          className="cursor-pointer rounded bg-neutral-800 px-3 py-2 text-sm text-neutral-300 transition-colors hover:bg-neutral-700 hover:text-white"
-        >
-          Back
-        </button>
-
-        <a
-          href={zipUrl}
-          download={`${displayName}.zip`}
-          className="flex items-center gap-1 rounded bg-neutral-800 px-3 py-2 text-sm text-neutral-300 transition-colors hover:bg-neutral-700 hover:text-white"
-        >
-          <Download size={14} />
-          Download ZIP
-        </a>
-      </div>
+    <div className="fixed inset-0 z-50 flex h-dvh w-full flex-col overflow-hidden bg-[#171717] lg:h-screen">
+      <button
+        onClick={goBack}
+        className="absolute left-3 top-3 z-20 cursor-pointer rounded-full bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
+        aria-label="Close viewer"
+      >
+        <X size={18} />
+      </button>
 
       {loading ? (
         <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 text-neutral-300">
@@ -245,83 +225,27 @@ export default function UploadViewerPage() {
               Authenticate and Retry
             </button>
           )}
-          <button
-            onClick={goBack}
-            className="rounded bg-neutral-800 px-3 py-2 text-sm transition-colors hover:bg-neutral-700"
-          >
-            Back to uploads
-          </button>
         </div>
       ) : images.length > 0 ? (
         <>
-          <div
-            className={
-              isExpanded
-                ? "fixed inset-0 z-50 flex items-center justify-center gap-2 bg-[#171717] p-2"
-                : "flex min-h-0 flex-1 items-center justify-center gap-3"
-            }
-          >
-            {!isExpanded && (
+          <div className="flex min-h-0 flex-1 items-center justify-center">
+            <div className="relative flex h-full w-full min-w-0 items-center justify-center overflow-hidden bg-[#111]">
               <button
                 onClick={showPrev}
-                className="cursor-pointer rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white"
+                className="absolute left-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
                 aria-label="Previous image"
               >
                 <ChevronLeft size={22} />
               </button>
-            )}
-
-            <div
-              ref={imagePaneRef}
-              className={`relative flex h-full min-w-0 flex-1 items-center justify-center bg-[#111] ${
-                isExpanded ? "overflow-hidden rounded-none border-0 p-2" : "overflow-auto rounded-md border border-neutral-800"
-              }`}
-            >
-              {isExpanded && (
-                <button
-                  onClick={showPrev}
-                  className="absolute left-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft size={22} />
-                </button>
-              )}
-              <button
-                onClick={toggleExpanded}
-                className="absolute right-2 top-2 z-10 cursor-pointer rounded bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
-                aria-label={isExpanded ? "Exit expanded view" : "Enter expanded view"}
-              >
-                {isExpanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-              </button>
-              {isExpanded && (
-                <button
-                  onClick={showNext}
-                  className="absolute right-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
-                  aria-label="Next image"
-                >
-                  <ChevronRight size={22} />
-                </button>
-              )}
-              <img
-                src={images[index].url}
-                alt={images[index].name}
-                className={
-                  isExpanded
-                    ? "h-[calc(100%-0.5rem)] w-[calc(100%-0.5rem)] object-contain"
-                    : "max-h-full max-w-full object-contain"
-                }
-              />
-            </div>
-
-            {!isExpanded && (
+              <img src={images[index].url} alt={images[index].name} className="h-full w-full object-contain p-2" />
               <button
                 onClick={showNext}
-                className="cursor-pointer rounded-full bg-black/30 p-2 text-neutral-300 transition-colors hover:text-white"
+                className="absolute right-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-neutral-300 transition-colors hover:text-white"
                 aria-label="Next image"
               >
                 <ChevronRight size={22} />
               </button>
-            )}
+            </div>
           </div>
 
           <div className="pt-3 text-center text-sm text-neutral-300">
