@@ -1,8 +1,88 @@
-'use client';
+"use client";
+
+import { useEffect, useState } from "react";
 
 import GridItem from "@/components/grid-item";
 
+const GITHUB_USERNAME = "Tullysaurus";
+
+interface ProjectItem {
+  id: number;
+  title: string;
+  description: string | null;
+  url: string;
+  date: number;
+}
+
+interface GithubRepo {
+  id: number;
+  name: string;
+  description: string | null;
+  html_url: string;
+  pushed_at: string;
+  fork: boolean;
+  archived: boolean;
+}
+
 export default function Projects() {
+  const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadProjects = async () => {
+      try {
+        const response = await fetch(
+          `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&direction=desc&per_page=24&type=owner`,
+          {
+            headers: {
+              Accept: "application/vnd.github+json",
+            },
+            cache: "no-store",
+          },
+        );
+        if (!response.ok) {
+          throw new Error("Failed to load projects.");
+        }
+
+        const repos = (await response.json()) as GithubRepo[];
+
+        const data = repos
+          .filter((repo) => !repo.fork && !repo.archived)
+          .sort((a, b) => new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime())
+          .map((repo) => ({
+            id: repo.id,
+            title: repo.name,
+            description: repo.description,
+            url: repo.html_url,
+            date: new Date(repo.pushed_at).getTime(),
+          }));
+
+        if (!cancelled) {
+          setProjects(data);
+          setError(null);
+        }
+      } catch {
+        if (!cancelled) {
+          setError("Couldn\'t load GitHub repositories right now. Please try again shortly.");
+          setProjects([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadProjects();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const rowDelayClass = (index: number) => {
     const row = Math.floor(index / 3);
     if (row <= 0) return "";
@@ -12,71 +92,34 @@ export default function Projects() {
     return "delay-4";
   };
 
-  const loremProjects = [
-    {
-      id: "101",
-      title: "Lorem Ipsum Dolor",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.",
-      url: "https://example.com/lorem-ipsum-dolor",
-      date: 1735689600000,
-    },
-    {
-      id: "102",
-      title: "Amet Consectetur",
-      description: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.",
-      url: "https://example.com/amet-consectetur",
-      date: 1736121600000,
-    },
-    {
-      id: "103",
-      title: "Tempor Incididunt",
-      description: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-      url: "https://example.com/tempor-incididunt",
-      date: 1736553600000,
-    },
-    {
-      id: "104",
-      title: "Labore Et Dolore",
-      description: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est.",
-      url: "https://example.com/labore-et-dolore",
-      date: 1736985600000,
-    },
-    {
-      id: "105",
-      title: "Magna Aliqua",
-      description: "Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra.",
-      url: "https://example.com/magna-aliqua",
-      date: 1737417600000,
-    },
-    {
-      id: "106",
-      title: "Nostrud Exercitation",
-      description: "Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula donec lobortis.",
-      url: "https://example.com/nostrud-exercitation",
-      date: 1737849600000,
-    },
-  ];
-
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-8 px-4 pb-10 pt-10 lg:pt-16">
-      <h1 className="text-center text-4xl italic font-light sm:text-5xl">tully.sh/<span className="text-[#FFC17B]">projects</span></h1>
-      <p className="max-w-xl text-center text-base font-semibold sm:text-lg">
-        Lorem ipsum projects and experiments.
-      </p>
-      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {loremProjects.map((item, index) => (
-          <div key={item.id} className={`reveal-up ${rowDelayClass(index)}`}>
-            <GridItem
-              id={item.id}
-              title={item.title}
-              description={item.description}
-              url={item.url}
-              date={item.date}
-              onclick={() => Promise.resolve(true)}
-            />
-          </div>
-        ))}
-      </div>
+      <h1 className="text-center text-4xl italic font-light sm:text-5xl">
+        tully.sh/<span className="text-[#FFC17B]">projects</span>
+      </h1>
+      <p className="max-w-xl text-center text-base font-semibold sm:text-lg">Live projects pulled from GitHub.</p>
+
+      {loading ? (
+        <p className="text-center text-sm text-neutral-400">Loading projects...</p>
+      ) : error ? (
+        <p className="text-center text-sm text-neutral-400">{error}</p>
+      ) : (
+        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project, index) => (
+            <div key={project.id} className={`reveal-up ${rowDelayClass(index)}`}>
+              <GridItem
+                id={project.title}
+                title={project.title}
+                description={project.description || "No description provided."}
+                url={project.url}
+                date={project.date}
+                showImage={false}
+                onclick={() => Promise.resolve(true)}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
