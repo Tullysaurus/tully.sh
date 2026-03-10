@@ -114,7 +114,6 @@ export default function Projects() {
                 url={project.url}
                 date={project.date}
                 showImage={false}
-                onclick={() => Promise.resolve(true)}
               />
             </div>
           ))}

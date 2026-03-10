@@ -73,7 +73,6 @@ export default function Blog() {
               description={item.description}
               url={item.url}
               date={item.date}
-              onclick={() => Promise.resolve(true)}
             />
           </div>
         ))}
