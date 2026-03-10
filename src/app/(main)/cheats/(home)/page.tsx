@@ -1,14 +1,9 @@
 'use client';
-
-import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import checkAuth from "@/lib/auth";
-import checkModeratorAccess from "@/lib/moderator";
 
 export default function CheatsHome() {
-  const [canSeeModeration, setCanSeeModeration] = useState(false);
 
-  const cheatsTags = useMemo(() => ([
+  const cheatsTags = [
     {
       id: "scripts",
       title: "Scripts Library",
@@ -16,45 +11,12 @@ export default function CheatsHome() {
       tone: "bg-[#1e2321] border-[#2f5a49]",
     },
     {
-      id: "uploads",
-      title: "Uploads",
-      description: "Share and view answers to full assignments and tests.",
-      tone: "bg-[#23211e] border-[#5b4f34]",
-    },
-    {
       id: "proxy",
       title: "Web Proxy",
       description: "Built-in web proxy with network bypass utilities.",
       tone: "bg-[#1f2026] border-[#3f4665]",
-    },
-    ...(canSeeModeration
-      ? [{
-        id: "private",
-        title: "Moderation",
-        description: "Review pending and flagged uploads before they become public.",
-        tone: "bg-[#241f26] border-[#4f3d61]",
-      }]
-      : []),
-  ]), [canSeeModeration]);
+    }]
 
-  useEffect(() => {
-    let mounted = true;
-
-    (async () => {
-      const authed = await checkAuth();
-      if (!authed) {
-        if (mounted) setCanSeeModeration(false);
-        return;
-      }
-
-      const canModerate = await checkModeratorAccess();
-      if (mounted) setCanSeeModeration(canModerate);
-    })();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   const scrollingTags = [...cheatsTags, ...cheatsTags];
   return (
@@ -76,25 +38,11 @@ export default function CheatsHome() {
           Explore Scripts
         </Link>
         <Link
-          href="/cheats/uploads"
-          className="inline-flex min-w-[10.5rem] items-center justify-center rounded-md border border-[#6f8dff] bg-transparent px-4 py-2 text-sm font-semibold text-[#b9c8ff] transition-colors hover:bg-[#6f8dff]/10"
-        >
-          Browse Uploads
-        </Link>
-        <Link
           href="/cheats/proxy"
           className="inline-flex min-w-[10.5rem] items-center justify-center rounded-md border border-[#58a585] bg-transparent px-4 py-2 text-sm font-semibold text-[#8fd6b7] transition-colors hover:bg-[#58a585]/10"
         >
           Search Freely
         </Link>
-        {canSeeModeration && (
-          <Link
-            href="/cheats/moderation"
-            className="inline-flex min-w-[10.5rem] items-center justify-center rounded-md border border-[#d07cff] bg-transparent px-4 py-2 text-sm font-semibold text-[#e4b7ff] transition-colors hover:bg-[#d07cff]/10"
-          >
-            Moderation Queue
-          </Link>
-        )}
       </div>
       <div className="reveal-up delay-4 home-card-marquee w-full overflow-hidden">
         <div className="home-card-track flex w-max items-stretch gap-3 py-1">
@@ -109,9 +57,6 @@ export default function CheatsHome() {
           ))}
         </div>
       </div>
-      <p className="reveal-up delay-4 text-center text-xs text-neutral-500">
-        Some tools may require a valid access key.
-      </p>
     </div>
   );
 }

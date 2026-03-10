@@ -3,8 +3,6 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import GridItem from "./grid-item";
-import checkAuth from "@/lib/auth";
-import { useModals } from "@/lib/modals";
 
 interface Scripts {
   [key: string]: {
@@ -21,7 +19,6 @@ export default function ScriptsGrid({
 }: {
   scripts: Scripts;
 }) {
-  const { openAuthModal } = useModals();
   const [searchName, setSearchName] = useState("");
 
   const rowDelayClass = (index: number) => {
@@ -32,16 +29,6 @@ export default function ScriptsGrid({
     if (row === 3) return "delay-3";
     return "delay-4";
   };
-
-  const handleItemClick = async () => {
-    const result = await checkAuth();
-    // If the server action returns "0", it means not authorized
-    if (!result) {
-      openAuthModal();
-    }
-    return result;
-  };
-
   const filteredEntries = useMemo(
     () =>
       Object.entries(scripts).filter(([, script]) =>
@@ -67,7 +54,7 @@ export default function ScriptsGrid({
       <div className="grid w-full max-w-6xl grid-cols-1 gap-4 px-4 sm:grid-cols-2 lg:grid-cols-3 lg:px-0">
         {filteredEntries.map(([key, script], index) => (
           <div key={key} className={`reveal-up ${rowDelayClass(index)}`}>
-            <GridItem {...script} onclick={handleItemClick} />
+            <GridItem {...script} />
           </div>
         ))}
       </div>

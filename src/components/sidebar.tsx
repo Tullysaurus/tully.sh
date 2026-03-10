@@ -7,16 +7,9 @@ import { usePathname } from "next/navigation";
 import { BugPlay, CheckCircle2, CloudUpload, Github, House, Key, Loader2, Megaphone, Router, Shield, Terminal } from "lucide-react";
 import SidebarLink from "./sidebar-link";
 import SocialLink from "./social-link";
-import checkAuth from "@/lib/auth";
-import checkModeratorAccess from "@/lib/moderator";
-import { useModals } from "@/lib/modals";
-
 export default function Sidebar() {
   const pathname = usePathname();
-  const [authStatus, setAuthStatus] = useState<"idle" | "checking" | "valid" | "invalid">("idle");
-  const [canSeeModeration, setCanSeeModeration] = useState(false);
-  const { openAuthModal } = useModals();
-
+ 
   const urls: {
     [key: string]: {
       name: string;
@@ -44,53 +37,15 @@ export default function Sidebar() {
         name: "Scripts",
         icon: <BugPlay className="h-4 w-4 lg:h-5 lg:w-5" />,
       },
-      "/cheats/uploads": {
-        name: "Uploads",
-        icon: <CloudUpload className="h-4 w-4 lg:h-5 lg:w-5" />,
-      },
-      ...(canSeeModeration
-        ? {
-          "/cheats/moderation": {
-            name: "Moderation",
-            icon: <Shield className="h-4 w-4 lg:h-5 lg:w-5" />,
-          },
-        }
-        : {}),
       "/cheats/proxy": {
         name: "Proxy",
         icon: <Router className="h-4 w-4 lg:h-5 lg:w-5" />,
-      },
-      "/cheats/get-key": {
-        name: "Get Key",
-        icon: <Key className="h-4 w-4 lg:h-5 lg:w-5" />,
       },
     }).filter(([k]) => (
       (k.startsWith("/cheats") && pathname.startsWith("/cheats")) ||
       (!pathname.startsWith("/cheats") && !k.startsWith("/cheats"))
     )),
   );
-
-  useEffect(() => {
-    if (!pathname.startsWith("/cheats")) {
-      setCanSeeModeration(false);
-      return;
-    }
-
-    setAuthStatus("checking");
-    setCanSeeModeration(false);
-    checkAuth()
-      .then(async (isValid) => {
-        setAuthStatus(isValid ? "valid" : "invalid");
-        if (!isValid) return;
-
-        const canModerate = await checkModeratorAccess();
-        setCanSeeModeration(canModerate);
-      })
-      .catch(() => {
-        setAuthStatus("invalid");
-        setCanSeeModeration(false);
-      });
-  }, [pathname]);
 
   return (
     <aside className="relative sticky top-0 z-30 w-full border-b border-neutral-800 bg-[#0f0f0f] px-4 py-3 lg:flex lg:h-screen lg:w-64 lg:min-w-64 lg:flex-col lg:border-b-0 lg:border-r lg:px-6 lg:py-8">
@@ -115,40 +70,6 @@ export default function Sidebar() {
       </nav>
 
       <div className="mt-3 flex w-full flex-col justify-center gap-3 lg:mt-auto">
-        {pathname.startsWith("/cheats") && (
-          <button
-            onClick={() => {
-              if (authStatus !== "valid") {
-                openAuthModal({
-                  onSuccess: () => setAuthStatus("valid"),
-                });
-              }
-            }}
-            className={
-              "flex w-full items-center justify-center gap-2 rounded py-2 font-bold transition-transform active:scale-[0.98] " +
-              (authStatus === "valid"
-                ? "cursor-default bg-green-600 text-white"
-                : "cursor-pointer bg-[#f5b041] text-black hover:bg-[#d49b3b]")
-            }
-          >
-            {authStatus === "checking" ? (
-              <>
-                <Loader2 size={20} className="animate-spin" />
-                Checking key...
-              </>
-            ) : authStatus === "valid" ? (
-              <>
-                <CheckCircle2 size={20} />
-                Key Active
-              </>
-            ) : (
-              <>
-                <Key size={20} />
-                Enter Key
-              </>
-            )}
-          </button>
-        )}
         <div className="hidden h-fit w-full flex-row items-center justify-around lg:flex">
           <SocialLink
             href="https://discord.com/users/694274948071555154"

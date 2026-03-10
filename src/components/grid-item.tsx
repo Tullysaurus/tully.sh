@@ -9,7 +9,6 @@ export default function GridItem({
   id,
   url,
   date,
-  onclick,
   imageUrl,
   showImage = true,
 }: {
@@ -18,30 +17,17 @@ export default function GridItem({
   id: string | null;
   url: string | null;
   date: number | null;
-  onclick: () => Promise<boolean>;
   imageUrl?: string | null;
   showImage?: boolean;
 }) {
   const unixTime = new Date(date || 0);
   const dayOfMonth = unixTime.getDate();
   const month = unixTime.toLocaleString("default", { month: "short" });
-  const [auth, setAuth] = useState(false);
   const resolvedImageUrl = imageUrl || `https://tully.sh/preview/${id}.png`;
 
   return (
     <div
-      onClick={() => {
-        if (auth) {
-          window.open(url || "", "_blank");
-          return;
-        }
-        onclick().then((res) => {
-          if (res) {
-            setAuth(true);
-            window.open(url || "", "_blank");
-          }
-        });
-      }}
+      onClick={() => window.open(url || "", "_blank")}
       className={`group flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-lg bg-[#1f1f1f] transition hover:scale-[1.02] ${showImage ? "min-h-80" : ""}`}
     >
       {showImage && (
