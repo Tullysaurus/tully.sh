@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { ReactElement } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BugPlay, CheckCircle2, CloudUpload, Github, House, Key, Loader2, Megaphone, Router, Shield, Terminal } from "lucide-react";
+import { BugPlay, CheckCircle2, CloudUpload, Github, House, Key, Loader2, Megaphone, Router, Shield, ShieldOff, Terminal } from "lucide-react";
 import SidebarLink from "./sidebar-link";
 import SocialLink from "./social-link";
 export default function Sidebar() {
@@ -40,6 +40,10 @@ export default function Sidebar() {
       "/cheats/proxy": {
         name: "Proxy",
         icon: <Router className="h-4 w-4 lg:h-5 lg:w-5" />,
+      },
+      "/cheats/goguardian": {
+        name: "GoGuardian",
+        icon: <ShieldOff className="h-4 w-4 lg:h-5 lg:w-5" />,
       },
     }).filter(([k]) => (
       (k.startsWith("/cheats") && pathname.startsWith("/cheats")) ||
