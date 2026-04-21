@@ -41,10 +41,6 @@ export default function Sidebar() {
         name: "Proxy",
         icon: <Router className="h-4 w-4 lg:h-5 lg:w-5" />,
       },
-      "/cheats/goguardian": {
-        name: "GoGuardian",
-        icon: <ShieldOff className="h-4 w-4 lg:h-5 lg:w-5" />,
-      },
     }).filter(([k]) => (
       (k.startsWith("/cheats") && pathname.startsWith("/cheats")) ||
       (!pathname.startsWith("/cheats") && !k.startsWith("/cheats"))

@@ -20,13 +20,13 @@ export default function Proxy() {
           onClick={handleGoToProxy}
           className="cursor-pointer rounded bg-[#f5b041] px-5 py-2 font-bold text-black transition-colors hover:bg-[#d49b3b]"
         >
-          Go to proxy
+          Go to main proxy
         </button>
         <button
           onClick={handleGoToProxy2}
           className="cursor-pointer rounded bg-[#f5b041] px-5 py-2 font-bold text-black transition-colors hover:bg-[#d49b3b]"
         >
-          Go to proxy2
+          Go to backup proxy
         </button>
       </div>
     </div>
