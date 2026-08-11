@@ -130,12 +130,12 @@ export default function Home() {
             >
               View Projects
             </Link>
-            <Link
+            {/* <Link
               href="/blog"
               className="rounded border border-white/20 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/5"
             >
               Read Blog
-            </Link>
+            </Link> */}
           </div>
         </div>
         <div className="reveal-up delay-3 home-card-marquee w-full overflow-hidden">

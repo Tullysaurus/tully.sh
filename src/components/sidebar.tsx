@@ -25,10 +25,10 @@ export default function Sidebar() {
         name: "Projects",
         icon: <Terminal className="h-4 w-4 lg:h-5 lg:w-5" />,
       },
-      "/blog": {
-        name: "Blog",
-        icon: <Megaphone className="h-4 w-4 lg:h-5 lg:w-5" />,
-      },
+      // "/blog": {
+      //   name: "Blog",
+      //   icon: <Megaphone className="h-4 w-4 lg:h-5 lg:w-5" />,
+      // },
       "/cheats": {
         name: "Home",
         icon: <House className="h-4 w-4 lg:h-5 lg:w-5" />,

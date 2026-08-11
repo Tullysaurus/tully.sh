@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import GridItem from "@/components/grid-item";
+import { Star } from "lucide-react";
 
 const GITHUB_USERNAME = "Tullysaurus";
 
@@ -98,6 +99,30 @@ export default function Projects() {
         tully.sh/<span className="text-[#FFC17B]">projects</span>
       </h1>
       <p className="max-w-xl text-center text-base font-semibold sm:text-lg">Live projects pulled from GitHub.</p>
+
+      {/* Featured, standalone project that is not pulled from GitHub */}
+      <div className="w-full">
+        <div className="reveal-up col-span-1 sm:col-span-2 lg:col-span-3">
+          <div
+            onClick={() => window.open("https://wasans.tully.sh", "_blank")}
+            className="mt-4 cursor-pointer overflow-hidden rounded-lg bg-gradient-to-r from-[#7c3aed] via-[#f43f5e] to-[#f59e0b] p-1 shadow-xl transition hover:scale-[1.01]"
+          >
+            <div className="flex w-full flex-col gap-4 rounded-md bg-[#0b0b0b] p-6 text-white">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-extrabold italic leading-tight">Wasans</h2>
+                  <p className="mt-1 w-full text-sm text-neutral-300">Wasans is my favorite project I&apos;ve created. It serves as a competitive hub for one of my favorite video games, and is used by hundreds of players.</p>
+                </div>
+              </div>
+
+              <div className="mt-2 flex items-center gap-3 text-sm font-medium text-[#f5b041]">
+                Visit Wasans
+                <span className="opacity-90">→</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {loading ? (
         <p className="text-center text-sm text-neutral-400">Loading projects...</p>
