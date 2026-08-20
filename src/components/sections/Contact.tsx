@@ -17,13 +17,7 @@ export function Contact() {
           <Button href={contact.primaryCta.href} variant="primary">
             {contact.primaryCta.label}
           </Button>
-          <Button
-            href={contact.secondaryCta.href}
-            variant="ghost"
-            icon={contact.secondaryCta.icon}
-            target="_blank"
-            rel="noreferrer"
-          >
+          <Button href={contact.secondaryCta.href} variant="ghost" target="_blank" rel="noreferrer">
             {contact.secondaryCta.label}
           </Button>
         </div>

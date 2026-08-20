@@ -1,14 +1,13 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react";
-import Image from "next/image";
+import Link from "next/link";
 import { cn } from "@/lib/cn";
+import { isInternalHref } from "@/lib/is-internal-href";
 
 type ButtonVariant = "primary" | "ghost" | "outline";
 
 interface ButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   variant?: ButtonVariant;
-  /** Optional leading icon, e.g. a brand mark like Discord's. */
-  icon?: string;
   children: ReactNode;
 }
 
@@ -18,18 +17,23 @@ const variantStyles: Record<ButtonVariant, string> = {
   outline: "border border-brass-dim text-brass hover:border-brass hover:bg-brass hover:text-ink",
 };
 
-export function Button({ href, variant = "primary", icon, className, children, ...props }: ButtonProps) {
+export function Button({ href, variant = "primary", className, children, ...props }: ButtonProps) {
+  const classes = cn(
+    "inline-flex items-center justify-center gap-2 rounded-[3px] px-6 py-3 font-mono text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass",
+    variantStyles[variant],
+    className,
+  );
+
+  if (isInternalHref(href)) {
+    return (
+      <Link href={href} className={classes} {...props}>
+        {children}
+      </Link>
+    );
+  }
+
   return (
-    <a
-      href={href}
-      className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-[3px] px-6 py-3 font-mono text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass",
-        variantStyles[variant],
-        className,
-      )}
-      {...props}
-    >
-      {icon && <Image src={icon} alt="" width={16} height={16} className="h-4 w-4 object-contain" />}
+    <a href={href} className={classes} {...props}>
       {children}
     </a>
   );

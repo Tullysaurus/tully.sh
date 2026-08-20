@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
@@ -9,24 +10,37 @@ import { site } from "@/content/site";
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-panel-line bg-ink/[0.88] backdrop-blur-md">
       <Container className="flex items-center justify-between py-4">
-        <a href="#top" className="font-mono text-lg">
+        <Link href="/#top" className="font-mono text-lg">
           <span className="text-text">{site.logo.name}</span>
           <span className="text-brass">{site.logo.tld}</span>
-        </a>
+        </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-8 min-[760px]:flex">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="font-mono text-sm text-text-muted transition-colors duration-150 ease-out hover:text-brass"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -37,6 +51,7 @@ export function Header() {
         </div>
 
         <button
+          ref={toggleRef}
           type="button"
           aria-label="Toggle navigation menu"
           aria-expanded={open}
@@ -51,14 +66,14 @@ export function Header() {
         <div className="border-t border-panel-line px-[28px] py-6 min-[760px]:hidden">
           <nav aria-label="Mobile" className="flex flex-col gap-5">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
                 className="font-mono text-sm text-text-muted transition-colors duration-150 ease-out hover:text-brass"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
             <Button href={site.headerCta.href} variant="primary" className="self-start" onClick={() => setOpen(false)}>
               {site.headerCta.label}

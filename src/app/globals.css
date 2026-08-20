@@ -32,6 +32,10 @@ html {
   scroll-behavior: smooth;
 }
 
+section[id] {
+  scroll-margin-top: 6rem;
+}
+
 body {
   min-height: 100vh;
   background: var(--ink);
