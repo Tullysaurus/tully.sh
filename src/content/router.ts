@@ -1,3 +1,5 @@
+import { paths } from "@/config/paths";
+
 export interface RouterCard {
   title: string;
   description: string;
@@ -6,7 +8,8 @@ export interface RouterCard {
 }
 
 export const routerSection = {
-  eyebrow: "start here",
+  path: paths.home,
+  command: "ls",
   title: "Pick a path",
   description: "Placeholder one-line description introducing the two ways to look around.",
 };

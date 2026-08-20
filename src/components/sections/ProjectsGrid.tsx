@@ -8,7 +8,8 @@ export function ProjectsGrid() {
   return (
     <Section border={false}>
       <SectionHeading
-        eyebrow={projectsSection.eyebrow}
+        path={projectsSection.path}
+        command={projectsSection.command}
         title={projectsSection.title}
         description={projectsSection.description}
       />

@@ -8,7 +8,7 @@ export function Contact() {
   return (
     <Section id="contact" border={false}>
       <div className="max-w-[640px]">
-        <Eyebrow>{contact.eyebrow}</Eyebrow>
+        <Eyebrow path={contact.path} command={contact.command} />
         <h2 className="mt-3 font-display text-[clamp(26px,4vw,40px)] font-semibold tracking-[-0.01em] text-text">
           {contact.title}
         </h2>

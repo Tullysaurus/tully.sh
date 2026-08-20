@@ -7,7 +7,8 @@ export function CaseStudy() {
   return (
     <Section id="work">
       <SectionHeading
-        eyebrow={caseStudySection.eyebrow}
+        path={caseStudySection.path}
+        command={caseStudySection.command}
         title={caseStudySection.title}
         description={caseStudySection.description}
       />

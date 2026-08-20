@@ -1,3 +1,5 @@
+import { paths } from "@/config/paths";
+
 export interface Capability {
   index: string;
   title: string;
@@ -5,7 +7,8 @@ export interface Capability {
 }
 
 export const capabilitiesSection = {
-  eyebrow: "capabilities",
+  path: paths.hire,
+  command: "ls services/",
   title: "What I can build",
   description: "Placeholder description of the breadth of engagements this covers.",
 };

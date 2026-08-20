@@ -1,5 +1,8 @@
+import { paths } from "@/config/paths";
+
 export interface HeroContent {
-  terminalLine: string;
+  path: string;
+  command: string;
   headlineBefore: string;
   headlineHighlight: string;
   headlineAfter: string;
@@ -9,8 +12,9 @@ export interface HeroContent {
 }
 
 export const homeHero: HeroContent = {
-  terminalLine: "$ whoami",
-  headlineBefore: "I build software — sites, tools, systems — and take it all the way to ",
+  path: paths.home,
+  command: "whoami",
+  headlineBefore: "I build sites, tools, and systems, and take them to ",
   headlineHighlight: "production",
   headlineAfter: ".",
   lead: "Placeholder lead paragraph naming the range: web, apps, automation, infrastructure — without turning into a bullet list.",

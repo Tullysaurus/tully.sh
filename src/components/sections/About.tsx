@@ -10,7 +10,7 @@ interface AboutProps {
 export function About({ border = true }: AboutProps) {
   return (
     <Section id="about" border={border}>
-      <SectionHeading eyebrow={aboutSection.eyebrow} title={aboutSection.title} />
+      <SectionHeading path={aboutSection.path} command={aboutSection.command} title={aboutSection.title} />
       <p className="max-w-[640px] text-text-muted">{about.paragraph}</p>
       <div className="mt-10 flex flex-wrap gap-9">
         {about.stats.map((stat) => (

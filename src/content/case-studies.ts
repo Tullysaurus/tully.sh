@@ -1,3 +1,5 @@
+import { paths } from "@/config/paths";
+
 export interface CaseStudySpec {
   label: string;
   detail: string;
@@ -14,7 +16,8 @@ export interface CaseStudy {
 }
 
 export const caseStudySection = {
-  eyebrow: "case-study",
+  path: paths.hire,
+  command: "ssh deploy@mercurieconsulting.com",
   title: "Selected work",
   description: "Placeholder description introducing recent project work.",
 };

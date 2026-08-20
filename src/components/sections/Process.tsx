@@ -6,7 +6,8 @@ export function Process() {
   return (
     <Section id="process">
       <SectionHeading
-        eyebrow={processSection.eyebrow}
+        path={processSection.path}
+        command={processSection.command}
         title={processSection.title}
         description={processSection.description}
       />

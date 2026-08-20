@@ -1,7 +1,9 @@
+import { paths } from "@/config/paths";
 import type { HeroContent } from "@/content/hero";
 
 export const hireHero: HeroContent = {
-  terminalLine: "$ hire tully",
+  path: paths.hire,
+  command: "cat pitch.md",
   headlineBefore: "Hire an engineer who ships the ",
   headlineHighlight: "whole thing",
   headlineAfter: ", not just the design.",

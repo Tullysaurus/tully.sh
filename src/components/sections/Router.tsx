@@ -8,7 +8,8 @@ export function Router() {
   return (
     <Section>
       <SectionHeading
-        eyebrow={routerSection.eyebrow}
+        path={routerSection.path}
+        command={routerSection.command}
         title={routerSection.title}
         description={routerSection.description}
       />

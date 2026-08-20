@@ -1,3 +1,5 @@
+import { paths } from "@/config/paths";
+
 export interface ContactLink {
   label: string;
   href: string;
@@ -5,7 +7,8 @@ export interface ContactLink {
 }
 
 export const contact = {
-  eyebrow: "contact",
+  path: paths.hire,
+  command: "./contact.sh --new",
   title: "Let's build something",
   description: "Placeholder supporting text inviting the reader to get in touch.",
   primaryCta: { label: "Email me", href: "mailto:tully@tully.sh" },

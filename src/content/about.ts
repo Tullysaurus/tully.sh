@@ -1,10 +1,13 @@
+import { paths } from "@/config/paths";
+
 export interface Stat {
   value: string;
   label: string;
 }
 
 export const aboutSection = {
-  eyebrow: "about",
+  path: paths.home,
+  command: "cat about.md",
   title: "About",
 };
 

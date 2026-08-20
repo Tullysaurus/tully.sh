@@ -7,7 +7,8 @@ export function Capabilities() {
   return (
     <Section id="capabilities">
       <SectionHeading
-        eyebrow={capabilitiesSection.eyebrow}
+        path={capabilitiesSection.path}
+        command={capabilitiesSection.command}
         title={capabilitiesSection.title}
         description={capabilitiesSection.description}
       />

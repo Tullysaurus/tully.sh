@@ -1,3 +1,5 @@
+import { paths } from "@/config/paths";
+
 export interface Project {
   name: string;
   description: string;
@@ -7,7 +9,8 @@ export interface Project {
 }
 
 export const projectsSection = {
-  eyebrow: "projects",
+  path: paths.projects,
+  command: "ls -la",
   title: "Things I've built",
   description: "Placeholder description introducing open-source and personal work.",
 };

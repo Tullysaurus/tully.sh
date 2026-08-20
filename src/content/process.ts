@@ -1,3 +1,5 @@
+import { paths } from "@/config/paths";
+
 export interface ProcessStep {
   label: string;
   title: string;
@@ -5,7 +7,8 @@ export interface ProcessStep {
 }
 
 export const processSection = {
-  eyebrow: "process",
+  path: paths.hire,
+  command: "./run-project.sh --verbose",
   title: "How it works",
   description: "Placeholder description of the shape of a typical engagement.",
 };
