@@ -11,13 +11,13 @@ export interface HeroContent {
   secondaryCta: { label: string; href: string };
 }
 
-export const homeHero: HeroContent = {
+export const hero: HeroContent = {
   path: paths.home,
   command: "whoami",
   headlineBefore: "I build sites, tools, and systems, and take them to ",
   headlineHighlight: "production",
   headlineAfter: ".",
   lead: "Placeholder lead paragraph naming the range: web, apps, automation, infrastructure — without turning into a bullet list.",
-  primaryCta: { label: "Hire me", href: "/hire" },
-  secondaryCta: { label: "See my work", href: "/projects" },
+  primaryCta: { label: "Hire me", href: "#contact" },
+  secondaryCta: { label: "See my work", href: "#work" },
 };

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Section } from "@/components/ui/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
@@ -18,26 +17,15 @@ export function Contact() {
           <Button href={contact.primaryCta.href} variant="primary">
             {contact.primaryCta.label}
           </Button>
-          <Button href={contact.secondaryCta.href} variant="ghost" target="_blank" rel="noreferrer">
+          <Button
+            href={contact.secondaryCta.href}
+            variant="ghost"
+            icon={contact.secondaryCta.icon}
+            target="_blank"
+            rel="noreferrer"
+          >
             {contact.secondaryCta.label}
           </Button>
-        </div>
-
-        <div className="mt-8 flex flex-wrap gap-6">
-          {contact.links.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 font-mono text-sm text-text-muted transition-colors duration-150 ease-out hover:text-brass"
-            >
-              {link.icon && (
-                <Image src={link.icon} alt="" width={16} height={16} className="h-4 w-4 object-contain" />
-              )}
-              {link.label}
-            </a>
-          ))}
         </div>
       </div>
     </Section>

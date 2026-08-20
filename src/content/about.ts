@@ -16,7 +16,7 @@ export const about = {
     "Placeholder bio — a couple of sentences: self-taught, years of experience, what you care about.",
   stats: [
     { value: "7+", label: "Years of experience" },
-    { value: "40+", label: "Projects shipped" },
+    { value: "20+", label: "Projects shipped" },
     { value: "Full-stack", label: "Engineering" },
   ] as Stat[],
 };

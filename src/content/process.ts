@@ -7,7 +7,7 @@ export interface ProcessStep {
 }
 
 export const processSection = {
-  path: paths.hire,
+  path: paths.home,
   command: "./run-project.sh --verbose",
   title: "How it works",
   description: "Placeholder description of the shape of a typical engagement.",

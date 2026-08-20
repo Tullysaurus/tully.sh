@@ -1,6 +1,4 @@
-/** Working-directory paths used in the shell-prompt section labels — mirrors the site map. */
+/** Working directory shown in every section's shell-prompt label. */
 export const paths = {
   home: "~",
-  hire: "~/hire",
-  projects: "~/projects",
 } as const;

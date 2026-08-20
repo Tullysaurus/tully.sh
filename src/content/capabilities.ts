@@ -7,7 +7,7 @@ export interface Capability {
 }
 
 export const capabilitiesSection = {
-  path: paths.hire,
+  path: paths.home,
   command: "ls services/",
   title: "What I can build",
   description: "Placeholder description of the breadth of engagements this covers.",

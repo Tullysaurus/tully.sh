@@ -5,6 +5,6 @@ export const site = {
   },
   headerCta: {
     label: "Get in touch",
-    href: "/hire#contact",
+    href: "#contact",
   },
 };

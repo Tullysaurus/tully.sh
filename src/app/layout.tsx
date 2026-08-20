@@ -21,10 +21,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: "tully.sh",
-    template: "%s · tully.sh",
-  },
+  title: "tully.sh",
   description: "tully.sh is a portfolio for Tully, a software engineer and web developer.",
 };
 

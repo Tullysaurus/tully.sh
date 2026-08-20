@@ -2,18 +2,26 @@ import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { HairlineGrid, HairlineGridItem } from "@/components/ui/HairlineGrid";
 import { ArrowLink } from "@/components/ui/ArrowLink";
-import { projects, projectsSection } from "@/content/projects";
+import { CaseStudyCard } from "@/components/sections/CaseStudyCard";
+import { caseStudies } from "@/content/case-studies";
+import { projects } from "@/content/projects";
+import { workSection } from "@/content/work";
 
-export function ProjectsGrid() {
+export function Work() {
   return (
-    <Section border={false}>
+    <Section id="work">
       <SectionHeading
-        path={projectsSection.path}
-        command={projectsSection.command}
-        title={projectsSection.title}
-        description={projectsSection.description}
+        path={workSection.path}
+        command={workSection.command}
+        title={workSection.title}
+        description={workSection.description}
       />
-      <HairlineGrid className="grid-cols-1 min-[640px]:grid-cols-2 min-[1000px]:grid-cols-3">
+      <div className="flex flex-col gap-8">
+        {caseStudies.map((study) => (
+          <CaseStudyCard key={study.name} study={study} />
+        ))}
+      </div>
+      <HairlineGrid className="mt-8 grid-cols-1 min-[640px]:grid-cols-2 min-[1000px]:grid-cols-3">
         {projects.map((project) => (
           <HairlineGridItem key={project.name} className="flex flex-col">
             <h3 className="font-display text-xl font-semibold tracking-[-0.01em] text-text">{project.name}</h3>

@@ -2,14 +2,9 @@ import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { about, aboutSection } from "@/content/about";
 
-interface AboutProps {
-  /** Set false when this is the last section before the footer. */
-  border?: boolean;
-}
-
-export function About({ border = true }: AboutProps) {
+export function About() {
   return (
-    <Section id="about" border={border}>
+    <Section id="about">
       <SectionHeading path={aboutSection.path} command={aboutSection.command} title={aboutSection.title} />
       <p className="max-w-[640px] text-text-muted">{about.paragraph}</p>
       <div className="mt-10 flex flex-wrap gap-9">

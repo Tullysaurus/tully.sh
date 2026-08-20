@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
@@ -14,20 +13,20 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-panel-line bg-ink/[0.88] backdrop-blur-md">
       <Container className="flex items-center justify-between py-4">
-        <Link href="/" className="font-mono text-lg">
+        <a href="#top" className="font-mono text-lg">
           <span className="text-text">{site.logo.name}</span>
           <span className="text-brass">{site.logo.tld}</span>
-        </Link>
+        </a>
 
         <nav aria-label="Primary" className="hidden items-center gap-8 min-[760px]:flex">
           {navLinks.map((link) => (
-            <Link
+            <a
               key={link.href}
               href={link.href}
               className="font-mono text-sm text-text-muted transition-colors duration-150 ease-out hover:text-brass"
             >
               {link.label}
-            </Link>
+            </a>
           ))}
         </nav>
 
@@ -52,14 +51,14 @@ export function Header() {
         <div className="border-t border-panel-line px-[28px] py-6 min-[760px]:hidden">
           <nav aria-label="Mobile" className="flex flex-col gap-5">
             {navLinks.map((link) => (
-              <Link
+              <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
                 className="font-mono text-sm text-text-muted transition-colors duration-150 ease-out hover:text-brass"
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
             <Button href={site.headerCta.href} variant="primary" className="self-start" onClick={() => setOpen(false)}>
               {site.headerCta.label}
