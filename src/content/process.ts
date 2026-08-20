@@ -10,16 +10,28 @@ export const processSection = {
   path: paths.home,
   command: "./run-project.sh --verbose",
   title: "How it works",
-  description: "Placeholder description of the shape of a typical engagement.",
+  description: "How a typical project goes, from first message to launch.",
 };
 
 export const processSteps: ProcessStep[] = [
-  { label: "01", title: "Message me", description: "Placeholder copy for the first-contact step." },
-  { label: "02", title: "Design & build", description: "Placeholder copy for the design-and-build step." },
+  {
+    label: "01",
+    title: "Message me",
+    description: "Tell me what you're trying to build and what's not working right now. No forms, just a conversation.",
+  },
+  {
+    label: "02",
+    title: "Design & build",
+    description: "I design and build in the open, so you're seeing progress the whole way, not just at the end.",
+  },
   {
     label: "03",
     title: "Ship it",
-    description: "Placeholder copy for deployment — domain and hosting are a detail here, not the headline, for website projects.",
+    description: "Deployed and live; domain and hosting handled if it's a website, infra set up if it's something bigger.",
   },
-  { label: "04", title: "Launch & support", description: "Placeholder copy for the launch-and-support step." },
+  {
+    label: "04",
+    title: "Launch & support",
+    description: "Live doesn't mean done. I stick around for fixes, tweaks, and whatever comes up after launch.",
+  },
 ];

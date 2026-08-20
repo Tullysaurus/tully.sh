@@ -4,5 +4,5 @@ export const workSection = {
   path: paths.home,
   command: "ls -la work/",
   title: "Selected work",
-  description: "Placeholder description introducing recent project work, flagship and smaller alike.",
+  description: "A mix of client work and my own projects; some built for a business, some built because I needed them myself.",
 };

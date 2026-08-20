@@ -6,7 +6,13 @@ export function About() {
   return (
     <Section id="about">
       <SectionHeading path={aboutSection.path} command={aboutSection.command} title={aboutSection.title} />
-      <p className="max-w-[640px] text-text-muted">{about.paragraph}</p>
+      <div className="max-w-[640px]">
+        {about.paragraphs.map((paragraph, index) => (
+          <p key={index} className={index === 0 ? "text-text-muted" : "mt-4 text-text-muted"}>
+            {paragraph}
+          </p>
+        ))}
+      </div>
       <div className="mt-10 flex flex-wrap gap-9">
         {about.stats.map((stat) => (
           <div key={stat.value}>

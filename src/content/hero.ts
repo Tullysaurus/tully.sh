@@ -17,7 +17,7 @@ export const hero: HeroContent = {
   headlineBefore: "I build sites, tools, and systems, and take them to ",
   headlineHighlight: "production",
   headlineAfter: ".",
-  lead: "Placeholder lead paragraph naming the range: web, apps, automation, infrastructure — without turning into a bullet list.",
+  lead: "Websites, internal tools, automation scripts, the infrastructure underneath; I like picking up whatever a project actually needs and building something that works.",
   primaryCta: { label: "Hire me", href: "#contact" },
   secondaryCta: { label: "See my work", href: "#work" },
 };
