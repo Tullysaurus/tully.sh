@@ -1,5 +1,5 @@
-import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { ArrowLink } from "@/components/ui/ArrowLink";
 import type { CaseStudy } from "@/content/case-studies";
 
 interface CaseStudyCardProps {
@@ -25,15 +25,9 @@ export function CaseStudyCard({ study }: CaseStudyCardProps) {
               {paragraph}
             </p>
           ))}
-          <a
-            href={study.href}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-6 inline-flex items-center gap-2 font-mono text-sm text-brass transition-colors duration-150 ease-out hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass"
-          >
+          <ArrowLink href={study.href} target="_blank" rel="noreferrer" className="mt-6">
             {study.linkLabel}
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </a>
+          </ArrowLink>
         </div>
 
         <ul>

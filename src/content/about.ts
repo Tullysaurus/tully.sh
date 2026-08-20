@@ -6,19 +6,14 @@ export interface Stat {
 export const aboutSection = {
   eyebrow: "about",
   title: "About",
-  description: "Placeholder description introducing the about section.",
 };
 
 export const about = {
-  monogram: "T",
-  paragraphs: [
-    "Placeholder bio paragraph one — background and focus.",
-    "Placeholder bio paragraph two — how you work.",
-    "Placeholder bio paragraph three — what you're looking for.",
-  ],
+  paragraph:
+    "Placeholder bio — a couple of sentences: self-taught, years of experience, what you care about.",
   stats: [
-    { value: "10+", label: "Years of experience" },
+    { value: "7+", label: "Years of experience" },
     { value: "40+", label: "Projects shipped" },
-    { value: "99%", label: "Client satisfaction" },
+    { value: "Full-stack", label: "Engineering" },
   ] as Stat[],
 };

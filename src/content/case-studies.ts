@@ -23,15 +23,15 @@ export const caseStudySection = {
 // once there's a second project worth featuring.
 export const caseStudies: CaseStudy[] = [
   {
-    url: "example-project.com",
+    url: "mercurie.co",
     role: "Lead engineer",
-    name: "Placeholder Project Name",
+    name: "Mercurie",
     paragraphs: [
-      "Placeholder paragraph describing the problem the project solved.",
+      "Placeholder paragraph describing the problem Mercurie solved.",
       "Placeholder paragraph describing the approach and outcome.",
     ],
     linkLabel: "Visit live project",
-    href: "https://example.com",
+    href: "https://mercurie.co",
     specs: [
       { label: "Scope", detail: "Placeholder scope detail." },
       { label: "Stack", detail: "Placeholder stack detail." },

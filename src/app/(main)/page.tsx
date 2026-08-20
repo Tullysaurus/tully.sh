@@ -1,13 +1,14 @@
 import { Hero } from "@/components/sections/Hero";
-import { sections } from "@/config/sections";
+import { Router } from "@/components/sections/Router";
+import { About } from "@/components/sections/About";
+import { homeHero } from "@/content/hero";
 
 export default function Home() {
   return (
     <>
-      <Hero />
-      {sections.map(({ id, Component }) => (
-        <Component key={id} />
-      ))}
+      <Hero content={homeHero} />
+      <Router />
+      <About border={false} />
     </>
   );
 }

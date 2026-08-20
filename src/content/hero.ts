@@ -1,9 +1,19 @@
-export const hero = {
+export interface HeroContent {
+  terminalLine: string;
+  headlineBefore: string;
+  headlineHighlight: string;
+  headlineAfter: string;
+  lead: string;
+  primaryCta: { label: string; href: string };
+  secondaryCta: { label: string; href: string };
+}
+
+export const homeHero: HeroContent = {
   terminalLine: "$ whoami",
-  headlineBefore: "Building software that ",
-  headlineHighlight: "ships",
-  headlineAfter: ", not just demos.",
-  lead: "Placeholder lead paragraph — a short pitch describing who you build for and what makes your work worth hiring.",
-  primaryCta: { label: "Start a project", href: "#contact" },
-  secondaryCta: { label: "See the work", href: "#work" },
+  headlineBefore: "I build software — sites, tools, systems — and take it all the way to ",
+  headlineHighlight: "production",
+  headlineAfter: ".",
+  lead: "Placeholder lead paragraph naming the range: web, apps, automation, infrastructure — without turning into a bullet list.",
+  primaryCta: { label: "Hire me", href: "/hire" },
+  secondaryCta: { label: "See my work", href: "/projects" },
 };

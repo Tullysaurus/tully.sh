@@ -11,8 +11,12 @@ export const processSection = {
 };
 
 export const processSteps: ProcessStep[] = [
-  { label: "01 / discover", title: "Discovery", description: "Placeholder copy for the discovery step." },
-  { label: "02 / plan", title: "Planning", description: "Placeholder copy for the planning step." },
-  { label: "03 / build", title: "Build", description: "Placeholder copy for the build step." },
-  { label: "04 / ship", title: "Ship & support", description: "Placeholder copy for the ship step." },
+  { label: "01", title: "Message me", description: "Placeholder copy for the first-contact step." },
+  { label: "02", title: "Design & build", description: "Placeholder copy for the design-and-build step." },
+  {
+    label: "03",
+    title: "Ship it",
+    description: "Placeholder copy for deployment — domain and hosting are a detail here, not the headline, for website projects.",
+  },
+  { label: "04", title: "Launch & support", description: "Placeholder copy for the launch-and-support step." },
 ];

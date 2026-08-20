@@ -4,7 +4,7 @@ export const site = {
     tld: ".sh",
   },
   headerCta: {
-    label: "Start a project",
-    href: "#contact",
+    label: "Get in touch",
+    href: "/hire#contact",
   },
 };
