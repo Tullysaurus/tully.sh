@@ -1,22 +1,73 @@
 @import "tailwindcss";
 
-
 :root {
-  --background: #1e1e1e;
-  --foreground: #ededed;
+  --ink: #0f191c;
+  --panel: #16242a;
+  --chrome: #101b20;
+  --panel-line: #29393f;
+  --text: #ece8e0;
+  --text-muted: #9fb0af;
+  --brass: #c79a45;
+  --brass-dim: #8a6d33;
+  --green: #7fb77e;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: var(--ink);
+  --color-panel: var(--panel);
+  --color-chrome: var(--chrome);
+  --color-panel-line: var(--panel-line);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-brass: var(--brass);
+  --color-brass-dim: var(--brass-dim);
+  --color-green: var(--green);
+
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-display: var(--font-space-grotesk);
 }
 
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   min-height: 100vh;
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--font-sans);
+  line-height: 1.6;
   overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
+
+@keyframes cursor-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,8 +1,13 @@
+import { Hero } from "@/components/sections/Hero";
+import { sections } from "@/config/sections";
 
 export default function Home() {
-    return (
-        <div>
-            Home
-        </div>
-    )
+  return (
+    <>
+      <Hero />
+      {sections.map(({ id, Component }) => (
+        <Component key={id} />
+      ))}
+    </>
+  );
 }
