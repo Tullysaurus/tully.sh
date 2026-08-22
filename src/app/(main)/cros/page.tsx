@@ -41,6 +41,14 @@ export default function CrosPage() {
                 </span>
               ) : null}
             </h2>
+            {group.credit ? (
+              <p className="mt-1 font-mono text-xs text-text-muted">
+                Credit:{" "}
+                <a href={group.credit.href} target="_blank" className="text-brass underline underline-offset-4 hover:text-brass-dim">
+                  {group.credit.label}
+                </a>
+              </p>
+            ) : null}
             <ol className="mt-4 flex flex-col gap-4">
               {group.steps.map((step) => (
                 <li key={step.number} className="flex gap-4 border-l-2 border-brass-dim pl-4">

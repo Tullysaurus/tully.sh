@@ -11,6 +11,7 @@ export interface CrosStep {
 export interface CrosGroup {
   label: string;
   optional?: boolean;
+  credit?: { label: string; href: string };
   steps: CrosStep[];
 }
 
@@ -87,6 +88,7 @@ export const crosPage = {
     },
     {
       label: "Flash stock firmware from the root shell",
+      credit: { label: "modmium.dev", href: "https://modmium.dev" },
       steps: [
         {
           number: 20,
@@ -101,6 +103,7 @@ export const crosPage = {
     },
     {
       label: "Install Modmium",
+      credit: { label: "modmium.dev", href: "https://modmium.dev" },
       steps: [
         { number: 25, title: "Ctrl + D", detail: "On the dev-mode warning screen." },
         { number: 26, title: "Connect to Wi-Fi" },
