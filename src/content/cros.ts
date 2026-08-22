@@ -41,7 +41,7 @@ export const crosPage = {
       label: "Boot the unenrollment shim",
       steps: [
         { number: 4, title: "Esc + Refresh + Power" },
-        { number: 5, title: "Ctrl + D" },
+        { number: 5, title: "Ctrl + D, then Enter" },
         { number: 6, title: "Esc + Refresh + Power" },
         {
           number: 7,
@@ -61,7 +61,7 @@ export const crosPage = {
           detail: "Returns to verified mode. Wait for OOBE to load.",
         },
         { number: 11, title: "Esc + Refresh + Power" },
-        { number: 12, title: "Ctrl + D" },
+        { number: 12, title: "Ctrl + D, then Enter" },
       ],
     },
     {
@@ -96,7 +96,7 @@ export const crosPage = {
       ],
     },
     {
-      label: "Flash stock firmware from the root shell",
+      label: "Flash dev firmware from the root shell",
       credit: { label: "modmium.dev", href: "https://modmium.dev" },
       steps: [
         {
