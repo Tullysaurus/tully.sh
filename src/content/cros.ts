@@ -10,6 +10,7 @@ export interface CrosStep {
 
 export interface CrosGroup {
   label: string;
+  optional?: boolean;
   steps: CrosStep[];
 }
 
@@ -119,6 +120,19 @@ export const crosPage = {
         { number: 31, title: "Space, then Enter", detail: "On the dev-mode warning screen." },
         { number: 32, title: "Go into OOBE", detail: "Modmium is now loaded." },
         { number: 33, title: "Ctrl + Alt + F2 (Right Arrow)" },
+        { number: 34, title: "Login as root" },
+      ],
+    },
+    {
+      label: "Toggle enrollment via Modmium",
+      optional: true,
+      steps: [
+        { number: 35, title: "Select \"Manage Modmium\"" },
+        {
+          number: 36,
+          title: "Select \"Toggle enrollment\"",
+          detail: "Unenrolls or re-enrolls the device.",
+        },
       ],
     },
   ] as CrosGroup[],

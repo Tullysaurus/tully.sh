@@ -33,7 +33,14 @@ export default function CrosPage() {
       <div className="mt-12 flex max-w-[640px] flex-col gap-10">
         {crosPage.groups.map((group) => (
           <div key={group.label}>
-            <h2 className="font-display text-xl font-semibold tracking-[-0.01em] text-text">{group.label}</h2>
+            <h2 className="flex items-center gap-2 font-display text-xl font-semibold tracking-[-0.01em] text-text">
+              {group.label}
+              {group.optional ? (
+                <span className="rounded-full border border-panel-line px-3 py-1 font-mono text-[10px] font-normal uppercase tracking-wide text-text-muted">
+                  Optional
+                </span>
+              ) : null}
+            </h2>
             <ol className="mt-4 flex flex-col gap-4">
               {group.steps.map((step) => (
                 <li key={step.number} className="flex gap-4 border-l-2 border-brass-dim pl-4">
