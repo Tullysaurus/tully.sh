@@ -111,7 +111,7 @@ export const crosPage = {
         {
           number: 28,
           title: "Manually type",
-          code: "bash <(curl -SLk tully.sh/cros/modmuim.sh)",
+          code: "bash <(curl -SLk tully.sh/cros/modmium.sh)",
         },
         { number: 29, title: "Wait for Modmium to finish downloading", detail: "Navigate the on-screen UI." },
         { number: 30, title: "Reboot" },
