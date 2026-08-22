@@ -5,6 +5,7 @@ export interface CrosStep {
   title: string;
   detail?: string;
   code?: string;
+  download?: { label: string; href: string };
 }
 
 export interface CrosGroup {
@@ -30,8 +31,9 @@ export const crosPage = {
         { number: 3, title: "Esc + Refresh + Power" },
         {
           number: 4,
-          title: "Insert the shim USB and run in bash",
-          code: "bash <(curl -SLk tully.sh/cros/1.sh)",
+          title: "Boot the shim USB (octopus.bin)",
+          detail: "Select \"Unenroll\" on the shim menu.",
+          download: { label: "octopus.bin", href: "https://assets.wasans.tully.sh/octopus.bin" },
         },
       ],
     },
@@ -66,8 +68,8 @@ export const crosPage = {
         { number: 12, title: "Esc + Refresh + Power" },
         {
           number: 13,
-          title: "Launch the shim and run in bash",
-          code: "bash <(curl -SLk tully.sh/cros/2.sh)",
+          title: "Boot the shim USB again",
+          detail: "Select \"Enable dev and disable FWMP\" on the shim menu.",
         },
         { number: 14, title: "Plug the battery back in" },
         { number: 15, title: "Hold the power button until it shuts off" },

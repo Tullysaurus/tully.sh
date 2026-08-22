@@ -43,6 +43,14 @@ export default function CrosPage() {
                   <div className="min-w-0">
                     <p className="text-text">{step.title}</p>
                     {step.detail ? <p className="mt-1 text-sm text-text-muted">{step.detail}</p> : null}
+                    {step.download ? (
+                      <a
+                        href={step.download.href}
+                        className="mt-2 inline-flex items-center gap-1.5 font-mono text-xs text-brass underline underline-offset-4 hover:text-brass-dim"
+                      >
+                        ↓ Download {step.download.label}
+                      </a>
+                    ) : null}
                     {step.code ? (
                       <pre className="mt-2 overflow-x-auto rounded-md border border-panel-line bg-ink px-4 py-3 font-mono text-xs text-green">
                         <code>{step.code}</code>
