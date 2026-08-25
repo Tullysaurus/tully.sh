@@ -2,4 +2,4 @@
 
 echo "Installing modmium..."
 
-bash <(curl -SLk modmium.dev/modmium.sh)
+bash <(curl -SLk https://raw.githubusercontent.com/Tullysaurus/modmium/refs/heads/stable/modmium.sh)
