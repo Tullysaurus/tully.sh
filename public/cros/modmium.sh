@@ -1,5 +1,3 @@
 #!/bin/bash
 
-echo "Installing modmium..."
-
-bash <(curl -SLk https://raw.githubusercontent.com/Tullysaurus/modmium/refs/heads/stable/modmium.sh)
+bash <(curl -SLk https://raw.githubusercontent.com/Tullysaurus/modmium/forked-stable/modmium.sh)
